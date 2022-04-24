@@ -1,0 +1,127 @@
+<?php
+namespace Admin\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+* @ORM\Entity
+* @ORM\Table(name="union_news")
+*/
+class UnionNews
+{
+    /**
+    * @ORM\Id
+    * @ORM\Column(name="id", type="integer")
+    * @ORM\GeneratedValue(strategy="AUTO")
+    */
+    protected $id;
+
+    /** @ORM\Column(name="title", type="string", length=120, nullable=false) */
+    protected $title;
+
+    /** @ORM\Column(name="body", type="text", nullable=false) */
+    protected $body;
+
+    /** @ORM\Column(name="date", type="datetime", nullable=false) */
+    protected $date;
+
+    /** @ORM\Column(name="picture_url", type="string", length=120, nullable=false) */
+    protected $picture_url;
+
+    /** @ORM\Column(name="piece_of_news_url", type="string", length=120, nullable=false) */
+    protected $piece_of_news_url;
+
+    /** @ORM\Column(name="documentId", type="string", unique=true,nullable=true) */
+    protected $documentId;
+
+    public function getArrayCopy(){
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'body' => $this->body,
+            'date' => $this->date->format('Y-m-d'),
+            'picture_url' => $this->picture_url,
+            'piece_of_news_url' => $this->piece_of_news_url,
+            'documentId' => $this->documentId,
+        ];
+    }
+
+    public function initialize(array $array){
+        $this->title = $array['title'];
+        $this->body = $array['body'];
+        $this->date = new \DateTime($array['date']);
+
+        // Verifico que la imagen sea válida
+        $empty = '';
+        if($array['picture_url'] != ''){
+            if(exif_imagetype($array['picture_url']) === FALSE) {
+                $this->picture_url = $empty;
+            }else{
+                $this->picture_url = $array['picture_url'];
+            }
+        }else{
+            $this->picture_url = $empty;
+        }
+
+        // Verifico que el URL sea válido
+        if(filter_var($array['piece_of_news_url'], FILTER_VALIDATE_URL) === FALSE) {
+            $this->piece_of_news_url = 'https://obrasocialquimicos.com.ar/';
+        }else{
+            $this->piece_of_news_url = $array['piece_of_news_url'];
+        }
+
+    }
+
+    public function exchangeArray(array $array){
+        $this->title = $array['title'];
+        $this->body = $array['body'];
+        $this->date = new \DateTime($array['date']);
+
+        // Verifico que la imagen sea válida
+        $empty = '';
+        if($array['picture_url'] != ''){
+            if(exif_imagetype($array['picture_url']) === FALSE) {
+                $this->picture_url = $empty;
+            }else{
+                $this->picture_url = $array['picture_url'];
+            }
+        }else{
+            $this->picture_url = $empty;
+        }
+
+        // Verifico que el URL sea válido
+        if(filter_var($array['piece_of_news_url'], FILTER_VALIDATE_URL) === FALSE) {
+            $this->piece_of_news_url = 'https://obrasocialquimicos.com.ar/';
+        }else{
+            $this->piece_of_news_url = $array['piece_of_news_url'];
+        }
+
+        $this->documentId = $array['documentId'];
+    }
+
+    public function toFirebase(){
+        return [
+            'id' => $this->id,
+            'title' => $this->title,
+            'body' => $this->body,
+            'date' => $this->date->format('d/m/Y'),
+            'picture_url' => $this->picture_url,
+            'piece_of_news_url' => $this->piece_of_news_url
+        ];
+    }
+
+    public function getId(){ return $this->id; }
+    public function getTitle(){ return $this->title; }
+    public function getBody(){ return $this->body; }
+    public function getDate(){ return $this->date; }
+    public function getPictureUrl(){ return $this->picture_url; }
+    public function getPieceOfNewsUrl(){ return $this->piece_of_news_url; }
+    public function getDocumentId(){ return $this->documentId; }
+
+    public function setTitle($v){ $this->title = $v; }
+    public function setBody($v){ $this->body = $v; }
+    public function setDate($v){ $this->date = $v; }
+    public function setPictureUrl($v){ $this->picture_url = $v; }
+    public function setPieceOfNewsUrl($v){ $this->piece_of_news_url = $v; }
+    public function setDocumentId($v){ $this->documentId = $v; }
+}

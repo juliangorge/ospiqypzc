@@ -1,0 +1,41 @@
+<?= $this->doctype() ?>
+
+<html lang="es">
+    <head>
+        <meta charset="utf-8">
+        <?php
+        echo $this->headTitle($this->web['config']['name']);
+
+        echo $this->headMeta()
+            ->appendName('viewport', 'width=device-width, initial-scale=1.0')
+            ->appendHttpEquiv('X-UA-Compatible', 'IE=edge');
+
+        ($this->web['config']['isTest'] ? $ext = '' : $ext = '.min');
+
+        echo $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => '/img/favicon.svg'])
+            ->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css')
+            ->prependStylesheet('/css/users' . $ext . '.css')
+            ->prependStylesheet('//cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css')
+        ?>
+
+        <script async src="https://www.googletagmanager.com/gtag/js?id=<?= $this->web['config']['analytics'] ?>"></script>
+        <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","<?= $this->web['config']['analytics'] ?>");</script>
+    </head>
+    <body>
+        <script>window.fbAsyncInit=function(){FB.init({appId:"<?= $this->web['config']['facebookAppId'] ?>",cookie:!0,xfbml:!0,version:"v11.0"}),FB.AppEvents.logPageView()},function(a,b,c){var d,e=a.getElementsByTagName(b)[0];a.getElementById(c)||(d=a.createElement(b),d.id=c,d.src="https://connect.facebook.net/en_US/sdk.js",e.parentNode.insertBefore(d,e))}(document,"script","facebook-jssdk");</script>
+
+        <section>
+            <div class="container d-flex flex-column">
+                <?= $this->content ?>
+            </div>
+        </section>
+
+        <?= $this->inlineScript()
+            ->prependFile('/js/users' . $ext . '.js')
+            ->prependFile('//cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js')
+            ->prependFile('//cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.slim.js')
+            ->prependFile('//apis.google.com/js/platform.js');
+        ?>
+    </body>
+
+</html>

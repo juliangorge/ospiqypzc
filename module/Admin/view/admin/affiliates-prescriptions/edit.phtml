@@ -1,0 +1,143 @@
+<div class="row">
+	<div class="col-md-8 mx-auto">
+		<section class="card card-cascade narrower my-3">
+		    <div class="row">
+		        <div class="col-md-12">
+		            <div class="card-header py-3 gradient-card-header btn-elegant">
+		            	<h5 class="mb-0">Editar <?= $this->title ?> <small>(Doc: <?= $this->item->getDocumentId(); ?>)</small></h5>
+		            </div>
+		            <div class="card-body card-body-cascade">
+		            <?php
+					$form = $this->form;
+					$form->prepare();
+					$form->setAttribute('action', '/admin/affiliates_prescriptions/edit/' . $this->item->getId());
+					$form->setAttribute('method', 'post');
+					echo $this->form()->openTag($form);
+					?>
+
+		    			<div class="row">
+							<div class="col-md-3 mb-4">
+								<?php 
+								$form->get('dni')->setAttributes(['readonly' => 'readonly']);
+								echo $this->formRow($form->get('dni'))
+								?>
+
+							</div>
+							
+							<div class="col-md-3 mb-4">
+								<?= $this->formRow($form->get('fullname')) ?>
+
+							</div>
+
+							<div class="col-md-3 mb-4">
+								<?= $this->formRow($form->get('gender_id')) ?>
+
+							</div>
+
+							<div class="col-md-3 mb-4">
+								<?= $this->formRow($form->get('age')) ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('professional_id')) ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('appointment_date')) ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('first_medication')); ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4"></div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('second_medication')); ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('third_medication')); ?>
+
+							</div>
+
+							<div class="col-md-12 mb-4">
+								<?php 
+								echo $this->formHidden($form->get('region_id'));
+
+								echo $this->formHidden($form->get('first_medication_id'));
+								echo $this->formHidden($form->get('second_medication_id'));
+								echo $this->formHidden($form->get('third_medication_id'));
+								echo $this->formRow($form->get('submit'));
+								?>
+
+							</div>
+						</div>
+						<?= $this->form()->closeTag() ?>
+
+					</div>
+		        </div>
+		    </div>
+		</section>
+	</div>
+</div>
+
+<?php
+$this->inlineScript()->prependFile('//ajax.googleapis.com/ajax/libs/jqueryui/1.13.1/jquery-ui.min.js');
+$this->inlineScript()->captureStart();
+	echo <<<JS
+
+		$('#fullname').on('keydown paste focus mousedown', function(e){
+	        if(e.keyCode != 9) e.preventDefault();
+	    });
+
+	    $('#dni').keyup(function(){
+	    	if($(this).val() < 6) return;
+
+	    	$.getJSON('/admin/affiliates/get-total-by-dni/' + $(this).val(), function(data){
+	    		if(data.length > 0){
+	    			$('#fullname').val(data[0].firstname + ' ' + data[0].lastname);
+	    			$('#region_id').val(data[0].region_id);
+	    		}else{
+	    			$('#fullname').val('');
+	    			$('#region_id').val('');
+	    		}
+	    	});
+	    });
+
+		$('.medication').autocomplete({
+			multiple: false,
+			source: function(request, response){
+				if($('region_id').val() == '') return [];
+
+				$.ajax({
+					url: '/admin/vademecum/get-by-region-id/' + $('#region_id').val(),
+					type: 'GET',
+					dataType: 'json',
+					data: {
+						search: request.term
+					},
+					success:function(data){
+						response($.map(data, function (item) {
+							return {
+								id: item.id,
+								value: item.label
+							}
+						}))
+					}
+				})
+			},
+			select: function(event, ui){
+				$(this).val(ui.item.value);
+				$('#' + $(this).attr('id') + '_id').val(ui.item.id);
+			}
+		});
+
+	JS;
+$this->inlineScript()->captureEnd();
+?>

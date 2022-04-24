@@ -1,0 +1,103 @@
+<?= $this->doctype() ?>
+
+<html lang="es" ng-app="adminApp">
+<head>
+    <meta charset="utf-8">
+<?php 
+    echo $this->headTitle('Admin ' . $this->web['config']['name'])->setSeparator(' | ')->setAutoEscape(false);
+    echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1, shrink-to-fit=no')->appendHttpEquiv('X-UA-Compatible', 'IE=edge');
+
+    echo $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => '/img/favicon.png'])
+        ->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css')
+        ->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/css/bootstrap.min.css')
+        ->prependStylesheet('/css/dashboard.min.css')
+        ->prependStylesheet('/css/sb-admin.min.css');
+
+?>
+</head>
+<body>
+    <nav class="navbar navbar-expand navbar-dark bg-dark static-top">
+        <a class="navbar-brand mr-1" href="/admin">Admin - <?= $this->web['config']['name']; ?></a>
+
+        <button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <ul class="navbar-nav ml-auto mr-0 mr-md-3 my-2 my-md-0">
+            <li class="nav-item dropdown no-arrow mx-1">
+                <a class="nav-link dropdown-toggle" href="#" id="alertsDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-bell fa-fw"></i>
+                    <span class="badge badge-danger"></span>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="alertsDropdown"></div>
+            </li>
+            <li class="nav-item dropdown no-arrow">
+                <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="fas fa-user-circle fa-fw"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
+                    <a class="dropdown-item" href="#">Rango: <?= $this->identity()['rank_name'] ?></a>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="/logout">Cerrar sesión</a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    <div id="wrapper">
+        <ul class="sidebar navbar-nav sidebar-dark" style="background:#212121">
+            <?= $this->navigation('Laminas\Navigation\Admin')->menu()->setPartial('admin/partials/navigation.phtml')
+                ->renderPartialWithParams(['acl_config' => $this->web['config']['acl']]); ?>
+        </ul>
+
+        <div id="content-wrapper">
+            <div class="container-fluid">
+                <?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
+
+                <?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
+
+                <?= $this->flashMessenger()->render('info', ['alert', 'alert-info']); ?>
+
+                <?= $this->content; ?>
+
+            </div>
+            <footer class="sticky-footer">
+                <div class="container my-auto">
+                    <div class="copyright text-center my-auto">
+                        <span>Versión <?= $this->web['config']['version'] ?></span>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <!--<section style="display:none">
+        <div class="modal fade" id="modalConfirmDelete" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-sm modal-notify modal-danger" role="document">
+                <div class="modal-content text-center">
+                    <div class="modal-header d-flex justify-content-center">
+                        <p class="heading">¿Estás seguro?</p>
+                    </div>
+                    <div class="modal-body">
+                        <i class="fa fa-times fa-4x animated rotateIn"></i>
+                    </div>
+                    <div class="modal-footer flex-center">
+                        <a type="button" class="btn btn-outline-danger" data-dismiss="modal">No</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>-->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-animate.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-animate.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-sanitize.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+    <script src="/js/angular/admin<?= ($this->web['config']['isTest'] ? '' : '.min') ?>.js"></script>
+    <script src="/js/admin<?= ($this->web['config']['isTest'] ? '' : '.min') ?>.js"></script>
+
+    <?= $this->inlineScript(); ?>
+
+</body>
+</html>

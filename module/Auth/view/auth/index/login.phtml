@@ -1,0 +1,78 @@
+<?php $this->headTitle('Iniciar sesión | '); ?>
+<div class="row align-items-center justify-content-center min-vh-100">
+    <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
+        <div>
+            <div class="mb-3 text-center">
+                <h6 class="h3 mb-1">Iniciar sesión</h6>
+            </div>
+            <span class="clearfix"></span>
+
+
+            <?php 
+            if($this->isLoginError){
+                echo '<div class="alert alert-danger text-center" role="alert">Contraseña incorrecta</div>';
+            }else if(isset($_GET['from'])){
+                if($_GET['from'] == 'add'){
+                    echo '<div class="alert alert-success text-center" role="alert">Felicitaciones, ahora inicia sesión!</div>';
+                }
+            }
+
+            ?>
+
+            <form method="post">
+                <div class="form-group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-at-sign">
+                                    <circle cx="12" cy="12" r="4"></circle>
+                                    <path d="M16 8v5a3 3 0 0 0 6 0v-1a10 10 0 1 0-3.92 7.94"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <?= $this->formElement($this->form->get('email')); ?>
+
+                    </div>
+                </div>
+                <div class="form-group mb-0">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-key">
+                                    <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+                                </svg>
+                            </span>
+                        </div>
+                        <?= $this->formElement($this->form->get('password')); ?>
+
+                    </div>
+                </div>
+                <div class="form-group mx-2 my-3">
+                    <div class="d-flex align-items-center justify-content-between">
+                        <div>
+                            <?= $this->formLabel($this->form->get('remember_me')); ?>
+
+                        </div>
+                        <div>
+                            <?= $this->formElement($this->form->get('remember_me')); ?>
+
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <?= $this->formElement($this->form->get('redirect_url')); ?>
+                    <?= $this->formElement($this->form->get('csrf')) ?>
+                    <?= $this->formElement($this->form->get('submit')); ?>
+                </div>
+            </form>
+        </div>
+        <?php /*
+        <div class="mt-4 text-center">
+            <small>No tiene cuenta?</small> 
+            <a href="/register<?= $_GET['redirectUrl'] ? '?redirectUrl=' . $_GET['redirectUrl'] : ''; ?>" class="small font-weight-bold">Registarse</a>
+        </div>
+        <div class="text-center">
+            <a href="/reset-password" class="small font-weight-bold">Recuperar cuenta</a>
+        </div>*/ ?>
+    </div>
+</div>

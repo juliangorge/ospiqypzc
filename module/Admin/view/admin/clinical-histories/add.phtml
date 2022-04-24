@@ -1,0 +1,96 @@
+<div class="row">
+	<div class="col-md-8 mx-auto">
+		<section class="card card-cascade narrower my-3">
+		    <div class="row">
+		        <div class="col-md-12">
+		            <div class="card-header py-3 gradient-card-header btn-elegant">
+		            	<h5 class="mb-0">Agregar <?= $this->title ?></h5>
+		            </div>
+		            <div class="card-body card-body-cascade">
+		            <?php
+					$form = $this->form;
+					$form->prepare();
+					$form->setAttribute('action', '/admin/clinical_histories/add');
+					$form->setAttribute('method', 'post');
+					echo $this->form()->openTag($form);
+					?>
+		    			<div class="row">
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('dni')) ?>
+
+							</div>
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('fullname')) ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('file_number')) ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4"></div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('diagnose')) ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('observations')) ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('treatment')) ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('date')) ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('professional_id')) ?>
+
+							</div>
+
+							<div class="col-md-12">
+								<?= $this->formRow($form->get('submit')) ?>
+
+							</div>
+						</div>
+						<?= $this->form()->closeTag() ?>
+
+					</div>
+		        </div>
+		    </div>
+		</section>
+	</div>
+</div>
+
+
+<?php 
+$this->inlineScript()->captureStart();
+	echo <<<JS
+
+		$('#fullname').on('keydown paste focus mousedown', function(e){
+	        if(e.keyCode != 9) e.preventDefault();
+	    });
+
+	    $('#dni').keyup(function(){
+	    	if($(this).val() < 6) return;
+
+	    	$.getJSON('/admin/affiliates/get-total-by-dni/' + $(this).val(), function(data){
+	    		if(data.length){
+	    			$('#fullname').val(data[0].firstname + ' ' + data[0].lastname);
+	    		}else{
+	    			$('#fullname').val('');
+	    		}
+	    	});
+	    });
+
+	JS;
+$this->inlineScript()->captureEnd();
+?>

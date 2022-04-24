@@ -1,0 +1,78 @@
+<div class="row">
+	<div class="col-md-12 mx-auto">
+		<section class="card card-cascade narrower my-3 mb-5" ng-controller="GenericController" ng-init="init('affiliates_authorizations')">
+			<div class="modal fade" id="defautModal" tabindex="-1" role="dialog" aria-labelledby="defautModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="defautModalLabel">¿Qué acción desea realizar?</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							Atención: Esta acción no se puede deshacer.
+						</div>
+						<div class="modal-footer">
+					        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancelar</button>
+					        <a href="/admin/affiliates_authorizations/authorizing/{{defaultItem}}?is_approved=true" class="btn btn-success btn-sm">Autorizar</a>
+					        <a href="/admin/affiliates_authorizations/authorizing/{{defaultItem}}?is_approved=false" class="btn btn-danger btn-sm">NO Autorizar</a>
+			      		</div>
+			    	</div>
+			  	</div>
+			</div>
+
+		  	<div class="row">
+		    	<div class="col-md-12">
+		      		<div class="card-header py-3 justify-content-between d-flex">
+		        		<h5 class="mb-0 line-height-2"><?= $this->title ?></h5>
+		        		<div class="w-auto">
+		        			<a class="btn btn-success disabled" href="/admin/affiliates_authorizations/download"><i class="fa fa-download"></i></a>
+		            	</div>
+		      		</div>
+		      		<div class="card-body card-body-cascade">
+		        		<div class="row">
+		          			<div class="col-md-12 mb-4 table-responsive" ng-cloak>
+		          				<input type="text" ng-model="searchFilter" class="form-control mb-3" placeholder="Filtrar">
+		            			<table class="table">
+					              	<thead>
+					                	<tr>
+					                		<th><small>Fecha</small></th>
+					                		<th><small>Afiliado</small></th>
+						                  	<th><small>Administrativo</small></th>
+						                  	<th><small>¿Aprobado?</small></th>
+						                  	<th><small>Tipo de Autorización</small></th>
+						                  	<th><small>Opciones</small></th>
+					                	</tr>
+									</thead>
+									<tbody>
+						                <tr ng-repeat="item in filtered = (items | filter: searchFilter) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy: sorted">
+						                	<td><small>{{item.date_created.date | cmdate: 'dd/MM/yyyy HH:mm'}}</small></td>
+						                	<td><small>{{item.affiliate_fullname}} (DNI: {{item.affiliate_dni}})</small></td>
+											<td><small>{{item.user_fullname ? item.user_fullname : '-'}}</small></td>
+											<td><small>
+												<span class="badge badge-{{item.is_approved ? 'success' : 'danger'}}">{{item.is_approved ? 'Sí' : 'No'}}</span> - {{item.authorization_date.date | cmdate: 'dd/MM/yyyy HH:mm'}}</small></td>
+											<td><small>{{item.type_of_authorization}}</small></td>
+						                	<td>
+							                    <a class="btn btn-success btn-sm disabled" href="/admin/affiliates_authorizations/download/{{item.id}}">
+							                    	<i class="fa fa-download"></i>
+							                    </a>
+
+							                    <button type="button" class="btn btn-primary {{item.is_approved ? 'disabled' : ''}} btn-sm" data-toggle="modal" data-target="#defautModal" ng-click="setDefaultItem(item.id)">
+							                    	<i class="fas fa-pencil-alt"></i>
+							                    </button>
+						                	</td>
+						                </tr>
+					              	</tbody>
+					            </table>
+		            			<div class="pages">
+		              				<ul uib-pagination ng-change="pageChanged()" previous-text="&laquo;" next-text="&raquo;" items-per-page="entryLimit" total-items="totalItems" max-size="noOfPages(filtered)" ng-model="currentPage"></ul>
+		            			</div>
+				          	</div>
+				        </div>
+			      	</div>
+		    	</div>
+		  	</div>
+		</section>
+	</div>
+</div>

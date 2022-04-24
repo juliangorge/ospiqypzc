@@ -1,0 +1,45 @@
+<div class="row">
+	<div class="col-md-8 mx-auto">
+		<section class="card card-cascade narrower my-3">
+		    <div class="row">
+		        <div class="col-md-12">
+		            <div class="card-header py-3 gradient-card-header btn-elegant">
+		            	<h5 class="mb-0">Agregar <?= $this->title ?></h5>
+		            </div>
+		            <div class="card-body card-body-cascade">
+		            <?php
+					$form = $this->form;
+					$form->prepare();
+					$form->setAttribute('action', '/admin/vademecum/add');
+					$form->setAttribute('method', 'post');
+					echo $this->form()->openTag($form);
+					?>
+
+		    			<div class="row">
+							<div class="col-md-12 mb-4">
+								<?= $this->formRow($form->get('drug')) ?>
+
+							</div>
+							<div class="col-md-12 mb-4">
+								<?= $this->formRow($form->get('presentation')) ?>
+
+							</div>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('region_id')) ?>
+
+							</div>
+
+							<div class="col-md-12">
+								<?= $this->formRow($form->get('submit')) ?>
+
+							</div>
+						</div>
+						<?= $this->form()->closeTag() ?>
+
+					</div>
+		        </div>
+		    </div>
+		</section>
+	</div>
+</div>

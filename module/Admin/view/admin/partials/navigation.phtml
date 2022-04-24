@@ -1,0 +1,43 @@
+<?php
+$container = $this->container;
+
+$config = [];
+$config['acl'] = $acl_config;
+
+$acl = new \Auth\Acl\Acl($config);
+foreach ($container as $page):
+	if(!$this->navigation()->accept($page)) continue;
+
+	/* @var $page Laminas\Navigation\Page\Mvc */
+	$hasChildren = $page->hasPages();
+
+	if($this->identity() == NULL) continue;
+
+	if(!$acl->isAllowed($this->identity()['rank_level'], $page->get('resource'), $page->get('privilege'))) continue;
+
+	if(!$hasChildren):
+	?>
+		<li class="nav-item  <?php if($page->isActive()) echo 'active'; ?>">
+			<a href="<?= $page->getHref() ?>" class="nav-link">
+				<i class="fa fa-<?= $page->get('icon') ?>"></i>&nbsp;&nbsp;<span><?= $page->getLabel() ?></span>
+			</a>
+		</li>
+	<?php
+	else:
+		$access = false;
+		foreach ($page->getPages() as $child) {
+			if($this->navigation()->accept($child) && $child->get("separator") !== true)
+				$access = true;
+		}
+		if($access):
+	?>
+		<li class="nav-item  <?php if($page->isActive()) echo 'active'; ?>">
+			<a href="<?= $page->getHref() ?>" class="nav-link">
+				<i class="fa fa-<?= $page->get('icon') ?>"></i>&nbsp;&nbsp;<span><?= $page->getLabel() ?></span>
+			</a>
+		</li>
+	<?php
+		endif;
+	endif;
+endforeach;
+?>

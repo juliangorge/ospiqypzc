@@ -1,0 +1,37 @@
+<?php if($this->pageCount): ?>
+<div class="box-footer clearfix">
+<ul class="pagination pagination-sm no-margin pull-right">
+<?php if(isset($this->previous)): ?>
+<li>
+<a href="<?php echo $this->url($this->route,['controller'=>$this->controller]);?>?p=<?php echo $this->previous; ?>">&laquo;</a>
+</li>
+<?php else: ?>
+<li class="disabled">
+<a>&laquo;</a>
+</li>
+<?php endif; foreach ($this->pagesInRange as $page): if ($page != $this->current): ?>
+<li>
+<a href="<?php echo $this->url($this->route,['controller'=>$this->controller]);?>?p=<?php echo $page; ?>">
+<?php echo $page; ?>
+</a>
+</li>
+<?php else: ?>
+<li class="active">
+<a>
+<?php echo $page; ?>
+</a>
+</li>
+<?php endif; ?>
+<?php endforeach; ?>
+<?php if(isset($this->next)): ?>
+<li>
+<a href="<?php echo $this->url($this->route,['controller'=>$this->controller]);?>?p<?php echo $this->next;?>">&raquo;</a>
+</li>
+<?php else: ?>
+<li class="disabled">
+<a>&raquo;</a>
+</li>
+<?php endif; ?>
+</ul>
+</div>
+<?php endif; ?>

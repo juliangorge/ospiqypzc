@@ -1,0 +1,36 @@
+<?= $this->headTitle('Reestablecer contraseña | '); ?>
+<div class="row align-items-center justify-content-center min-vh-100">
+    <div class="col-md-6 col-lg-5 col-xl-4 py-6 py-md-0">
+        <div>
+            <div class="mb-3">
+                <h6 class="h3 mb-1">Reestablecer contraseña</h6>
+            </div>
+            <span class="clearfix"></span>
+
+			<?php if ($id == 'sent'): ?>
+			<p>
+				Las instrucciones para reestablecer tu contraseña han sido enviadas a tu email.
+			</p>
+			<p>
+				Revisa tu casilla de No deseado / SPAM o aguarde unos minutos.
+			</p>
+			<?php elseif ($id == 'invalid-email'): ?>
+			<p>
+			    El email no coincide con nuestro registro.
+			</p>
+			<?php elseif ($id == 'set'): ?>
+			<p>
+			    La nueva contraseña ha sido establecida correctamente.
+			</p>
+			<p>
+			    Volver a la <a href="<?= $this->url('login'); ?>">página de inicio</a>.
+			</p>
+			<?php elseif ($id == 'failed'): ?>
+
+			    La clave de restablecimiento es inválida o ha expirado.<br>
+			    Vuelve a intentar <a href="<?= $this->url('reset-password') ?>">aquí</a>.
+			</p>
+			<?php endif; ?>
+		</div>
+	</div>
+</div>
