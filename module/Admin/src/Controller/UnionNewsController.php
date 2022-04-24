@@ -27,8 +27,8 @@ class UnionNewsController extends AbstractActionController
             'keyFilePath' => './ospiqyp-firebase-adminsdk-dx723-21cf738448.json'
         ]);
 
-        $this->collection = 'union-news';
-        $this->route = 'admin/union-news';
+        $this->collection = 'union_news';
+        $this->route = 'admin/union_news';
     }
 
     public function indexAction(){

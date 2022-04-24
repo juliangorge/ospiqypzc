@@ -10,7 +10,6 @@ return [
                 'icon'       => 'tachometer-alt',
 
                 'resource'   => 'Admin\Controller\IndexController',
-                'privilege'  => 'index',
             ],
             [
                 'label'      => 'Noticias',
@@ -19,16 +18,14 @@ return [
                 'icon'       => 'file-alt',
 
                 'resource'   => 'Admin\Controller\NewsController',
-                'privilege'  => 'index',
             ],
             [
-                'label'      => 'Noticias sindicales',
-                'route'      => 'admin/union-news',
+                'label'      => 'Noticias Sindicales',
+                'route'      => 'admin/union_news',
                 'action'     => 'index',
                 'icon'       => 'file-alt',
 
                 'resource'   => 'Admin\Controller\UnionNewsController',
-                'privilege'  => 'index',
             ],
             [
                 'label'      => 'Afiliados',
@@ -37,7 +34,6 @@ return [
                 'icon'       => 'users-cog',
 
                 'resource'   => 'Admin\Controller\AffiliatesController',
-                'privilege'  => 'index',
             ],
             [
                 'label'      => 'Familiares',
@@ -46,7 +42,6 @@ return [
                 'icon'       => 'users',
 
                 'resource'   => 'Admin\Controller\AffiliatesFamilyController',
-                'privilege'  => 'index',
             ],
             [
                 'label'      => 'Prescripciones',
@@ -55,7 +50,6 @@ return [
                 'icon'       => 'syringe',
 
                 'resource'   => 'Admin\Controller\AffiliatesPrescriptionsController',
-                'privilege'  => 'index',
             ],
             [
                 'label'      => 'Autorizaciones',
@@ -64,7 +58,6 @@ return [
                 'icon'       => 'file',
 
                 'resource'   => 'Admin\Controller\AffiliatesAuthorizationsController',
-                'privilege'  => 'index',
             ],
             [
                 'label'      => 'Profesionales',
@@ -73,7 +66,6 @@ return [
                 'icon'       => 'user-tie',
 
                 'resource'   => 'Admin\Controller\ProfessionalsController',
-                'privilege'  => 'index',
             ],
             [
                 'label'      => 'Historias Clínicas',
@@ -82,7 +74,6 @@ return [
                 'icon'       => 'pen',
 
                 'resource'   => 'Admin\Controller\ClinicalHistoriesController',
-                'privilege'  => 'index',
             ],
             [
                 'label'      => 'Vademecum',
@@ -91,7 +82,6 @@ return [
                 'icon'       => 'capsules',
 
                 'resource'   => 'Admin\Controller\VademecumController',
-                'privilege'  => 'index',
             ],
             [
                 'label'      => 'Usuarios',
@@ -100,7 +90,6 @@ return [
                 'icon'       => 'users',
 
                 'resource'   => 'Admin\Controller\UsersController',
-                'privilege'  => 'index',
             ],
         ],
     ],

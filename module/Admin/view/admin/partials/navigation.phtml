@@ -13,7 +13,7 @@ foreach ($container as $page):
 
 	if($this->identity() == NULL) continue;
 
-	if(!$acl->isAllowed($this->identity()['rank_level'], $page->get('resource'), $page->get('privilege'))) continue;
+	if(!$acl->isAllowed($this->identity()['rank_level'], $page->get('resource'), $page->get('index'))) continue;
 
 	if(!$hasChildren):
 	?>

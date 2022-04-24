@@ -39,10 +39,10 @@ return [
                             ],
                         ],
                     ],
-                    'union-news' => [
+                    'union_news' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/union-news[/:action[/:id]]',
+                            'route' => '/union_news[/:action[/:id]]',
                             'defaults' => [
                                 'controller'    => Controller\UnionNewsController::class,
                                 'action'        => 'index',

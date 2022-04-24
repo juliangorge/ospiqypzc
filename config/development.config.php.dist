@@ -9,7 +9,7 @@
 return [
     // Development time modules
     'modules' => [
-        'Laminas\DeveloperTools',
+        //'Laminas\DeveloperTools',
         'Laminas\ApiTools\Admin',
         'Laminas\ApiTools\Versioning',
         'Laminas\ApiTools\ApiProblem',
