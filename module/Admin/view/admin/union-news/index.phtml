@@ -1,6 +1,6 @@
 <div class="row">
 	<div class="col-md-12 mx-auto">
-		<section class="card card-cascade narrower my-3 mb-5" ng-controller="GenericController" ng-init="init('news')">
+		<section class="card card-cascade narrower my-3 mb-5" ng-controller="GenericController" ng-init="init('union_news')">
 			<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
 				<div class="modal-dialog" role="document">
 					<div class="modal-content">
@@ -15,7 +15,7 @@
 						</div>
 						<div class="modal-footer">
 					        <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">Cancelar</button>
-					        <a href="/admin/news/delete/{{defaultItem}}" class="btn btn-danger btn-sm">Confirmar</a>
+					        <a href="/admin/union_news/delete/{{defaultItem}}" class="btn btn-danger btn-sm">Confirmar</a>
 			      		</div>
 			    	</div>
 			  	</div>
@@ -26,8 +26,8 @@
 		      		<div class="card-header py-3 justify-content-between d-flex">
 		        		<h5 class="mb-0 line-height-2"><?= $this->title ?></h5>
 		        		<div class="w-auto">
-		        			<a class="btn btn-success disabled" href="/admin/news/download"><i class="fa fa-download"></i></a>
-		            		<a class="btn btn-primary" href="/admin/news/add"><i class="far fa-edit"></i></a>
+		        			<a class="btn btn-success disabled" href="/admin/union_news/download"><i class="fa fa-download"></i></a>
+		            		<a class="btn btn-primary" href="/admin/union_news/add"><i class="far fa-edit"></i></a>
 		            	</div>
 		      		</div>
 		      		<div class="card-body card-body-cascade">
@@ -47,10 +47,10 @@
 						                	<td width="60%"><small>{{item.title + ' ' + item.lastname}}</small></td>
 						                	<td width="30%"><small>{{item.date.date | cmdate: 'dd/MM/yyyy'}}</small></td>
 						                	<td>
-							                    <a class="btn btn-success btn-sm disabled" href="/admin/news/download/{{item.id}}">
+							                    <a class="btn btn-success btn-sm disabled" href="/admin/union_news/download/{{item.id}}">
 							                    	<i class="fa fa-download"></i>
 							                    </a>
-						                		<a class="btn btn-primary btn-sm" href="/admin/news/edit/{{item.id}}">
+						                		<a class="btn btn-primary btn-sm" href="/admin/union_news/edit/{{item.id}}">
 							                    	<i class="far fa-edit"></i>
 							                    </a>
 							                    
