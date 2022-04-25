@@ -31,8 +31,8 @@ class News
     /** @ORM\Column(name="piece_of_news_url", type="string", length=120, nullable=false) */
     protected $piece_of_news_url;
 
-    /** @ORM\Column(name="documentId", type="string", unique=true,nullable=true) */
-    protected $documentId;
+    /** @ORM\Column(name="document_id", type="string", unique=true,nullable=true) */
+    protected $document_id;
 
     public function getArrayCopy(){
         return [
@@ -42,7 +42,7 @@ class News
             'date' => $this->date->format('Y-m-d'),
             'picture_url' => $this->picture_url,
             'piece_of_news_url' => $this->piece_of_news_url,
-            'documentId' => $this->documentId,
+            'document_id' => $this->document_id,
         ];
     }
 
@@ -96,7 +96,7 @@ class News
             $this->piece_of_news_url = $array['piece_of_news_url'];
         }
 
-        $this->documentId = $array['documentId'];
+        $this->document_id = $array['document_id'];
     }
 
     public function toFirebase(){
@@ -116,12 +116,12 @@ class News
     public function getDate(){ return $this->date; }
     public function getPictureUrl(){ return $this->picture_url; }
     public function getPieceOfNewsUrl(){ return $this->piece_of_news_url; }
-    public function getDocumentId(){ return $this->documentId; }
+    public function getDocumentId(){ return $this->document_id; }
 
     public function setTitle($v){ $this->title = $v; }
     public function setBody($v){ $this->body = $v; }
     public function setDate($v){ $this->date = $v; }
     public function setPictureUrl($v){ $this->picture_url = $v; }
     public function setPieceOfNewsUrl($v){ $this->piece_of_news_url = $v; }
-    public function setDocumentId($v){ $this->documentId = $v; }
+    public function setDocumentId($v){ $this->document_id = $v; }
 }
