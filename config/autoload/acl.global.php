@@ -24,7 +24,7 @@ return [
 					'all' => ['administracion']
 				],
 				'Admin\Controller\AffiliatesFamilyController' => [
-					'all' => ['gerencia']
+					'all' => ['administracion', 'gerencia']
 				],
 				'Admin\Controller\AffiliatesPrescriptionsController' => [
 					'all' => ['gerencia', 'medico']
