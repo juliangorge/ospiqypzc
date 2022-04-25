@@ -43,6 +43,7 @@ return [
 
                 'resource'   => 'Admin\Controller\AffiliatesFamilyController',
             ],
+            /*
             [
                 'label'      => 'Prescripciones',
                 'route'      => 'admin/affiliates_prescriptions',
@@ -51,6 +52,7 @@ return [
 
                 'resource'   => 'Admin\Controller\AffiliatesPrescriptionsController',
             ],
+            */
             [
                 'label'      => 'Autorizaciones',
                 'route'      => 'admin/affiliates_authorizations',
@@ -75,6 +77,7 @@ return [
 
                 'resource'   => 'Admin\Controller\ClinicalHistoriesController',
             ],
+            /*
             [
                 'label'      => 'Vademecum',
                 'route'      => 'admin/vademecum',
@@ -83,6 +86,7 @@ return [
 
                 'resource'   => 'Admin\Controller\VademecumController',
             ],
+            */
             [
                 'label'      => 'Usuarios',
                 'route'      => 'admin/users',

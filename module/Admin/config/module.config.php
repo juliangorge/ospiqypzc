@@ -69,6 +69,7 @@ return [
                             ],
                         ],
                     ],
+                    /*
                     'affiliates_prescriptions' => [
                         'type' => Segment::class,
                         'options' => [
@@ -79,6 +80,7 @@ return [
                             ],
                         ],
                     ],
+                    */
                     'affiliates_authorizations' => [
                         'type' => Segment::class,
                         'options' => [
@@ -109,6 +111,7 @@ return [
                             ],
                         ],
                     ],
+                    /*
                     'vademecum' => [
                         'type' => Segment::class,
                         'options' => [
@@ -118,7 +121,7 @@ return [
                                 'action'        => 'index',
                             ],
                         ],
-                    ],
+                    ],*/
                     'users' => [
                         'type' => Segment::class,
                         'options' => [
