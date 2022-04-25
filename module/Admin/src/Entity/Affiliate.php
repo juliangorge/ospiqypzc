@@ -89,6 +89,7 @@ class Affiliate
         $this->phone_number = $array['phone_number'];
         $this->affiliate_type = $array['affiliate_type'];
         $this->affiliate_number = strval($array['affiliate_type']) . '00';
+        $this->region_id = $array['region_id'];
         $this->is_active = $array['is_active'];
     }
 
