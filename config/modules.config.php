@@ -36,6 +36,6 @@ return [
     'DoctrineModule',
     'DoctrineORMModule',
     'API',
-    'Admin',
-    'Auth'
+    #'Admin',
+    #'Auth'
 ];
