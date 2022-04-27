@@ -94,7 +94,7 @@ class Module
 
         $mail = new PHPMailer(true);
         $mail->isSMTP();
-        $mail->SMTPDebug = 1;
+        //$mail->SMTPDebug = 1;
         $mail->Host = $config['exceptionHost'];
         $mail->SMTPAuth = true;
         $mail->Username = $config['exceptionEmail'];

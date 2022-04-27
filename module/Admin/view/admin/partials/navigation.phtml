@@ -4,6 +4,8 @@ $container = $this->container;
 $config = [];
 $config['acl'] = $acl_config;
 
+//if($acl_config == NULL) return;
+
 $acl = new \Auth\Acl\Acl($config);
 foreach ($container as $page):
 	if(!$this->navigation()->accept($page)) continue;

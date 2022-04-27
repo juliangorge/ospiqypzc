@@ -56,6 +56,7 @@ class AuthManager
 
     public function filterAccess($controllerName, $actionName)
     {
+
         $mode = isset($this->config['access_filter']['options']['mode']) ? $this->config['access_filter']['options']['mode'] : 'restrictive';
         if ($mode != 'restrictive' && $mode != 'permissive')
             throw new \Exception('Modo de filtro de acceso inválido (determine un modo restrictive/permissive)');
@@ -83,9 +84,7 @@ class AuthManager
         }
 
         $acl = new \Auth\Acl\Acl($this->config);
-        
         if(!$acl->hasResource($controllerName)) throw new \Exception('Resource ' . $controllerName . ' not defined');
-        
         return $acl->isAllowed($this->authService->getIdentity()['rank_level'], $controllerName, $actionName);
     }
 }

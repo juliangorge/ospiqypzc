@@ -81,6 +81,16 @@ return [
                         ],
                     ],
                     */
+                    'affiliates_claims' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/affiliates_claims[/:action[/:id]]',
+                            'defaults' => [
+                                'controller'    => Controller\AffiliatesClaimsController::class,
+                                'action'        => 'index',
+                            ],
+                        ],
+                    ],
                     'affiliates_authorizations' => [
                         'type' => Segment::class,
                         'options' => [
@@ -101,6 +111,7 @@ return [
                             ],
                         ],
                     ],
+                    /*
                     'clinical_histories' => [
                         'type' => Segment::class,
                         'options' => [
@@ -111,7 +122,6 @@ return [
                             ],
                         ],
                     ],
-                    /*
                     'vademecum' => [
                         'type' => Segment::class,
                         'options' => [
@@ -145,6 +155,7 @@ return [
             Controller\AffiliatesFamilyController::class => Controller\Factory\ControllerFactory::class,
             Controller\AffiliatesPrescriptionsController::class => Controller\Factory\ControllerFactory::class,
             Controller\AffiliatesAuthorizationsController::class => Controller\Factory\ControllerFactory::class,
+            Controller\AffiliatesClaimsController::class => Controller\Factory\ControllerFactory::class,
             Controller\ProfessionalsController::class => Controller\Factory\ControllerFactory::class,
             Controller\ClinicalHistoriesController::class => Controller\Factory\ControllerFactory::class,
             Controller\VademecumController::class => Controller\Factory\ControllerFactory::class,

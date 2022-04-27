@@ -1,26 +1,10 @@
 <?php
 
-/**
- * @see       https://github.com/laminas-api-tools/api-tools-skeleton for the canonical source repository
- * @copyright https://github.com/laminas-api-tools/api-tools-skeleton/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas-api-tools/api-tools-skeleton/blob/master/LICENSE.md New BSD License
- */
-
 return [
     // Development time modules
     'modules' => [
-        //'Laminas\DeveloperTools',
+        'Laminas\DeveloperTools',
         'Laminas\ApiTools\Admin',
-        'Laminas\ApiTools\Versioning',
-        'Laminas\ApiTools\ApiProblem',
-        'Laminas\ApiTools\ContentNegotiation',
-        'Laminas\ApiTools\Rpc',
-        'Laminas\ApiTools\MvcAuth',
-        'Laminas\ApiTools\Hal',
-        'Laminas\ApiTools\Rest',
-        'Laminas\ApiTools\ContentValidation',
-        'Laminas\ApiTools\Configuration',
-        'Laminas\ApiTools',
     ],
     // development time configuration globbing
     'module_listener_options' => [

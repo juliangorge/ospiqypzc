@@ -1,6 +1,7 @@
 <?php
 namespace Admin\Controller;
 
+use Laminas\ApiTools\Admin\Module as AdminModule;
 use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
@@ -18,7 +19,12 @@ class IndexController extends AbstractActionController
         $this->config = $config;
     }
 
-    public function indexAction(){
+    public function indexAction()
+    {
+        /*if (class_exists(AdminModule::class, false)) {
+            return $this->redirect()->toRoute('api-tools/ui');
+        }*/
+        return new ViewModel();
     }
 
     public function disableWebsiteAction(){

@@ -1,0 +1,48 @@
+<div class="row">
+	<div class="col-md-12 mx-auto">
+		<section class="card card-cascade narrower my-3 mb-5" ng-controller="GenericController" ng-init="init('affiliates_claims')">
+		  	<div class="row">
+		    	<div class="col-md-12">
+		      		<div class="card-header py-3 justify-content-between d-flex">
+		        		<h5 class="mb-0 line-height-2"><?= $this->title ?></h5>
+		        		<div class="w-auto">
+		            		<a class="btn btn-primary disabled" href="/admin/affiliates_claims/add"><i class="far fa-edit"></i></a>
+		            	</div>
+		      		</div>
+		      		<div class="card-body card-body-cascade">
+		        		<div class="row">
+		        			<div class="col-md-12 mb-4 table-responsive" ng-cloak>
+		          				<input type="text" ng-model="searchFilter" class="form-control mb-3" placeholder="Filtrar">
+		          				<table class="table">
+					              	<thead>
+					                	<tr>
+						                  	<th><small>Detalle</small></th>
+											<th><small>Sector</small></th>
+											<th><small>Tipo</small></th>
+						                  	<th><small>Opciones</small></th>
+					                	</tr>
+									</thead>
+									<tbody>
+						                <tr ng-repeat="item in filtered = (items | filter: searchFilter) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy: sorted">
+						                	<td><small>{{item.detail}}</small></td>
+											<td><small>{{item.sector}}</small></td>
+											<td><small>{{item.type}}</small></td>
+						                	<td>
+						                		<a class="btn btn-primary btn-sm disabled" href="/admin/affiliates_claims/edit/{{item.id}}">
+							                    	<i class="far fa-edit"></i>
+							                    </a>
+						                	</td>
+						                </tr>
+					              	</tbody>
+					            </table>
+		            			<div class="pages">
+		              				<ul uib-pagination ng-change="pageChanged()" previous-text="&laquo;" next-text="&raquo;" items-per-page="entryLimit" total-items="totalItems" max-size="noOfPages(filtered)" ng-model="currentPage"></ul>
+		            			</div>
+				          	</div>
+				        </div>
+			      	</div>
+		    	</div>
+		  	</div>
+		</section>
+	</div>
+</div>

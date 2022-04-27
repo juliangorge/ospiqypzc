@@ -111,7 +111,7 @@ class AffiliatePrescription
     public function toFirebase(){
         return [
             'id' => $this->id,
-            'dni' => $this->dni,
+            'affiliate_dni' => $this->dni,
             'affiliate_name' => $this->fullname,
             'age' => $this->age,
             'gender_id' => $this->gender_id,

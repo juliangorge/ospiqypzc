@@ -62,6 +62,14 @@ return [
                 'resource'   => 'Admin\Controller\AffiliatesAuthorizationsController',
             ],
             [
+                'label'      => 'Reclamaciones',
+                'route'      => 'admin/affiliates_claims',
+                'action'     => 'index',
+                'icon'       => 'address-book',
+
+                'resource'   => 'Admin\Controller\AffiliatesClaimsController',
+            ],
+            [
                 'label'      => 'Profesionales',
                 'route'      => 'admin/professionals',
                 'action'     => 'index',
@@ -69,6 +77,7 @@ return [
 
                 'resource'   => 'Admin\Controller\ProfessionalsController',
             ],
+            /*
             [
                 'label'      => 'Historias Clínicas',
                 'route'      => 'admin/clinical_histories',
@@ -77,7 +86,6 @@ return [
 
                 'resource'   => 'Admin\Controller\ClinicalHistoriesController',
             ],
-            /*
             [
                 'label'      => 'Vademecum',
                 'route'      => 'admin/vademecum',

@@ -20,6 +20,9 @@ return [
 		],
 		'resources' => [
 			'allow' => [
+				'Laminas\ApiTools\Admin\Controller\App' => [
+					'all' => ['guest']
+				],
 				'Admin\Controller\AffiliatesController' => [
 					'all' => ['administracion']
 				],
@@ -28,6 +31,9 @@ return [
 				],
 				'Admin\Controller\AffiliatesPrescriptionsController' => [
 					'all' => ['gerencia', 'medico']
+				],
+				'Admin\Controller\AffiliatesClaimsController' => [
+					'all' => ['administracion', 'gerencia']
 				],
 				'Admin\Controller\IndexController' => [
 					'all' => ['administracion']
@@ -40,9 +46,6 @@ return [
 				],
 				'Admin\Controller\ProfessionalsController' => [
 					'all' => ['administracion']
-				],
-				'Admin\Controller\ClinicalHistoriesController' => [
-					'all' => ['gerencia', 'medico']
 				],
 				'Admin\Controller\VademecumController' => [
 					'all' => ['gerencia', 'medico']
