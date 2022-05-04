@@ -16,17 +16,15 @@
 		          				<table class="table">
 					              	<thead>
 					                	<tr>
+											<th><small>Título</small></th>
 						                  	<th><small>Detalle</small></th>
-											<th><small>Sector</small></th>
-											<th><small>Tipo</small></th>
 						                  	<th><small>Opciones</small></th>
 					                	</tr>
 									</thead>
 									<tbody>
 						                <tr ng-repeat="item in filtered = (items | filter: searchFilter) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy: sorted">
+											<td><small>{{item.title}}</small></td>
 						                	<td><small>{{item.detail}}</small></td>
-											<td><small>{{item.sector}}</small></td>
-											<td><small>{{item.type}}</small></td>
 						                	<td>
 						                		<a class="btn btn-primary btn-sm disabled" href="/admin/affiliates_claims/edit/{{item.id}}">
 							                    	<i class="far fa-edit"></i>

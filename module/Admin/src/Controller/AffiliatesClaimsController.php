@@ -46,7 +46,7 @@ class AffiliatesClaimsController extends AbstractActionController
             return $this->em->createQuery('SELECT a FROM Admin\Entity\AffiliateClaim a WHERE a.id = :id')->setParameter('id', $id)->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         }else{
             return $this->em->createQuery('
-                SELECT c.id, c.detail, c.sector, c.type
+                SELECT c.id, c.title, c.detail
                 FROM Admin\Entity\AffiliateClaim c 
                 ORDER BY c.id ASC')->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         }
