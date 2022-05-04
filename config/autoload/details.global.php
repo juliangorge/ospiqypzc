@@ -5,7 +5,7 @@ date_default_timezone_set('America/Argentina/Buenos_Aires');
 return [
 	'isTest'			  => true, //$isTest,
 	'debug'				  => false,
-	'version'			  => '3.0.2.' . date('md'), //MMDD
+	'version'			  => '3.0.2.0504', //MMDD
 	'name'				  => 'OSPIQ y P Z-C',
 
 	'exceptionEmail'	  => 'hola@juliangorge.com.ar',
