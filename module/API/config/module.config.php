@@ -142,7 +142,7 @@ return [
                 ],
             ],
             2 => [
-                'name' => 'sector',
+                'name' => 'title',
                 'required' => true,
                 'filters' => [
                     0 => [
@@ -163,39 +163,18 @@ return [
                 ],
             ],
             3 => [
-                'name' => 'type',
-                'required' => true,
-                'filters' => [
-                    0 => [
-                        'name' => \Laminas\Filter\StringTrim::class,
-                    ],
-                    1 => [
-                        'name' => \Laminas\Filter\StripTags::class,
-                    ],
-                ],
-                'validators' => [
-                    0 => [
-                        'name' => \Laminas\Validator\StringLength::class,
-                        'options' => [
-                            'min' => 1,
-                            'max' => '255',
-                        ],
-                    ],
-                ],
-            ],
-            4 => [
                 'name' => 'detail_answer',
                 'required' => false,
                 'filters' => [],
                 'validators' => [],
             ],
-            5 => [
+            4 => [
                 'name' => 'date_answer',
                 'required' => false,
                 'filters' => [],
                 'validators' => [],
             ],
-            6 => [
+            5 => [
                 'name' => 'document_id',
                 'required' => false,
                 'filters' => [
