@@ -284,27 +284,6 @@ return [
                 ],
             ],
             1 => [
-                'name' => 'fullname',
-                'required' => true,
-                'filters' => [
-                    0 => [
-                        'name' => \Laminas\Filter\StringTrim::class,
-                    ],
-                    1 => [
-                        'name' => \Laminas\Filter\StripTags::class,
-                    ],
-                ],
-                'validators' => [
-                    0 => [
-                        'name' => \Laminas\Validator\StringLength::class,
-                        'options' => [
-                            'min' => 1,
-                            'max' => '255',
-                        ],
-                    ],
-                ],
-            ],
-            2 => [
                 'name' => 'user_id',
                 'required' => true,
                 'filters' => [
@@ -317,19 +296,19 @@ return [
                 ],
                 'validators' => [],
             ],
-            3 => [
+            2 => [
                 'name' => 'authorization_date',
                 'required' => false,
                 'filters' => [],
                 'validators' => [],
             ],
-            4 => [
+            3 => [
                 'name' => 'date_created',
-                'required' => true,
+                'required' => false,
                 'filters' => [],
                 'validators' => [],
             ],
-            5 => [
+            4 => [
                 'name' => 'is_approved',
                 'required' => true,
                 'filters' => [
@@ -342,7 +321,7 @@ return [
                 ],
                 'validators' => [],
             ],
-            6 => [
+            5 => [
                 'name' => 'type_of_authorization',
                 'required' => true,
                 'filters' => [
@@ -363,7 +342,7 @@ return [
                     ],
                 ],
             ],
-            7 => [
+            6 => [
                 'name' => 'document_id',
                 'required' => false,
                 'filters' => [

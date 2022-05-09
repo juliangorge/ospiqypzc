@@ -22,7 +22,7 @@ class AffiliateAuthorization
     /** @ORM\Column(name="dni", type="string", length=10, unique=false, nullable=false) */
     protected $dni;
 
-    /** @ORM\Column(name="user_id", type="integer", nullable=false) */
+    /** @ORM\Column(name="user_id", type="integer", nullable=true) */
     protected $user_id;
 
     /** @ORM\Column(name="authorization_date", type="datetime", nullable=true) */
