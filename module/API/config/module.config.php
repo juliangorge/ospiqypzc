@@ -307,10 +307,11 @@ return [
                 'required' => false,
                 'filters' => [],
                 'validators' => [],
+                'continue_if_empty' => true,
             ],
             4 => [
                 'name' => 'is_approved',
-                'required' => true,
+                'required' => false,
                 'filters' => [
                     0 => [
                         'name' => \Laminas\Filter\StripTags::class,
@@ -320,6 +321,7 @@ return [
                     ],
                 ],
                 'validators' => [],
+                'continue_if_empty' => true,
             ],
             5 => [
                 'name' => 'type_of_authorization',

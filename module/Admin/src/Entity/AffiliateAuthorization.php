@@ -28,10 +28,10 @@ class AffiliateAuthorization
     /** @ORM\Column(name="authorization_date", type="datetime", nullable=true) */
     protected $authorization_date;
 
-    /** @ORM\Column(name="date_created", type="datetime", nullable=false) */
+    /** @ORM\Column(name="date_created", type="datetime", nullable=false, options={"default": "CURRENT_TIMESTAMP"}) */
     protected $date_created;
 
-    /** @ORM\Column(name="is_approved", type="boolean", nullable=false) */
+    /** @ORM\Column(name="is_approved", type="boolean", nullable=false, options={"default": 0}) */
     protected $is_approved;
 
     /** @ORM\Column(name="type_of_authorization", type="string", nullable=false) */
