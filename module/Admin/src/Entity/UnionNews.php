@@ -71,7 +71,7 @@ class UnionNews
                 $this->piece_of_news_url = $array['piece_of_news_url'];
             }
         }else{
-            $this->piece_of_news_url = $empty
+            $this->piece_of_news_url = $empty;
         }
 
     }
