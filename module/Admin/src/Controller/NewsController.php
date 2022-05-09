@@ -27,7 +27,7 @@ class NewsController extends AbstractActionController
             'keyFilePath' => './ospiqyp-firebase-adminsdk-dx723-21cf738448.json'
         ]);
 
-        $this->collection = 'news';
+        $this->collection = 'news_2';
         $this->route = 'admin/news';
     }
 
@@ -71,6 +71,7 @@ class NewsController extends AbstractActionController
                         $this->flashMessenger()->addErrorMessage($e->getMessage());
                         $success = false;   
                     }
+                    
                 }
                 
 
