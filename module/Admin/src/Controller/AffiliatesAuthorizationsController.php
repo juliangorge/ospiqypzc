@@ -85,8 +85,9 @@ class AffiliatesAuthorizationsController extends AbstractActionController
         }else{
             $authorization = $this->em->createQuery('
                 SELECT
-                v.id, v.fullname as affiliate_fullname, v.dni as affiliate_dni, v.authorization_date, v.is_approved, v.date_created, v.type_of_authorization, CONCAT(u.firstname, \' \', u.lastname) as user_fullname
+                v.id, CONCAT(a.firstname, \' \', a.lastname) as affiliate_fullname, v.dni as affiliate_dni, v.authorization_date, v.is_approved, v.date_created, v.type_of_authorization, CONCAT(u.firstname, \' \', u.lastname) as user_fullname
                 FROM Admin\Entity\AffiliateAuthorization v 
+                INNER JOIN Admin\Entity\Affiliate a WITH a.dni = v.dni
                 LEFT JOIN Auth\Entity\User u WITH u.id = v.user_id
                 ORDER BY v.id DESC')->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
 
