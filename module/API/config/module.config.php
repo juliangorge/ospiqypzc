@@ -285,7 +285,7 @@ return [
             ],
             1 => [
                 'name' => 'user_id',
-                'required' => true,
+                'required' => false,
                 'filters' => [
                     0 => [
                         'name' => \Laminas\Filter\StripTags::class,
