@@ -93,13 +93,13 @@ class UnionNews extends Form
             'name' => 'piece_of_news_url',
             'attributes' => [
                 'id' => 'piece_of_news_url',
-                'required' => true,
+                'required' => false,
                 'class' => 'form-control',
                 'maxlength' => 120,
                 'placeholder' => 'https://....'
             ],
             'options' => [
-                'label' => 'URL de la Publicación <small>(requiere)</small>',
+                'label' => 'URL de la Publicación',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

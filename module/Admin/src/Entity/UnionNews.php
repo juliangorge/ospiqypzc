@@ -64,10 +64,14 @@ class UnionNews
         }
 
         // Verifico que el URL sea válido
-        if(filter_var($array['piece_of_news_url'], FILTER_VALIDATE_URL) === FALSE) {
-            $this->piece_of_news_url = 'https://obrasocialquimicos.com.ar/';
+        if($array['piece_of_news_url'] != ''){
+            if(filter_var($array['piece_of_news_url'], FILTER_VALIDATE_URL) === FALSE) {
+                $this->piece_of_news_url = 'https://obrasocialquimicos.com.ar/';
+            }else{
+                $this->piece_of_news_url = $array['piece_of_news_url'];
+            }
         }else{
-            $this->piece_of_news_url = $array['piece_of_news_url'];
+            $this->piece_of_news_url = $empty
         }
 
     }
@@ -90,10 +94,14 @@ class UnionNews
         }
 
         // Verifico que el URL sea válido
-        if(filter_var($array['piece_of_news_url'], FILTER_VALIDATE_URL) === FALSE) {
-            $this->piece_of_news_url = 'https://obrasocialquimicos.com.ar/';
+        if($array['piece_of_news_url'] != ''){
+            if(filter_var($array['piece_of_news_url'], FILTER_VALIDATE_URL) === FALSE) {
+                $this->piece_of_news_url = 'https://obrasocialquimicos.com.ar/';
+            }else{
+                $this->piece_of_news_url = $array['piece_of_news_url'];
+            }
         }else{
-            $this->piece_of_news_url = $array['piece_of_news_url'];
+            $this->piece_of_news_url = $empty;
         }
 
         $this->document_id = $array['document_id'];
