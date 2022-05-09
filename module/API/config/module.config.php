@@ -14,7 +14,7 @@ return [
             'api.rest.affiliates-authorizations' => [
                 'type' => 'Segment',
                 'options' => [
-                    'route' => '/affiliates_authorizations[/:affiliates_authorizations_id]',
+                    'route' => '/api/v1/affiliates_authorizations[/:affiliates_authorizations_id]',
                     'defaults' => [
                         'controller' => 'API\\V1\\Rest\\AffiliatesAuthorizations\\Controller',
                     ],
