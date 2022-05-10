@@ -16,17 +16,21 @@
 		          				<table class="table">
 					              	<thead>
 					                	<tr>
+						                  	<th><small>Afiliado</small></th>
 											<th><small>Título</small></th>
 						                  	<th><small>Detalle</small></th>
+						                  	<th><small>Estado</small></th>
 						                  	<th><small>Opciones</small></th>
 					                	</tr>
 									</thead>
 									<tbody>
 						                <tr ng-repeat="item in filtered = (items | filter: searchFilter) | startFrom:(currentPage-1)*entryLimit | limitTo:entryLimit | orderBy: sorted">
-											<td><small>{{item.title}}</small></td>
+											<td><small>{{item.fullname_affiliate}}</small></td>
+						                	<td><small>{{item.title}}</small></td>
 						                	<td><small>{{item.detail}}</small></td>
+						                	<td><small>{{item.date_answer == undefined ? 'Pendiente' : 'Respondido'}}</small></td>
 						                	<td>
-						                		<a class="btn btn-primary btn-sm disabled" href="/admin/affiliates_claims/edit/{{item.id}}">
+						                		<a class="btn btn-primary btn-sm" href="/admin/affiliates_claims/answer/{{item.id}}">
 							                    	<i class="far fa-edit"></i>
 							                    </a>
 						                	</td>

@@ -50,7 +50,7 @@ return [
             'service_name' => 'affiliates_claims',
         ],
         'API\\V1\\Rest\\AffiliatesAuthorizations\\Controller' => [
-            'listener' => 'API\\V1\\Rest\\AffiliatesAuthorizations\\AffiliatesAuthorizationsResource',
+            'listener' => \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsResource::class,
             'route_name' => 'api.rest.affiliates-authorizations',
             'route_identifier_name' => 'affiliates_authorizations_id',
             'collection_name' => 'affiliates_authorizations',
@@ -98,7 +98,7 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.affiliates-claims',
                 'route_identifier_name' => 'affiliates_claims_id',
-                'hydrator' => \Doctrine\Laminas\Hydrator\DoctrineObject::class,
+                'hydrator' => \Laminas\Hydrator\ArraySerializableHydrator::class,
             ],
             \API\V1\Rest\AffiliatesClaims\AffiliatesClaimsCollection::class => [
                 'entity_identifier_name' => 'id',
@@ -116,7 +116,7 @@ return [
                 'entity_identifier_name' => 'id',
                 'route_name' => 'api.rest.affiliates-authorizations',
                 'route_identifier_name' => 'affiliates_authorizations_id',
-                'hydrator' => \Doctrine\Laminas\Hydrator\DoctrineObject::class,
+                'hydrator' => \Laminas\Hydrator\ArraySerializableHydrator::class,
             ],
             \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsCollection::class => [
                 'entity_identifier_name' => 'id',
@@ -131,15 +131,15 @@ return [
             'API\\V1\\Rest\\AffiliatesClaims\\AffiliatesClaimsResource' => [
                 'adapter_name' => 'dbadapter',
                 'table_name' => 'affiliates_claims',
-                'hydrator_name' => \Doctrine\Laminas\Hydrator\DoctrineObject::class,
+                'hydrator_name' => \Laminas\Hydrator\ArraySerializableHydrator::class,
                 'controller_service_name' => 'API\\V1\\Rest\\AffiliatesClaims\\Controller',
                 'entity_identifier_name' => 'id',
                 'table_service' => 'API\\V1\\Rest\\AffiliatesClaims\\AffiliatesClaimsResource\\Table',
             ],
-            'API\\V1\\Rest\\AffiliatesAuthorizations\\AffiliatesAuthorizationsResource' => [
+            \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsResource::class => [
                 'adapter_name' => 'dbadapter',
                 'table_name' => 'affiliates_authorizations',
-                'hydrator_name' => \Doctrine\Laminas\Hydrator\DoctrineObject::class,
+                'hydrator_name' => \Laminas\Hydrator\ArraySerializableHydrator::class,
                 'controller_service_name' => 'API\\V1\\Rest\\AffiliatesAuthorizations\\Controller',
                 'entity_identifier_name' => 'id',
                 'table_service' => 'API\\V1\\Rest\\AffiliatesAuthorizations\\AffiliatesAuthorizationsResource\\Table',
@@ -260,6 +260,27 @@ return [
                     ],
                 ],
             ],
+            6 => [
+                'required' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\StringLength::class,
+                        'options' => [
+                            'min' => '1',
+                            'max' => '255',
+                        ],
+                    ],
+                ],
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                    ],
+                ],
+                'name' => 'dni',
+            ],
         ],
         'API\\V1\\Rest\\AffiliatesAuthorizations\\Validator' => [
             0 => [
@@ -306,8 +327,16 @@ return [
                 'name' => 'date_created',
                 'required' => false,
                 'filters' => [],
-                'validators' => [],
-                'continue_if_empty' => true,
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\Date::class,
+                        'options' => [
+                            'format' => 'Y-m-d H:i:s',
+                        ],
+                    ],
+                ],
+                'continue_if_empty' => false,
+                'allow_empty' => false,
             ],
             4 => [
                 'name' => 'is_approved',
@@ -373,6 +402,48 @@ return [
                     ],
                 ],
             ],
+            7 => [
+                'name' => 'medical_order_image_url',
+                'required' => false,
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                    ],
+                ],
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\StringLength::class,
+                        'options' => [
+                            'min' => 1,
+                            'max' => '255',
+                        ],
+                    ],
+                ],
+            ],
+            8 => [
+                'name' => 'complementary_studies_image_url',
+                'required' => false,
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                    ],
+                ],
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\StringLength::class,
+                        'options' => [
+                            'min' => 1,
+                            'max' => '255',
+                        ],
+                    ],
+                ],
+            ],
         ],
     ],
     'api-tools-mvc-auth' => [
@@ -409,6 +480,29 @@ return [
                     'DELETE' => false,
                 ],
             ],
+        ],
+    ],
+    'view_manager' => [
+        'display_not_found_reason' => true,
+        'display_exceptions' => true,
+        'doctype' => 'HTML5',
+        'not_found_template' => 'error/404',
+        'exception_template' => 'error/index',
+        'template_map' => [
+            'error/404' => __DIR__ . '/../view/error/404.phtml',
+            'error/index' => __DIR__ . '/../view/error/index.phtml',
+        ],
+        'template_path_stack' => [
+            0 => __DIR__ . '/../view',
+        ],
+        'strategies' => [
+            0 => 'ViewJsonStrategy',
+        ],
+    ],
+    'service_manager' => [
+        'factories' => [
+            \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsResource::class => \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsResourceFactory::class,
+            \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsTableGateway::class => \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsTableGatewayFactory::class,
         ],
     ],
 ];

@@ -37,6 +37,12 @@ class AffiliateAuthorization
     /** @ORM\Column(name="type_of_authorization", type="string", nullable=false) */
     protected $type_of_authorization;
 
+    /** @ORM\Column(name="medical_order_image_url", type="string", nullable=true) */
+    protected $medical_order_image_url;
+
+    /** @ORM\Column(name="complementary_studies_image_url", type="string", nullable=true) */
+    protected $complementary_studies_image_url;
+
     /** @ORM\Column(name="document_id", type="string", unique=true, nullable=true) */
     protected $document_id;
 
@@ -49,6 +55,8 @@ class AffiliateAuthorization
             'date_created' => $this->date_created,
             'is_approved' => $this->is_approved,
             'type_of_authorization' => $this->type_of_authorization,
+            'medical_order_image_url' => $this->medical_order_image_url,
+            'complementary_studies_image_url' => $this->complementary_studies_image_url,
             'document_id' => $this->document_id,
         ];
     }
@@ -60,6 +68,7 @@ class AffiliateAuthorization
         $this->date_created = new \DateTime();
         $this->is_approved = $array['is_approved'];
         $this->type_of_authorization = $array['type_of_authorization'];
+        $this->medical_order_image_url = $array['medical_order_image_url'];
     }
 
     public function exchangeArray(array $array){
@@ -68,6 +77,7 @@ class AffiliateAuthorization
         $this->authorization_date = $array['authorization_date'];
         $this->is_approved = $array['is_approved'];
         $this->type_of_authorization = $array['type_of_authorization'];
+        $this->complementary_studies_image_url = $array['complementary_studies_image_url'];
     }
 
     public function authorizing(array $array){
@@ -78,13 +88,10 @@ class AffiliateAuthorization
 
     public function toFirebase(){
         return [
-            'dni' => $this->dni,
             'authorization_date' => $this->authorization_date == NULL ? '' : $this->authorization_date->format('d/m/Y'),
             'authorization_administrative' => '',
             'complementary_studies_image_url' => '',
-            'date' => $this->date_created->format('d/m/Y'),
             'is_approved' => $this->is_approved,
-            'type_of_authorization' => $this->type_of_authorization
         ];
     }
 
@@ -95,6 +102,8 @@ class AffiliateAuthorization
     public function getDateCreated(){ return $this->date_created; }
     public function getIsApproved(){ return $this->is_approved; }
     public function getTypeOfAuthorization(){ return $this->type_of_authorization; }
+    public function getMedicalOrderImageUrl(){ return $this->medical_order_image_url; }
+    public function getComplementaryStudiesImageUrl(){ return $this->complementary_studies_image_url; }
     public function getDocumentId(){ return $this->document_id; }
 
     public function setDni($v){ $this->dni = $v; }
@@ -103,5 +112,7 @@ class AffiliateAuthorization
     public function setDateCreated($v){ $this->date_created = $v; }
     public function setIsApproved($v){ $this->is_approved = $v; }
     public function setTypeOfAuthorization($v){ $this->type_of_authorization = $v; }
+    public function setMedicalOrderImageUrl($v){ $this->medical_order_image_url = $v; }
+    public function setComplementaryStudiesImageUrl($v){ $this->complementary_studies_image_url = $v; }
     public function setDocumentId($v){ $this->document_id = $v; }
 }

@@ -5,7 +5,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
 * @ORM\Entity
-* @ORM\Table(name="affiliates_claims")
+* @ORM\Table(name="affiliates_claims", indexes={
+    * @ORM\Index(name="dni", columns={"dni"}),
+* })
 */
 class AffiliateClaim
 {
@@ -31,6 +33,9 @@ class AffiliateClaim
     /** @ORM\Column(name="date_answer", type="datetime", nullable=true) */    
     protected $date_answer;
 
+    /** @ORM\Column(name="dni", type="string", length=10, unique=false, nullable=false) */
+    protected $dni;
+
     /** @ORM\Column(name="document_id", type="string", unique=true, nullable=true) */
     protected $document_id;
 
@@ -42,6 +47,7 @@ class AffiliateClaim
             'detail' => $this->detail,
             'detail_answer' => $this->detail_answer,
             'date_answer' => $this->date_answer,
+            'dni' => $this->dni,
             'document_id' => $this->document_id
         ];
     }
@@ -52,6 +58,7 @@ class AffiliateClaim
         $this->detail = $array['detail'];
         $this->detail_answer = $array['detail_answer'];
         $this->date_answer = $array['date_answer'];
+        $this->dni = $array['dni'];
     }
 
     public function exchangeArray(array $array){
@@ -59,7 +66,8 @@ class AffiliateClaim
         $this->title = $array['title'];
         $this->detail = $array['detail'];
         $this->detail_answer = $array['detail_answer'];
-        $this->date_answer = $array['date_answer'];
+        $this->date_answer = new \DateTime();
+        $this->dni = $array['dni'];
     }
 
     public function toFirebase(){
@@ -75,12 +83,13 @@ class AffiliateClaim
     public function getDetail(){ return $this->detail; }
     public function getDetailAnswer(){ return $this->detail_answer; }
     public function getDateAnswer(){ return $this->date_answer; }
+    public function getDni(){ return $this->dni; }
     public function getDocumentId(){ return $this->document_id; }
 
     public function setClaimId($v){ $this->claim_id = $v; }
     public function setTitle($v){ $this->title = $v; }
     public function setDetail($v){ $this->detail = $v; }
     public function setDetailAnswer($v){ $this->detail_answer = $v; }
-    public function setDateAnswer($v){ $this->date_answer = $v; }
+    public function setDni($v){ $this->dni = $v; }
     public function setDocumentId($v){ $this->document_id = $v; }
 }

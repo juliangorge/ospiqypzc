@@ -51,7 +51,8 @@
 						                	<td><small>{{item.affiliate_fullname}} (DNI: {{item.affiliate_dni}})</small></td>
 											<td><small>{{item.user_fullname ? item.user_fullname : '-'}}</small></td>
 											<td><small>
-												<span class="badge badge-{{item.is_approved ? 'success' : 'danger'}}">{{item.is_approved ? 'Sí' : 'No'}}</span> - {{item.authorization_date.date | cmdate: 'dd/MM/yyyy HH:mm'}}</small></td>
+												<span class="badge badge-{{item.is_approved ? 'success' : 'danger'}}">{{item.is_approved ? 'Sí' : 'No'}}</span>
+												{{item.authorization_date ? (' - ' + item.authorization_date.date | cmdate: 'dd/MM/yyyy HH:mm') : ''}}</small></td>
 											<td><small>{{item.type_of_authorization}}</small></td>
 						                	<td>
 							                    <a class="btn btn-success btn-sm disabled" href="/admin/affiliates_authorizations/download/{{item.id}}">
