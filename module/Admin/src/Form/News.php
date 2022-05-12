@@ -110,9 +110,9 @@ class News extends Form
         ]);
 
         $this->add([
-            'name' => 'documentId',
+            'name' => 'document_id',
             'attributes' => [
-                'id' => 'documentId',
+                'id' => 'document_id',
                 'type' => 'hidden'
             ],
         ]);
@@ -133,7 +133,7 @@ class News extends Form
             'date',
             'picture_url',
             'piece_of_news_url',
-            'documentId',
+            'document_id',
             'submit'
         ]);
     }
