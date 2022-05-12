@@ -104,6 +104,16 @@ class AffiliateAuthorization
     public function getComplementaryStudiesImageUrl(){ return $this->complementary_studies_image_url; }
     public function getDocumentId(){ return $this->document_id; }
 
+    public function getIsApprovedText(){
+        if($this->authorization_date == NULL) return 'Pendiente';
+
+        if($this->is_approved){
+            return 'Autorizado';
+        }else{
+            return 'NO Autorizado';
+        }
+    }
+
     public function setDni($v){ $this->dni = $v; }
     public function setUserID($v){ $this->user_id = $v; }
     public function setAuthorizationDate($v){ $this->authorization_date = $v; }
