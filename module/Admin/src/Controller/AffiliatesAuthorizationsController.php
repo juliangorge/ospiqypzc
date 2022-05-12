@@ -87,8 +87,10 @@ class AffiliatesAuthorizationsController extends AbstractActionController
         if($affiliate == NULL) return $this->redirect()->toRoute($this->route);
         $form->get('affiliate_fullname')->setValue($affiliate->getFirstname() . ' ' . $affiliate->getLastname());
 
-        $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
-        $form->get('authorization_administrative')->setValue($user->getFirstname() . ' ' . $user->getLastname());
+        if($entity->getUserId() != NULL){
+            $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
+            $form->get('authorization_administrative')->setValue($user->getFirstname() . ' ' . $user->getLastname());
+        }
 
         $request = $this->getRequest();
 
@@ -116,6 +118,8 @@ class AffiliatesAuthorizationsController extends AbstractActionController
 
             if($success){
                 $to_firebase = $entity->toFirebase();
+
+                $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
                 $to_firebase['authorization_administrative'] = $user->getFirstname() . ' ' . $user->getLastname();
 
                 $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
