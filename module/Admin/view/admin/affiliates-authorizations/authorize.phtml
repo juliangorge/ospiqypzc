@@ -70,6 +70,8 @@
 							</div>
 							
 							<div class="col-md-12">
+								<?= $this->formHidden($form->get('user_id')->setValue($this->identity()['id'])) ?>
+
 								<?= $this->formRow($form->get('submit')) ?>
 
 							</div>

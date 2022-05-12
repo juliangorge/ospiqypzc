@@ -42,36 +42,6 @@ class AffiliatesAuthorizationsController extends AbstractActionController
         return new JsonModel([]);
     }
 
-    /*public function authorizingAction(){
-        $id = $this->params()->fromRoute('id', 0);
-        $is_approved = $this->params()->fromQuery('is_approved', 0);
-
-        $entity = $this->em->find('Admin\Entity\AffiliateAuthorization', $id);
-        if($entity == NULL) return $this->redirect()->toRoute('admin/affiliates_authorizations');
-        if($entity->getAuthorizationDate() != NULL) return $this->redirect()->toRoute('admin/affiliates_authorizations');
-
-        $entity->authorizing([
-            'is_approved' => $is_approved,
-            'user_id' => $this->identity()['id']
-        ]);
-        $this->em->flush();
-
-        $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
-        if($user == NULL) return $this->redirect()->toRoute('admin/affiliates_authorizations');        
-
-        $data = [
-            'authorization_date' => $entity->getAuthorizationDate()->format('d/m/Y'),
-            'authorizing_administrative' => $user->getFirstname() . ' ' . $user->getLastname(),
-            'is_approved' => $entity->getIsApproved() ? true : false
-        ];
-
-        $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
-        $docRef->set($data, ['merge' => true]);
-
-        $this->flashMessenger()->addSuccessMessage('Carga exitosa');
-        return $this->redirect()->toRoute('admin/affiliates_authorizations');
-    }*/
-
     public function authorizeAction(){
         $id = $this->params()->fromRoute('id', 0);
         if(!$id) return $this->redirect()->toRoute($this->route);
@@ -102,6 +72,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
             if($form->isValid()){
                 try {
                     if($entity->getAuthorizationDate() == NULL){
+                        $post['user_id'] = $this->identity()['id'];
                         $entity->exchangeArray($post);
                         $this->em->flush();
                     }

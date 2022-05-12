@@ -33,6 +33,9 @@ class AffiliateClaim
     /** @ORM\Column(name="date_answer", type="datetime", nullable=true) */    
     protected $date_answer;
 
+    /** @ORM\Column(name="user_id", type="integer", nullable=true) */    
+    protected $user_id;
+
     /** @ORM\Column(name="dni", type="string", length=10, unique=false, nullable=false) */
     protected $dni;
 
@@ -47,6 +50,7 @@ class AffiliateClaim
             'detail' => $this->detail,
             'detail_answer' => $this->detail_answer,
             'date_answer' => $this->date_answer,
+            'user_id' => $this->user_id,
             'dni' => $this->dni,
             'document_id' => $this->document_id
         ];
@@ -58,6 +62,7 @@ class AffiliateClaim
         $this->detail = $array['detail'];
         $this->detail_answer = $array['detail_answer'];
         $this->date_answer = $array['date_answer'];
+        $this->user_id = $array['user_id'];
         $this->dni = $array['dni'];
     }
 
@@ -67,6 +72,7 @@ class AffiliateClaim
         $this->detail = $array['detail'];
         $this->detail_answer = $array['detail_answer'];
         $this->date_answer = new \DateTime();
+        $this->user_id = $array['user_id'];
         $this->dni = $array['dni'];
     }
 
@@ -84,6 +90,7 @@ class AffiliateClaim
     public function getDetailAnswer(){ return $this->detail_answer; }
     public function getDateAnswer(){ return $this->date_answer; }
     public function getDni(){ return $this->dni; }
+    public function getUserId(){ return $this->user_id; }
     public function getDocumentId(){ return $this->document_id; }
 
     public function setClaimId($v){ $this->claim_id = $v; }
@@ -91,5 +98,6 @@ class AffiliateClaim
     public function setDetail($v){ $this->detail = $v; }
     public function setDetailAnswer($v){ $this->detail_answer = $v; }
     public function setDni($v){ $this->dni = $v; }
+    public function setUserId($v){ $this->user_id = $v; }
     public function setDocumentId($v){ $this->document_id = $v; }
 }

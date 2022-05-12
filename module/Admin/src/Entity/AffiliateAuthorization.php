@@ -72,15 +72,6 @@ class AffiliateAuthorization
     }
 
     public function exchangeArray(array $array){
-        $this->dni = $array['dni'];
-        $this->user_id = $array['user_id'];
-        $this->authorization_date = $array['authorization_date'];
-        $this->is_approved = $array['is_approved'];
-        $this->type_of_authorization = $array['type_of_authorization'];
-        $this->complementary_studies_image_url = $array['complementary_studies_image_url'];
-    }
-
-    public function authorizing(array $array){
         $this->user_id = $array['user_id'];
         $this->authorization_date = new \DateTime();
         $this->is_approved = boolval($array['is_approved']);

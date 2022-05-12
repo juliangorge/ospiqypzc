@@ -143,6 +143,11 @@ class AffiliateClaim extends Form
         ]);
 
         $this->add([
+            'name' => 'user_id',
+            'type' => 'hidden'
+        ]);
+
+        $this->add([
             'name' => 'submit',
             'attributes' => [
                 'id' => 'submit',
@@ -160,6 +165,7 @@ class AffiliateClaim extends Form
             'detail',
             'detail_answer',
             'date_answer',
+            'user_id',
             'submit'
         ]);
     }

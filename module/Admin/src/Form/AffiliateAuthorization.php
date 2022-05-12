@@ -95,6 +95,11 @@ class AffiliateAuthorization extends Form
         ]);
 
         $this->add([
+            'name' => 'user_id',
+            'type' => 'hidden'
+        ]);
+
+        $this->add([
             'name' => 'submit',
             'attributes' => [
                 'id' => 'submit',
@@ -109,6 +114,7 @@ class AffiliateAuthorization extends Form
             'type_of_authorization',
             'authorization_administrative',
             'is_approved',
+            'user_id',
             'submit'
         ]);
     }

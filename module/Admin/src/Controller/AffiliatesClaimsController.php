@@ -45,7 +45,7 @@ class AffiliatesClaimsController extends AbstractActionController
         if($entity == NULL) return $this->redirect()->toRoute($this->route);
 
         $readonly = $entity->getDateAnswer() == NULL;
-        $form = new \Admin\Form\AffiliateClaim($this->em, NULL, $readonly);
+        $form = new \Admin\Form\AffiliateClaim($this->em, NULL, !$readonly);
         $form->bind($entity);
 
         $affiliate = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy(['dni' => $entity->getDni()]);
