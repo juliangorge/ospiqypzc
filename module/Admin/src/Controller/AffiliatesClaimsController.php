@@ -33,7 +33,7 @@ class AffiliatesClaimsController extends AbstractActionController
 
     public function indexAction(){
         return new ViewModel([
-            'title' => 'Reclamaciones'
+            'title' => 'Reclamos'
         ]);
     }
 
@@ -90,7 +90,7 @@ class AffiliatesClaimsController extends AbstractActionController
 
         return new ViewModel([
             'form' => $form,
-            'title' => 'Reclamación',
+            'title' => 'Reclamo',
             'item' => $entity
         ]);
     }

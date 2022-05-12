@@ -62,7 +62,7 @@ return [
                 'resource'   => 'Admin\Controller\AffiliatesAuthorizationsController',
             ],
             [
-                'label'      => 'Reclamaciones',
+                'label'      => 'Reclamos',
                 'route'      => 'admin/affiliates_claims',
                 'action'     => 'index',
                 'icon'       => 'address-book',

@@ -132,7 +132,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
 
         return new ViewModel([
             'form' => $form,
-            'title' => 'Reclamación',
+            'title' => 'Autorización',
             'item' => $entity
         ]);
     }
