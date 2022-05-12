@@ -89,8 +89,6 @@ class AffiliateAuthorization
     public function toFirebase(){
         return [
             'authorization_date' => $this->authorization_date == NULL ? '' : $this->authorization_date->format('d/m/Y'),
-            'authorization_administrative' => '',
-            'complementary_studies_image_url' => '',
             'is_approved' => $this->is_approved,
         ];
     }

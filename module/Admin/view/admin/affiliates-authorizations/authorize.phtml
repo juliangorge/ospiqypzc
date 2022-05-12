@@ -1,0 +1,85 @@
+<div class="row">
+	<div class="col-md-6 mx-auto">
+		<section class="card card-cascade narrower my-3">
+		    <div class="row">
+		        <div class="col-md-12">
+		            <div class="card-header py-3 gradient-card-header btn-elegant">
+		            	<h5 class="mb-0">Autorizar <?= $this->title ?> <small>(Doc: <?= $this->item->getDocumentId(); ?>)</small></h5>
+		            </div>
+		            <div class="card-body card-body-cascade">
+		            <?php
+					$form = $this->form;
+					$form->prepare();
+					$form->setAttribute('action', '/admin/affiliates_authorizations/authorize/' . $this->item->getId());
+					$form->setAttribute('method', 'post');
+					echo $this->form()->openTag($form);
+					?>
+		    			<div class="row">
+
+		    				<div class="col-md-12 mb-4">
+		    					Autorizado: <?= $this->item->getIsApproved() ? 'Sí' : 'NO' ?>
+		    					<br>
+								Fecha de Generación: <?= $this->item->getDateCreated()->format('d/m/Y H:i:s') ?>
+
+							</div>
+
+							<?php if($this->item->getUserId()): ?>
+
+							<div class="col-md-6 mb-4">
+								<?= $this->formRow($form->get('authorization_administrative')) ?>
+								<small>Autorizado: <?= $this->item->getAuthorizationDate()->format('d/m/Y H:i:s'); ?></small>
+							</div>
+							<?php endif; ?>
+
+							<div class="col-md-12 mb-4">
+								<?= $this->formRow($form->get('affiliate_fullname')) ?>
+
+							</div>
+
+							<div class="col-md-12 mb-4">
+								<?= $this->formRow($form->get('type_of_authorization')) ?>
+
+							</div>
+
+							<div class="col-md-12 mb-4">
+								<div class="row">
+									<div class="col-md-6">
+										<img src="<?= $this->item->getMedicalOrderImageUrl() ?>" class="img-fluid" />
+
+										<?php 
+										if($this->item->getMedicalOrderImageUrl() != ''){
+											echo '<a href="' . $this->item->getMedicalOrderImageUrl() . '" target="_blank">Ampliar Orden médica</a>';
+										}
+										?>
+									</div>
+									<div class="col-md-6">
+										<img src="<?= $this->item->getComplementaryStudiesImageUrl() ?>" class="img-fluid" />
+
+										<?php 
+										if($this->item->getComplementaryStudiesImageUrl() != ''){
+											echo '<a href="' . $this->item->getComplementaryStudiesImageUrl() . '" target="_blank">Ampliar Estudios complementarios</a>';
+										}
+										?>
+									</div>
+								</div>
+
+							</div>
+
+							<div class="col-md-12">
+								<?= $this->formRow($form->get('is_approved')) ?>
+
+							</div>
+							
+							<div class="col-md-12">
+								<?= $this->formRow($form->get('submit')) ?>
+
+							</div>
+						</div>
+						<?= $this->form()->closeTag() ?>
+
+					</div>
+		        </div>
+		    </div>
+		</section>
+	</div>
+</div>

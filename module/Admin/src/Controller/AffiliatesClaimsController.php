@@ -48,6 +48,10 @@ class AffiliatesClaimsController extends AbstractActionController
         $form = new \Admin\Form\AffiliateClaim($this->em, NULL, $readonly);
         $form->bind($entity);
 
+        $affiliate = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy(['dni' => $entity->getDni()]);
+        if($affiliate == NULL) return $this->redirect()->toRoute($this->route);
+        $form->get('affiliate_fullname')->setValue($affiliate->getFirstname() . ' ' . $affiliate->getLastname());
+
         $request = $this->getRequest();
 
         $success = true;
@@ -73,6 +77,9 @@ class AffiliatesClaimsController extends AbstractActionController
 
             if($success){
                 $to_firebase = $entity->toFirebase();
+                $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
+                $to_firebase['authorization_administrative'] = $user->getFirstname() . ' ' . $user->getLastname();
+
                 $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
                 $docRef->set($to_firebase, ['merge' => true]);
 

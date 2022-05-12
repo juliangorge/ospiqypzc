@@ -42,7 +42,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
         return new JsonModel([]);
     }
 
-    public function authorizingAction(){
+    /*public function authorizingAction(){
         $id = $this->params()->fromRoute('id', 0);
         $is_approved = $this->params()->fromQuery('is_approved', 0);
 
@@ -70,6 +70,67 @@ class AffiliatesAuthorizationsController extends AbstractActionController
 
         $this->flashMessenger()->addSuccessMessage('Carga exitosa');
         return $this->redirect()->toRoute('admin/affiliates_authorizations');
+    }*/
+
+    public function authorizeAction(){
+        $id = $this->params()->fromRoute('id', 0);
+        if(!$id) return $this->redirect()->toRoute($this->route);
+
+        $entity = $this->em->find('Admin\Entity\AffiliateAuthorization', $id);
+        if($entity == NULL) return $this->redirect()->toRoute($this->route);
+
+        $readonly = $entity->getAuthorizationDate() == NULL;
+        $form = new \Admin\Form\AffiliateAuthorization($this->em, NULL, $readonly);
+        $form->bind($entity);
+
+        $affiliate = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy(['dni' => $entity->getDni()]);
+        if($affiliate == NULL) return $this->redirect()->toRoute($this->route);
+        $form->get('affiliate_fullname')->setValue($affiliate->getFirstname() . ' ' . $affiliate->getLastname());
+
+        $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
+        $form->get('authorization_administrative')->setValue($user->getFirstname() . ' ' . $user->getLastname());
+
+        $request = $this->getRequest();
+
+        $success = true;
+        if($request->isPost()){
+            $post = array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray());
+            $form->setData($post);
+
+            if($form->isValid()){
+                try {
+                    if($entity->getAuthorizationDate() == NULL){
+                        $entity->exchangeArray($post);
+                        $this->em->flush();
+                    }
+                }catch(\Throwable $e){
+                    $this->flashMessenger()->addErrorMessage($e->getMessage());
+                    $success = false;
+                }
+
+            }else{
+                $this->flashMessenger()->addErrorMessage($form->getMessages());
+                $success = false;
+            }
+
+
+            if($success){
+                $to_firebase = $entity->toFirebase();
+                $to_firebase['authorization_administrative'] = $user->getFirstname() . ' ' . $user->getLastname();
+
+                $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
+                $docRef->set($to_firebase, ['merge' => true]);
+
+                $this->flashMessenger()->addSuccessMessage('Carga exitosa');
+                return $this->redirect()->toRoute($route, [], $query);
+            }
+        }
+
+        return new ViewModel([
+            'form' => $form,
+            'title' => 'Reclamación',
+            'item' => $entity
+        ]);
     }
 
     public function getAction(){

@@ -16,11 +16,32 @@ class AffiliateClaim extends Form
                 'required' => true,
                 'class' => 'form-control',
                 'maxlength' => 100,
-                'placeholder' => 'Nombre',
+                'placeholder' => 'Reclamo',
                 'readonly' => 'readonly'
             ],
             'options' => [
                 'label' => 'Reclamo',
+                'label_options' => [
+                    'disable_html_escape' => true,
+                ],
+                'label_attributes' => [
+                    'class' => 'col-form-label'
+                ]
+            ]
+        ]);
+
+        $this->add([
+            'name' => 'affiliate_fullname',
+            'attributes' => [
+                'id' => 'affiliate_fullname',
+                'required' => true,
+                'class' => 'form-control',
+                'maxlength' => 100,
+                'placeholder' => 'Afiliado',
+                'readonly' => 'readonly'
+            ],
+            'options' => [
+                'label' => 'Afiliado',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -133,6 +154,7 @@ class AffiliateClaim extends Form
 
         $this->setValidationGroup([
             'claim_id',
+            'affiliate_fullname',
             'title',
             'dni',
             'detail',
