@@ -30,9 +30,8 @@
 						                	<td><small>{{item.affiliate_fullname}} (DNI: {{item.affiliate_dni}})</small></td>
 											<td><small>{{item.user_fullname ? item.user_fullname : '-'}}</small></td>
 											<td><small>
-
-												<span ng-show="is_approved" class="badge badge-success">Autorizado</span>
-												<span ng-show="!is_approved && item.authorization_date" class="badge badge-danger">NO Autorizado</span>
+												<span ng-show="item.is_approved && item.authorization_date" class="badge badge-success">Autorizado</span>
+												<span ng-show="!item.is_approved && item.authorization_date" class="badge badge-danger">NO Autorizado</span>
 												<span ng-show="!item.authorization_date" class="badge badge-info">Pendiente</span>
 
 												{{item.authorization_date ? (' - ' + item.authorization_date.date | cmdate: 'dd/MM/yyyy HH:mm') : ''}}

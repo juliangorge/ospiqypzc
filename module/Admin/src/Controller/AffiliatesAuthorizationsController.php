@@ -71,11 +71,8 @@ class AffiliatesAuthorizationsController extends AbstractActionController
 
             if($form->isValid()){
                 try {
-                    if($entity->getAuthorizationDate() == NULL){
-                        $post['user_id'] = $this->identity()['id'];
-                        $entity->exchangeArray($post);
-                        $this->em->flush();
-                    }
+                    $entity->exchangeArray($post);
+                    $this->em->flush();
                 }catch(\Throwable $e){
                     $this->flashMessenger()->addErrorMessage($e->getMessage());
                     $success = false;
@@ -85,7 +82,6 @@ class AffiliatesAuthorizationsController extends AbstractActionController
                 $this->flashMessenger()->addErrorMessage($form->getMessages());
                 $success = false;
             }
-
 
             if($success){
                 $to_firebase = $entity->toFirebase();
