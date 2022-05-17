@@ -107,7 +107,7 @@ class AffiliatesClaimsController extends AbstractActionController
                 SELECT c.id, c.title, c.detail, CONCAT(a.firstname, \' \', a.lastname) as fullname_affiliate, c.date_answer
                 FROM Admin\Entity\AffiliateClaim c 
                 INNER JOIN Admin\Entity\Affiliate a WITH a.dni = c.dni
-                ORDER BY c.id ASC')->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
+                ORDER BY c.id DESC')->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         }
     }
 
