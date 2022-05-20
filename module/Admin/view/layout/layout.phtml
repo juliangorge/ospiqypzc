@@ -51,6 +51,16 @@
 
         <div id="content-wrapper">
             <div class="container-fluid">
+
+                <?php if($this->errorMessage != NULL): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= $this->errorMessage ?>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <?php endif; ?>
+
                 <?= $this->flashMessenger()->render('error', ['alert', 'alert-warning']); ?>
 
                 <?= $this->flashMessenger()->render('success', ['alert', 'alert-success']); ?>
@@ -94,8 +104,8 @@
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-animate.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular-sanitize.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
-    <script src="/js/angular/admin<?= ($this->web['config']['isTest'] ? '' : '.min') ?>.js"></script>
-    <script src="/js/admin<?= ($this->web['config']['isTest'] ? '' : '.min') ?>.js"></script>
+    <script src="/js/angular/admin<?= ($this->web['config']['isTest'] ? '' : '.min') ?>.js?v=0"></script>
+    <script src="/js/admin<?= ($this->web['config']['isTest'] ? '' : '.min') ?>.js?v=0"></script>
 
     <?= $this->inlineScript(); ?>
 

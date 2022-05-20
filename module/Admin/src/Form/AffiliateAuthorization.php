@@ -52,9 +52,9 @@ class AffiliateAuthorization extends Form
         ]);
 
         $this->add([
-            'name' => 'authorization_administrative',
+            'name' => 'administrative_name',
             'attributes' => [
-                'id' => 'authorization_administrative',
+                'id' => 'administrative_name',
                 'required' => true,
                 'class' => 'form-control',
                 'maxlength' => 100,
@@ -112,7 +112,7 @@ class AffiliateAuthorization extends Form
         $this->setValidationGroup([
             'affiliate_fullname',
             'type_of_authorization',
-            'authorization_administrative',
+            'administrative_name',
             'is_approved',
             'user_id',
             'submit'

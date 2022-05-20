@@ -78,8 +78,8 @@ class AffiliateClaim
 
     public function toFirebase(){
         return [
-            'detail_answer' => $this->detail_answer,
-            'date_answer' => $this->date_answer->format('d/m/Y H:i'),
+            'response' => $this->detail_answer,
+            'response_date' => $this->date_answer->format('d/m/Y'),
         ];
     }
 

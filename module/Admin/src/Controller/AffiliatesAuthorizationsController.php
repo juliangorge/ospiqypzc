@@ -54,12 +54,15 @@ class AffiliatesAuthorizationsController extends AbstractActionController
         $form->bind($entity);
 
         $affiliate = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy(['dni' => $entity->getDni()]);
-        if($affiliate == NULL) return $this->redirect()->toRoute($this->route);
+        if($affiliate == NULL){
+            $affiliate = $this->em->getRepository('Admin\Entity\AffiliateFamily')->findOneBy(['dni' => $entity->getDni()]);
+            if($affiliate == NULL) return $this->redirect()->toRoute($this->route);
+        }
         $form->get('affiliate_fullname')->setValue($affiliate->getFirstname() . ' ' . $affiliate->getLastname());
 
         if($entity->getUserId() != NULL){
             $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
-            $form->get('authorization_administrative')->setValue($user->getFirstname() . ' ' . $user->getLastname());
+            $form->get('administrative_name')->setValue($user->getFirstname() . ' ' . $user->getLastname());
         }
 
         $request = $this->getRequest();
@@ -87,7 +90,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
                 $to_firebase = $entity->toFirebase();
 
                 $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
-                $to_firebase['authorization_administrative'] = $user->getFirstname() . ' ' . $user->getLastname();
+                $to_firebase['administrative_name'] = $user->getFirstname() . ' ' . $user->getLastname();
 
                 $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
                 $docRef->set($to_firebase, ['merge' => true]);
@@ -117,9 +120,14 @@ class AffiliatesAuthorizationsController extends AbstractActionController
         }else{
             $authorization = $this->em->createQuery('
                 SELECT
-                v.id, CONCAT(a.firstname, \' \', a.lastname) as affiliate_fullname, v.dni as affiliate_dni, v.authorization_date, v.is_approved, v.date_created, v.type_of_authorization, CONCAT(u.firstname, \' \', u.lastname) as user_fullname
+                v.id, 
+                v.dni as affiliate_dni, 
+                CONCAT(a.firstname, \' \', a.lastname) as affiliate_fullname,
+                CONCAT(f.firstname, \' \', f.lastname) as family_fullname,
+                v.authorization_date, v.is_approved, v.date_created, v.type_of_authorization, CONCAT(u.firstname, \' \', u.lastname) as user_fullname
                 FROM Admin\Entity\AffiliateAuthorization v 
-                INNER JOIN Admin\Entity\Affiliate a WITH a.dni = v.dni
+                LEFT JOIN Admin\Entity\Affiliate a WITH a.dni = v.dni
+                LEFT JOIN Admin\Entity\AffiliateFamily f WITH f.dni = v.dni
                 LEFT JOIN Auth\Entity\User u WITH u.id = v.user_id
                 ORDER BY v.id DESC')->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
 

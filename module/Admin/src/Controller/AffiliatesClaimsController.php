@@ -49,7 +49,10 @@ class AffiliatesClaimsController extends AbstractActionController
         $form->bind($entity);
 
         $affiliate = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy(['dni' => $entity->getDni()]);
-        if($affiliate == NULL) return $this->redirect()->toRoute($this->route);
+        if($affiliate == NULL){
+            $affiliate = $this->em->getRepository('Admin\Entity\AffiliateFamily')->findOneBy(['dni' => $entity->getDni()]);
+            if($affiliate == NULL) return $this->redirect()->toRoute($this->route);
+        }
         $form->get('affiliate_fullname')->setValue($affiliate->getFirstname() . ' ' . $affiliate->getLastname());
 
         $request = $this->getRequest();
@@ -78,7 +81,7 @@ class AffiliatesClaimsController extends AbstractActionController
             if($success){
                 $to_firebase = $entity->toFirebase();
                 $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
-                $to_firebase['authorization_administrative'] = $user->getFirstname() . ' ' . $user->getLastname();
+                $to_firebase['administrative_name'] = $user->getFirstname() . ' ' . $user->getLastname();
 
                 $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
                 $docRef->set($to_firebase, ['merge' => true]);
@@ -104,9 +107,12 @@ class AffiliatesClaimsController extends AbstractActionController
             return $this->em->createQuery('SELECT a FROM Admin\Entity\AffiliateClaim a WHERE a.id = :id')->setParameter('id', $id)->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         }else{
             return $this->em->createQuery('
-                SELECT c.id, c.title, c.detail, CONCAT(a.firstname, \' \', a.lastname) as fullname_affiliate, c.date_answer
+                SELECT c.id, c.title, c.detail, c.date_answer,
+                CONCAT(a.firstname, \' \', a.lastname) as affiliate_fullname,
+                CONCAT(f.firstname, \' \', f.lastname) as family_fullname
                 FROM Admin\Entity\AffiliateClaim c 
-                INNER JOIN Admin\Entity\Affiliate a WITH a.dni = c.dni
+                LEFT JOIN Admin\Entity\Affiliate a WITH a.dni = c.dni
+                LEFT JOIN Admin\Entity\AffiliateFamily f WITH f.dni = c.dni
                 ORDER BY c.id DESC')->getResult(\Doctrine\ORM\Query::HYDRATE_ARRAY);
         }
     }

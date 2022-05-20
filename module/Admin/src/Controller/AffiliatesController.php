@@ -50,6 +50,13 @@ class AffiliatesController extends AbstractActionController
     die;
     */
 
+    private function checkIfDniAlreadyExists($dni){
+        $entity = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy(['dni' => $dni]);
+        if($entity != NULL){
+            throw new \Exception('Ya existe el DNI ingresado');
+        }
+    }
+
     public function addAction(){
         $form = new \Admin\Form\Affiliate($this->em);
         $request = $this->getRequest();
@@ -65,9 +72,10 @@ class AffiliatesController extends AbstractActionController
                 $this->em->persist($entity);
 
                 try {
+                    $this->checkIfDniAlreadyExists($post['dni']);
                     $this->em->flush();
                 }catch(\Throwable $e){
-                    $this->flashMessenger()->addErrorMessage($e->getMessage());
+                    $this->layout()->errorMessage = $e->getMessage();
                     $success = false;
                 }
 
@@ -120,10 +128,11 @@ class AffiliatesController extends AbstractActionController
 
             if($form->isValid()){
                 try {
+                    $this->checkIfDniAlreadyExists($post['dni']);
                     $entity->exchangeArray($post);
                     $this->em->flush();
                 }catch(\Throwable $e){
-                    $this->flashMessenger()->addErrorMessage($e->getMessage());
+                    $this->layout()->errorMessage = $e->getMessage();
                     $success = false;
                 }
 
