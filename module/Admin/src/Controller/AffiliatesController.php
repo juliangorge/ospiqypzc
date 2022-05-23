@@ -83,6 +83,11 @@ class AffiliatesController extends AbstractActionController
                     $to_firebase = $entity->toFirebase(true);
                     $documentReference = $this->firestore->collection($this->collection)->add($to_firebase);
                     $entity->setDocumentId($documentReference->id());
+
+                    $documentReferenceDni = $this->firestore->collection('affiliates_dni')->add([
+                        'dni' => $to_firebase['dni'],
+                        'name' => $to_firebase['name']
+                    ]);
                     
                     try {
                         $this->em->flush();
@@ -114,6 +119,7 @@ class AffiliatesController extends AbstractActionController
         if(!$id) return $this->redirect()->toRoute($this->route);
 
         $entity = $this->em->find('Admin\Entity\Affiliate', $id);
+        $old_dni = $entity->getDni();
         if($entity == NULL) return $this->redirect()->toRoute($this->route);
 
         $form = new \Admin\Form\Affiliate($this->em);
@@ -146,6 +152,18 @@ class AffiliatesController extends AbstractActionController
                 $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
                 $docRef->set($to_firebase, ['merge' => true]);
 
+                $affiliate_dni = $this->firestore->collection('affiliates_dni')->where('dni', '=', $old_dni);
+                $documents = $affiliate_dni->documents();
+
+                foreach ($documents as $document) {
+                    $docRef = $this->firestore->collection('affiliates_dni')->document($document->id());
+                    $docRef->set([
+                        'dni' => $to_firebase['dni'],
+                        'name' => $to_firebase['name'],
+                    ], ['merge' => true]);
+                }
+
+                die;
                 $this->flashMessenger()->addSuccessMessage('Carga exitosa');
                 return $this->redirect()->toRoute($route, [], $query);
             }
