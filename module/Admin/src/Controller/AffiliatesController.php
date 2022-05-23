@@ -163,7 +163,6 @@ class AffiliatesController extends AbstractActionController
                     ], ['merge' => true]);
                 }
 
-                die;
                 $this->flashMessenger()->addSuccessMessage('Carga exitosa');
                 return $this->redirect()->toRoute($route, [], $query);
             }
