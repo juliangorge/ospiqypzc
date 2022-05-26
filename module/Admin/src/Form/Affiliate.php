@@ -153,7 +153,7 @@ class Affiliate extends Form
 
         $this->add([
             'name' => 'affiliate_type',
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
+            'type'  => 'Admin\Form\Element\ObjectSelect',
             'attributes' => [
                 'id' => 'affiliate_type',
                 'required' => true,
@@ -170,8 +170,10 @@ class Affiliate extends Form
                 'object_manager' => $em,
                 'target_class' => 'Admin\Entity\AffiliateType',
                 'property' => 'name',
-                'is_method' => false,
-                'display_empty_item' => true,
+                'find_method'     => 'findBy',
+                'value'           => 'getValue',
+                'value_is_method' => true,
+
                 'empty_item_label' => 'Seleccionar Tipo de Afiliado',
                 'find_method' => [
                     'name'   => 'findBy',
