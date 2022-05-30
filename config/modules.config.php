@@ -30,6 +30,7 @@ return [
     'Laminas\ApiTools\Versioning',
     'DoctrineModule',
     'DoctrineORMModule',
+    'Laminas\ZendFrameworkBridge',
     'API',
     'Auth',
     'Admin',

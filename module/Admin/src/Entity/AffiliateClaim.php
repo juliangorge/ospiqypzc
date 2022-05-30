@@ -71,7 +71,7 @@ class AffiliateClaim
         $this->title = $array['title'];
         $this->detail = $array['detail'];
         $this->detail_answer = $array['detail_answer'];
-        $this->date_answer = new \DateTime();
+        //$this->date_answer = new \DateTime();
         $this->user_id = $array['user_id'];
         $this->dni = $array['dni'];
     }
@@ -97,6 +97,7 @@ class AffiliateClaim
     public function setTitle($v){ $this->title = $v; }
     public function setDetail($v){ $this->detail = $v; }
     public function setDetailAnswer($v){ $this->detail_answer = $v; }
+    public function setDateAnswer($v){ $this->date_answer = $v; }
     public function setDni($v){ $this->dni = $v; }
     public function setUserId($v){ $this->user_id = $v; }
     public function setDocumentId($v){ $this->document_id = $v; }

@@ -66,6 +66,7 @@ class AffiliatesClaimsController extends AbstractActionController
                 try {
                     if($entity->getDateAnswer() == NULL){
                         $entity->exchangeArray($post);
+                        $entity->setDateAnswer(new \DateTime());
                         $this->em->flush();
                     }
                 }catch(\Throwable $e){
