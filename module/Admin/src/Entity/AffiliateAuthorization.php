@@ -98,11 +98,28 @@ class AffiliateAuthorization
     public function getIsApprovedText(){
         if($this->authorization_date == NULL) return 'Pendiente';
 
+        $string = '';
+        switch($this->is_approved){
+            case 0:
+                $string = 'Autorizado';
+                break;
+            case 1:
+                $string = 'NO Autorizado';
+                break;
+            case 2:
+                $string = 'Por favor comuniquese con la Obra Social';
+                break;
+        }
+
+        return $string;
+
+        /*
         if($this->is_approved){
             return 'Autorizado';
         }else{
             return 'NO Autorizado';
         }
+        */
     }
 
     public function setDni($v){ $this->dni = $v; }

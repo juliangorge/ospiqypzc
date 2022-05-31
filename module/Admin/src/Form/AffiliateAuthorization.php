@@ -87,6 +87,7 @@ class AffiliateAuthorization extends Form
                 'value_options' => [
                     '0' => 'NO Autorizar',
                     '1' => 'Autorizar',
+                    '2' => 'Por favor comuniquese con la Obra Social'
                 ],
                 'value_options_attributes' => [
                     'class' => "btn btn-outline-primary"
