@@ -60,6 +60,9 @@ class Affiliate
     protected $region_id;
     // Custom: OSPIQYPZC
 
+    /** @ORM\Column(name="token", type="text", nullable=true) */
+    protected $token;
+
     public function getArrayCopy(){
         return [
             'id' => $this->id,
@@ -75,6 +78,7 @@ class Affiliate
             'affiliate_type' => $this->affiliate_type,
             'affiliate_number' => $this->affiliate_number,
             'region_id' => $this->region_id, // Custom
+            'token' => $this->token,
             'document_id' => $this->document_id,
         ];
     }
@@ -90,6 +94,7 @@ class Affiliate
         $this->affiliate_type = $array['affiliate_type'];
         $this->affiliate_number = strval($array['affiliate_type']) . '00';
         $this->region_id = $array['region_id'];
+        $this->token = '';
         $this->is_active = $array['is_active'];
     }
 
@@ -104,6 +109,7 @@ class Affiliate
         $this->affiliate_type = $array['affiliate_type'];
         $this->affiliate_number = strval($array['affiliate_type']) . '00';
         $this->region_id = $array['region_id'];
+        //$this->token = $array['token'];
         $this->is_active = $array['is_active'];
     }
 
@@ -120,6 +126,7 @@ class Affiliate
         $this->affiliate_type = $array['affiliate_type'];
         $this->affiliate_number = strval($array['affiliate_type']) . '00';
         $this->region_id = $array['region_id'];
+        $this->token = $array['token'];
         $this->is_active = $array['is_active'];
     }
 
@@ -134,6 +141,7 @@ class Affiliate
             'photo_url' => ($this->photo_url == NULL ? '' : $this->photo_url),
             'active_user' => boolval($this->is_active),
             'affiliate_number' => $this->affiliate_number,
+            'token' => $this->token,
             'region_id' => $this->region_id == 1 ? 'Buenos Aires' : 'Entre Ríos' // Custom
         ];
 
@@ -155,6 +163,7 @@ class Affiliate
     public function getAffiliateType(){ return $this->affiliate_type; }
     public function getAffiliateNumber(){ return $this->affiliate_number; }
     public function getRegionId(){ return $this->region_id; } // Custom
+    public function getToken(){ return $this->token; }
     public function getDocumentId(){ return $this->document_id; }
 
     public function setFirstname($v){ $this->firstname = $v; }
@@ -169,5 +178,6 @@ class Affiliate
     public function setAffiliateType($v){ $this->affiliate_type = $v; }
     public function setAffiliateNumber($v){ $this->affiliate_number = $v; }
     public function setRegionId($v){ $this->region_id = $v; } // Custom
+    public function setToken($v){ $this->token = $v; }
     public function setDocumentId($v){ $this->document_id = $v; }
 }
