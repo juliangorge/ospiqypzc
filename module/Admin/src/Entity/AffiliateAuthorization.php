@@ -98,7 +98,7 @@ class AffiliateAuthorization
     public function getIsApprovedText(){
         if($this->authorization_date == NULL) return 'Pendiente';
 
-        $string = '';
+        /*$string = '';
         switch($this->is_approved){
             case 0:
                 $string = 'Autorizado';
@@ -111,15 +111,13 @@ class AffiliateAuthorization
                 break;
         }
 
-        return $string;
+        return $string;*/
 
-        /*
         if($this->is_approved){
             return 'Autorizado';
         }else{
             return 'NO Autorizado';
         }
-        */
     }
 
     public function setDni($v){ $this->dni = $v; }
