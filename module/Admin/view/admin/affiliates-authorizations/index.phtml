@@ -32,7 +32,7 @@
 											<td><small>
 												<span ng-show="item.status == 0 && item.authorization_date" class="badge badge-danger">No Autorizado</span>
 												<span ng-show="item.status == 1" class="badge badge-success">Autorizado</span>
-												<span ng-show="item.status == 2 && item.authorization_date" class="badge badge-danger">Comuniquese con la OS</span>
+												<span ng-show="item.status == 2 && item.authorization_date" class="badge badge-secondary">Comuniquese con la OS</span>
 												<span ng-show="!item.authorization_date" class="badge badge-info">Pendiente</span>
 
 												{{item.authorization_date ? (' - ' + item.authorization_date.date | cmdate: 'dd/MM/yyyy HH:mm') : ''}}
