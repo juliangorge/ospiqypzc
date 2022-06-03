@@ -124,7 +124,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
                 v.dni as affiliate_dni, 
                 CONCAT(a.firstname, \' \', a.lastname) as affiliate_fullname,
                 CONCAT(f.firstname, \' \', f.lastname) as family_fullname,
-                v.authorization_date, v.is_approved, v.date_created, v.type_of_authorization, CONCAT(u.firstname, \' \', u.lastname) as user_fullname
+                v.authorization_date, v.status, v.date_created, v.type_of_authorization, CONCAT(u.firstname, \' \', u.lastname) as user_fullname
                 FROM Admin\Entity\AffiliateAuthorization v 
                 LEFT JOIN Admin\Entity\Affiliate a WITH a.dni = v.dni
                 LEFT JOIN Admin\Entity\AffiliateFamily f WITH f.dni = v.dni

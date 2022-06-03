@@ -31,7 +31,7 @@ class AffiliateAuthorization
     /** @ORM\Column(name="date_created", type="datetime", nullable=false, options={"default": "CURRENT_TIMESTAMP"}) */
     protected $date_created;
 
-    /** @ORM\Column(name="status", type="status", nullable=false, options={"default": 0}) */
+    /** @ORM\Column(name="status", type="integer", nullable=false, options={"default": 0}) */
     protected $status;
 
     /** @ORM\Column(name="type_of_authorization", type="string", nullable=false) */
