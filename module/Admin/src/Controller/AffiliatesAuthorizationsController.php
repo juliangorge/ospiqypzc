@@ -62,7 +62,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
 
         if($entity->getUserId() != NULL){
             $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
-            $form->get('authorizing_administrative')->setValue($user->getFirstname() . ' ' . $user->getLastname());
+            $form->get('administrative_name')->setValue($user->getFirstname() . ' ' . $user->getLastname());
         }
 
         $request = $this->getRequest();
@@ -90,7 +90,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
                 $to_firebase = $entity->toFirebase();
 
                 $user = $this->em->find('Auth\Entity\User', $entity->getUserId());
-                $to_firebase['authorizing_administrative'] = $user->getFirstname() . ' ' . $user->getLastname();
+                $to_firebase['administrative_name'] = $user->getFirstname() . ' ' . $user->getLastname();
 
                 $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
                 $docRef->set($to_firebase, ['merge' => true]);
