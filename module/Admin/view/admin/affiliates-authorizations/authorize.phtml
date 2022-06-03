@@ -19,7 +19,7 @@
 		    				<div class="col-md-12 mb-4">
 		    					Fecha de solicitud: <?= $this->item->getDateCreated()->format('d/m/Y H:i:s') ?>
 		    					<br>
-		    					Estado: <?= $this->item->getIsApprovedText() ?>
+		    					Estado: <?= $this->item->getStatusText() ?>
 							</div>
 
 							<?php if($this->item->getUserId()): ?>
@@ -65,7 +65,7 @@
 							</div>
 
 							<div class="col-md-12">
-								<?= $this->formRow($form->get('is_approved')) ?>
+								<?= $this->formRow($form->get('status')) ?>
 
 							</div>
 							

@@ -31,8 +31,8 @@ class AffiliateAuthorization
     /** @ORM\Column(name="date_created", type="datetime", nullable=false, options={"default": "CURRENT_TIMESTAMP"}) */
     protected $date_created;
 
-    /** @ORM\Column(name="is_approved", type="boolean", nullable=false, options={"default": 0}) */
-    protected $is_approved;
+    /** @ORM\Column(name="status", type="status", nullable=false, options={"default": 0}) */
+    protected $status;
 
     /** @ORM\Column(name="type_of_authorization", type="string", nullable=false) */
     protected $type_of_authorization;
@@ -53,7 +53,7 @@ class AffiliateAuthorization
             'user_id' => $this->user_id,
             'authorization_date' => $this->authorization_date,
             'date_created' => $this->date_created,
-            'is_approved' => $this->is_approved,
+            'status' => $this->status,
             'type_of_authorization' => $this->type_of_authorization,
             'medical_order_image_url' => $this->medical_order_image_url,
             'complementary_studies_image_url' => $this->complementary_studies_image_url,
@@ -66,7 +66,7 @@ class AffiliateAuthorization
         $this->user_id = $array['user_id'];
         $this->authorization_date = $array['authorization_date'];
         $this->date_created = new \DateTime();
-        $this->is_approved = $array['is_approved'];
+        $this->status = $array['status'];
         $this->type_of_authorization = $array['type_of_authorization'];
         $this->medical_order_image_url = $array['medical_order_image_url'];
     }
@@ -74,13 +74,13 @@ class AffiliateAuthorization
     public function exchangeArray(array $array){
         $this->user_id = $array['user_id'];
         $this->authorization_date = new \DateTime();
-        $this->is_approved = boolval($array['is_approved']);
+        $this->status = $array['status'];
     }
 
     public function toFirebase(){
         return [
             'authorization_date' => $this->authorization_date == NULL ? '' : $this->authorization_date->format('d/m/Y'),
-            'is_approved' => $this->is_approved,
+            'status' => $this->getStatusText(),
         ];
     }
 
@@ -89,42 +89,36 @@ class AffiliateAuthorization
     public function getUserID(){ return $this->user_id; }
     public function getAuthorizationDate(){ return $this->authorization_date; }
     public function getDateCreated(){ return $this->date_created; }
-    public function getIsApproved(){ return $this->is_approved; }
+    public function getStatus(){ return $this->status; }
     public function getTypeOfAuthorization(){ return $this->type_of_authorization; }
     public function getMedicalOrderImageUrl(){ return $this->medical_order_image_url; }
     public function getComplementaryStudiesImageUrl(){ return $this->complementary_studies_image_url; }
     public function getDocumentId(){ return $this->document_id; }
 
-    public function getIsApprovedText(){
+    public function getStatusText(){
         if($this->authorization_date == NULL) return 'Pendiente';
 
-        /*$string = '';
-        switch($this->is_approved){
+        $string = '';
+        switch($this->status){
             case 0:
-                $string = 'Autorizado';
+                $string = 'No Autorizado';
                 break;
             case 1:
-                $string = 'NO Autorizado';
+                $string = 'Autorizado';
                 break;
             case 2:
-                $string = 'Por favor comuniquese con la Obra Social';
+                $string = 'Por favor, comuniquese con la Obra Social';
                 break;
         }
 
-        return $string;*/
-
-        if($this->is_approved){
-            return 'Autorizado';
-        }else{
-            return 'NO Autorizado';
-        }
+        return $string;
     }
 
     public function setDni($v){ $this->dni = $v; }
     public function setUserID($v){ $this->user_id = $v; }
     public function setAuthorizationDate($v){ $this->authorization_date = $v; }
     public function setDateCreated($v){ $this->date_created = $v; }
-    public function setIsApproved($v){ $this->is_approved = $v; }
+    public function setStatus($v){ $this->status = $v; }
     public function setTypeOfAuthorization($v){ $this->type_of_authorization = $v; }
     public function setMedicalOrderImageUrl($v){ $this->medical_order_image_url = $v; }
     public function setComplementaryStudiesImageUrl($v){ $this->complementary_studies_image_url = $v; }

@@ -73,10 +73,10 @@ class AffiliateAuthorization extends Form
         ]);
 
         $this->add([
-            'name' => 'is_approved',
+            'name' => 'status',
             'type' => \Laminas\Form\Element\Radio::class,
             'attributes' => [
-                'id' => 'is_approved',
+                'id' => 'status',
                 'required' => true
             ],
             'options' => [
@@ -114,7 +114,7 @@ class AffiliateAuthorization extends Form
             'affiliate_fullname',
             'type_of_authorization',
             'administrative_name',
-            'is_approved',
+            'status',
             'user_id',
             'submit'
         ]);
