@@ -50,60 +50,16 @@ class UnionNews
         $this->title = $array['title'];
         $this->body = $array['body'];
         $this->date = new \DateTime($array['date']);
-
-        // Verifico que la imagen sea válida
-        $empty = '';
-        if($array['picture_url'] != ''){
-            if(exif_imagetype($array['picture_url']) === FALSE) {
-                $this->picture_url = $empty;
-            }else{
-                $this->picture_url = $array['picture_url'];
-            }
-        }else{
-            $this->picture_url = $empty;
-        }
-
-        // Verifico que el URL sea válido
-        if($array['piece_of_news_url'] != ''){
-            if(filter_var($array['piece_of_news_url'], FILTER_VALIDATE_URL) === FALSE) {
-                $this->piece_of_news_url = 'https://obrasocialquimicos.com.ar/';
-            }else{
-                $this->piece_of_news_url = $array['piece_of_news_url'];
-            }
-        }else{
-            $this->piece_of_news_url = $empty;
-        }
-
+        $this->picture_url = $this->validatePictureUrl($array['picture_url']);
+        $this->piece_of_news_url = $this->validatePieceOfNewsUrl($array['piece_of_news_url']);
     }
 
     public function exchangeArray(array $array){
         $this->title = $array['title'];
         $this->body = $array['body'];
         $this->date = new \DateTime($array['date']);
-
-        // Verifico que la imagen sea válida
-        $empty = '';
-        if($array['picture_url'] != ''){
-            if(exif_imagetype($array['picture_url']) === FALSE) {
-                $this->picture_url = $empty;
-            }else{
-                $this->picture_url = $array['picture_url'];
-            }
-        }else{
-            $this->picture_url = $empty;
-        }
-
-        // Verifico que el URL sea válido
-        if($array['piece_of_news_url'] != ''){
-            if(filter_var($array['piece_of_news_url'], FILTER_VALIDATE_URL) === FALSE) {
-                $this->piece_of_news_url = 'https://obrasocialquimicos.com.ar/';
-            }else{
-                $this->piece_of_news_url = $array['piece_of_news_url'];
-            }
-        }else{
-            $this->piece_of_news_url = $empty;
-        }
-
+        $this->picture_url = $this->validatePictureUrl($array['picture_url']);
+        $this->piece_of_news_url = $this->validatePieceOfNewsUrl($array['piece_of_news_url']);
         $this->document_id = $array['document_id'];
     }
 
@@ -132,4 +88,29 @@ class UnionNews
     public function setPictureUrl($v){ $this->picture_url = $v; }
     public function setPieceOfNewsUrl($v){ $this->piece_of_news_url = $v; }
     public function setDocumentId($v){ $this->document_id = $v; }
+
+    private function validatePieceOfNewsUrl($piece_of_news_url){
+        // Verifico que el URL sea válido
+        $url = 'https://obrasocialquimicos.com.ar/';
+
+        if(filter_var($piece_of_news_url, FILTER_VALIDATE_URL) === FALSE) {
+            return $url;
+        }else{
+            return $piece_of_news_url;
+        }
+    }
+
+    private function validatePictureUrl($picture_url){
+        // Verifico que la imagen sea válida
+        $empty = '';
+        if($picture_url != ''){
+            if(exif_imagetype($picture_url) === FALSE) {
+                return $empty;
+            }else{
+                return $picture_url;
+            }
+        }else{
+            return $empty;
+        }
+    }
 }

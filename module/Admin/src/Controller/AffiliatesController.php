@@ -230,6 +230,9 @@ class AffiliatesController extends AbstractActionController
 
         $import = new \Admin\Controller\Import($this->em);
 
+        echo '<pre>' , print_r($import->initialize()) , '</pre>';
+        die;
+
         try {
             $import->initialize();
         }
