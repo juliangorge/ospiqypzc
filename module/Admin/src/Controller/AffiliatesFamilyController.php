@@ -37,30 +37,20 @@ class AffiliatesFamilyController extends AbstractActionController
         ]);
     }
 
-    /*
-    Migración:
+    private function checkIfDniAlreadyExists($dni, $id = NULL){
+        $array = [
+            'dni' => $dni
+        ];
 
-    $affiliates = $this->em->createQuery('SELECT a FROM Admin\Entity\AffiliateFamily a WHERE a.document_id IS NULL')->getResult();
-    foreach($affiliates as $a){
-        $to_firebase = $a->toFirebase();
-        $type_of_family_member = $this->em->find('Admin\Entity\TypeOfFamilyMember', $to_firebase['type_of_family_member_id']);
-        $to_firebase['type_of_family_member'] = $type_of_family_member->getName();
+        if($id != NULL){
+            $array['id'] = $id;
 
-        $aff = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy(['dni' => $a->getAffiliateDni()]);
-        if($aff == NULL) continue;
-        $to_firebase['affiliate_number'] = strval($aff->getAffiliateType()) . '0' . strval($type_of_family_member->getId());
-        unset($to_firebase['type_of_family_member_id']);
+            $entity = $this->em->createQuery('SELECT a FROM Admin\Entity\Affiliate a WHERE a.id != :id AND a.dni = :dni')->setParameters($array)->getResult();
+        }
+        else{
+            $entity = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy($array);
+        }
 
-        $documentReference = $this->firestore->collection($this->collection)->add($to_firebase);
-        $a->setDocumentId($documentReference->id());
-    
-        $this->em->flush();
-    }
-    die;
-    */
-
-    private function checkIfDniAlreadyExists($dni){
-        $entity = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy(['dni' => $dni]);
         if($entity != NULL){
             throw new \Exception('Ya existe el DNI ingresado');
         }
@@ -158,7 +148,7 @@ class AffiliatesFamilyController extends AbstractActionController
                     $success = false;
                 }else{
                     try {
-                        $this->checkIfDniAlreadyExists($post['dni']);
+                        $this->checkIfDniAlreadyExists($post['dni'], $id);
                         $post['region_id'] = $affiliate->getRegionId();
                         $entity->exchangeArray($post);
                         $this->em->flush();

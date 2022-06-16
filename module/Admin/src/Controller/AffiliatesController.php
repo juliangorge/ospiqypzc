@@ -37,8 +37,20 @@ class AffiliatesController extends AbstractActionController
         ]);
     }
 
-    private function checkIfDniAlreadyExists($dni){
-        $entity = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy(['dni' => $dni]);
+    private function checkIfDniAlreadyExists($dni, $id = NULL){
+        $array = [
+            'dni' => $dni
+        ];
+
+        if($id != NULL){
+            $array['id'] = $id;
+
+            $entity = $this->em->createQuery('SELECT a FROM Admin\Entity\Affiliate a WHERE a.id != :id AND a.dni = :dni')->setParameters($array)->getResult();
+        }
+        else{
+            $entity = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy($array);
+        }
+
         if($entity != NULL){
             throw new \Exception('Ya existe el DNI ingresado');
         }
@@ -121,7 +133,7 @@ class AffiliatesController extends AbstractActionController
 
             if($form->isValid()){
                 try {
-                    $this->checkIfDniAlreadyExists($post['dni']);
+                    $this->checkIfDniAlreadyExists($post['dni'], $id);
                     $entity->exchangeArray($post);
                     $this->em->flush();
                 }catch(\Throwable $e){
