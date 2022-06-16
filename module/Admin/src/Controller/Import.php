@@ -7,9 +7,9 @@ class Import
     protected $filename;
     protected $firestore;
 
-    public function __construct($em){
+    public function __construct($em, $config){
         $this->em = $em;
-        $this->filename = 'https://content.saas.com.ar/padrones/10/export-afiliados.csv';
+        $this->filename = $config['exportAfiliadosFile'];
 
         $this->firestore = new \Google\Cloud\Firestore\FirestoreClient([
             'projectId' => 'ospiqyp-oridhean',
@@ -184,6 +184,8 @@ class Import
 
     */
     public function initialize(){
+
+        die;
         ini_set('max_execution_time', '30000');
         set_time_limit(30000);
         ini_set('memory_limit', '-1');

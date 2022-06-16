@@ -215,7 +215,7 @@ class AffiliatesController extends AbstractActionController
             return new JsonModel(['success' => false]);
         }
 
-        $import = new \Admin\Controller\Import($this->em);
+        $import = new \Admin\Controller\Import($this->em, $this->config);
 
         echo '<pre>' , print_r($import->initialize()) , '</pre>';
         die;
