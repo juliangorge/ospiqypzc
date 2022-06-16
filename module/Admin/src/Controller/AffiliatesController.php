@@ -37,19 +37,6 @@ class AffiliatesController extends AbstractActionController
         ]);
     }
 
-    /*
-    Migración:
-
-    $affiliates = $this->em->createQuery('SELECT a FROM Admin\Entity\Affiliate a WHERE a.document_id IS NULL')->getResult();
-    foreach($affiliates as $a){
-        $to_firebase = $a->toFirebase();
-        $documentReference = $this->firestore->collection($this->collection)->add($to_firebase);
-        $a->setDocumentId($documentReference->id());
-    }
-    $this->em->flush();
-    die;
-    */
-
     private function checkIfDniAlreadyExists($dni){
         $entity = $this->em->getRepository('Admin\Entity\Affiliate')->findOneBy(['dni' => $dni]);
         if($entity != NULL){

@@ -126,11 +126,18 @@ class Affiliate
         $this->affiliate_type = $array['affiliate_type'];
         $this->affiliate_number = strval($array['affiliate_type']) . '00';
         $this->region_id = $array['region_id'];
-        $this->token = $array['token'];
-        $this->is_active = $array['is_active'];
+        //$this->token = $array['token'];
+        $this->is_active = true;
     }
 
-    public function toFirebase($update = false){
+    public function toAffiliateDni(){
+        return [
+            'name' => $this->firstname . ' ' . $this->lastname,
+            'dni' => $this->dni
+        ];
+    }
+
+    public function toFirebase($new_affiliate = false){
         $array = [
             'name' => $this->firstname . ' ' . $this->lastname,
             'dni' => $this->dni,
@@ -141,11 +148,13 @@ class Affiliate
             'photo_url' => ($this->photo_url == NULL ? '' : $this->photo_url),
             'active_user' => boolval($this->is_active),
             'affiliate_number' => $this->affiliate_number,
-            'token' => $this->token,
             'region_id' => $this->region_id == 1 ? 'Buenos Aires' : 'Entre Ríos' // Custom
         ];
 
-        if($update) $array['is_data_validated'] = false;
+        if($new_affiliate){
+            $array['is_data_validated'] = false;
+            $array['token'] = '';
+        }
 
         return $array;
     }

@@ -54,6 +54,9 @@ class AffiliateFamily
     protected $region_id;
     // Custom: OSPIQYPZC
 
+    /** @ORM\Column(name="is_active", type="boolean", nullable=false) */
+    protected $is_active;
+
     public function getArrayCopy(){
         return [
             'id' => $this->id,
@@ -78,9 +81,11 @@ class AffiliateFamily
         $this->email = $array['email'];
         $this->affiliate_dni = $array['affiliate_dni'];
         $this->type_of_family_member_id = $array['type_of_family_member_id'];
+        $this->type_of_family_member = $array['type_of_family_member'];
         $this->phone_number = $array['phone_number'];
         $this->birthday = new \DateTime($array['birthday']);
         $this->region_id = $array['region_id'];
+        $this->is_active = true;
     }
 
     public function exchangeArray(array $array){
@@ -93,6 +98,7 @@ class AffiliateFamily
         $this->phone_number = $array['phone_number'];
         $this->birthday = new \DateTime($array['birthday']);
         $this->region_id = $array['region_id'];
+        $this->is_active = true;
     }
 
     public function fromImport(array $array){
@@ -107,6 +113,7 @@ class AffiliateFamily
         $this->type_of_family_member_id = $array['type_of_family_member_id'];
         $this->phone_number = $array['phone_number'];
         $this->region_id = $array['region_id'];
+        $this->is_active = true;
     }
 
     public function toFirebase(){
@@ -134,6 +141,7 @@ class AffiliateFamily
     public function getBirthday() { return $this->birthday; }
     public function getPhotoUrl() { return $this->photo_url; }
     public function getRegionId(){ return $this->region_id; } // Custom
+    public function getIsActive(){ return $this->is_active; }
     public function getDocumentId() { return $this->document_id; }
 
     public function setFirstname($v) { $this->firstname = $v; }
@@ -146,5 +154,6 @@ class AffiliateFamily
     public function setBirthday($v) { $this->birthday = $v; }
     public function setPhotoUrl($v) { $this->photo_url = $v; }
     public function setRegionId($v){ $this->region_id = $v; } // Custom
+    public function setIsActive($v){ $this->is_active = $v; }
     public function setDocumentId($v) { $this->document_id = $v; }
 }
