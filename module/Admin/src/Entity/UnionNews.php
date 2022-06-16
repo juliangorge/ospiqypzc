@@ -102,15 +102,17 @@ class UnionNews
 
     private function validatePictureUrl($picture_url){
         // Verifico que la imagen sea válida
-        $empty = '';
+        //$empty = '';
+        $template = 'https://obrasocialquimicos.com.ar/wp-content/uploads/2022/06/Sindicato-e1655155313930.jpg';
         if($picture_url != ''){
             if(exif_imagetype($picture_url) === FALSE) {
-                return $empty;
+                return $template;
+                //return $empty;
             }else{
                 return $picture_url;
             }
         }else{
-            return $empty;
+            return $template;
         }
     }
 }
