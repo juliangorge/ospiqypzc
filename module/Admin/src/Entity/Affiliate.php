@@ -52,6 +52,9 @@ class Affiliate
     /** @ORM\Column(name="affiliate_number", type="string", nullable=true) */
     protected $affiliate_number;
 
+    /** @ORM\Column(name="credential_number", type="string", nullable=true) */
+    protected $credential_number;
+
     /** @ORM\Column(name="document_id", type="string", unique=true, nullable=true) */
     protected $document_id;
 
@@ -77,6 +80,7 @@ class Affiliate
             'photo_url' => $this->photo_url,
             'affiliate_type' => $this->affiliate_type,
             'affiliate_number' => $this->affiliate_number,
+            'credential_number' => $this->credential_number,
             'region_id' => $this->region_id, // Custom
             'token' => $this->token,
             'document_id' => $this->document_id,
@@ -93,6 +97,7 @@ class Affiliate
         $this->phone_number = $array['phone_number'];
         $this->affiliate_type = $array['affiliate_type'];
         $this->affiliate_number = strval($array['affiliate_type']) . '00';
+        $this->credential_number = $array['credential_number'];
         $this->region_id = $array['region_id'];
         $this->token = '';
         $this->is_active = $array['is_active'];
@@ -108,6 +113,7 @@ class Affiliate
         $this->phone_number = $array['phone_number'];
         $this->affiliate_type = $array['affiliate_type'];
         $this->affiliate_number = strval($array['affiliate_type']) . '00';
+        $this->credential_number = $array['credential_number'];
         $this->region_id = $array['region_id'];
         //$this->token = $array['token'];
         $this->is_active = $array['is_active'];
@@ -125,6 +131,7 @@ class Affiliate
         $this->phone_number = $array['phone_number'];
         $this->affiliate_type = $array['affiliate_type'];
         $this->affiliate_number = strval($array['affiliate_type']) . '00';
+        $this->credential_number = $array['credential_number'];
         $this->region_id = $array['region_id'];
         //$this->token = $array['token'];
         $this->is_active = true;
@@ -148,6 +155,7 @@ class Affiliate
             'photo_url' => ($this->photo_url == NULL ? '' : $this->photo_url),
             'active_user' => boolval($this->is_active),
             'affiliate_number' => $this->affiliate_number,
+            'credential_number' => $this->credential_number,
             'region_id' => $this->region_id == 1 ? 'Buenos Aires' : 'Entre Ríos' // Custom
         ];
 
@@ -171,6 +179,7 @@ class Affiliate
     public function getIsActive(){ return $this->is_active; }
     public function getAffiliateType(){ return $this->affiliate_type; }
     public function getAffiliateNumber(){ return $this->affiliate_number; }
+    public function getCredentialNumber(){ return $this->credential_number; }
     public function getRegionId(){ return $this->region_id; } // Custom
     public function getToken(){ return $this->token; }
     public function getDocumentId(){ return $this->document_id; }
@@ -186,6 +195,7 @@ class Affiliate
     public function setIsActive($v){ $this->is_active = $v; }
     public function setAffiliateType($v){ $this->affiliate_type = $v; }
     public function setAffiliateNumber($v){ $this->affiliate_number = $v; }
+    public function setCredentialNumber($v){ $this->credential_number = $v; }
     public function setRegionId($v){ $this->region_id = $v; } // Custom
     public function setToken($v){ $this->token = $v; }
     public function setDocumentId($v){ $this->document_id = $v; }

@@ -34,6 +34,9 @@ class AffiliateFamily
     /** @ORM\Column(name="affiliate_dni", type="string", length=10, unique=false, nullable=false) */
     protected $affiliate_dni;
 
+    /** @ORM\Column(name="credential_number", type="string", nullable=true) */
+    protected $credential_number;
+
     /** @ORM\Column(name="type_of_family_member_id", type="integer", nullable=false) */
     protected $type_of_family_member_id;
 
@@ -65,6 +68,7 @@ class AffiliateFamily
             'dni' => $this->dni,
             'email' => $this->email,
             'affiliate_dni' => $this->affiliate_dni,
+            'credential_number' => $this->credential_number,
             'type_of_family_member_id' => $this->type_of_family_member_id,
             'phone_number' => $this->phone_number,
             'birthday' => $this->birthday,
@@ -80,6 +84,7 @@ class AffiliateFamily
         $this->dni = $array['dni'];
         $this->email = $array['email'];
         $this->affiliate_dni = $array['affiliate_dni'];
+        $this->credential_number = $array['credential_number'];
         $this->type_of_family_member_id = $array['type_of_family_member_id'];
         $this->type_of_family_member = $array['type_of_family_member'];
         $this->phone_number = $array['phone_number'];
@@ -94,6 +99,7 @@ class AffiliateFamily
         $this->dni = $array['dni'];
         $this->email = $array['email'];
         $this->affiliate_dni = $array['affiliate_dni'];
+        $this->credential_number = $array['credential_number'];
         $this->type_of_family_member_id = $array['type_of_family_member_id'];
         $this->phone_number = $array['phone_number'];
         $this->birthday = new \DateTime($array['birthday']);
@@ -110,6 +116,7 @@ class AffiliateFamily
         $this->email = $array['email'];
         $this->birthday = $birthday;
         $this->affiliate_dni = $array['affiliate_dni'];
+        $this->credential_number = $array['credential_number'];
         $this->type_of_family_member_id = $array['type_of_family_member_id'];
         $this->phone_number = $array['phone_number'];
         $this->region_id = $array['region_id'];
@@ -126,6 +133,7 @@ class AffiliateFamily
             'photo_url' => ($this->photo_url == NULL ? '' : $this->photo_url),
             'type_of_family_member_id' => $this->type_of_family_member_id,
             'affiliate_dni' => $this->affiliate_dni,
+            'credential_number' => $this->credential_number,
             'region' => $this->region_id == 1 ? 'Buenos Aires' : 'Entre Ríos' // Custom
         ];
     }
@@ -136,6 +144,7 @@ class AffiliateFamily
     public function getDni() { return $this->dni; }
     public function getEmail() { return $this->email; }
     public function getAffiliateDni() { return $this->affiliate_dni; }
+    public function getCredentialNumber(){ return $this->credential_number; }
     public function getTypeOfFamilyMemberId() { return $this->type_of_family_member_id; }
     public function getPhoneNumber() { return $this->phone_number; }
     public function getBirthday() { return $this->birthday; }
@@ -149,6 +158,7 @@ class AffiliateFamily
     public function setDni($v) { $this->dni = $v; }
     public function setEmail($v) { $this->email = $v; }
     public function setAffiliateDni($v) { $this->affiliate_dni = $v; }
+    public function setCredentialNumber($v){ $this->credential_number = $v; }
     public function setTypeOfFamilyMemberId($v) { $this->type_of_family_member_id = $v; }
     public function setPhoneNumber($v) { $this->phone_number = $v; }
     public function setBirthday($v) { $this->birthday = $v; }

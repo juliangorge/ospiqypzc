@@ -222,8 +222,7 @@ class AffiliatesController extends AbstractActionController
 
     public function importAction()
     {
-        $whitelist = ['127.0.0.1', '::1'];
-        if(!in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
+        if(!empty($_SERVER['REMOTE_ADDR'])){
             return new JsonModel(['success' => false]);
         }
 

@@ -17,56 +17,65 @@ class Import
         ]);
     }
 
+
+    public function encodeToUtf8($string) {
+         return mb_convert_encoding($string, "UTF-8", mb_detect_encoding($string, "UTF-8, ISO-8859-1, ISO-8859-15", true));
+    }
+
+    public function encodeToIso($string) {
+         return mb_convert_encoding($string, "ISO-8859-1", mb_detect_encoding($string, "UTF-8, ISO-8859-1, ISO-8859-15", true));
+    }
+
     // PRE:
     // POST: Construye array con los datos seleccionados de la linea
     private function inicializarLinea(array $linea = []) : array {
         if(!sizeof($linea)) return [];
 
         return [
-            'id' => $linea[0],
-            'cuil' => $linea[1],
-            'cuil_titular' => $linea[2],
-            'parentesco_codigo' => $linea[3],
-            'parentesco_nombre' => $linea[4],
-            'tipo_documento_codigo' => $linea[5],
-            'tipo_documento_nombre' => $linea[6],
-            'numero_documento' => $linea[7],
-            'nombre' => $linea[8],
-            'apellido' => $linea[9],
-            'fecha_nacimiento' => $linea[10],
-            'tipo_beneficiario_codigo' => $linea[11],
-            'tipo_beneficiario_nombre' => $linea[12],
-            'situacion_revista_codigo' => $linea[13],
-            'situacion_revista_nombre' => $linea[14],
-            'estado_civil_codigo' => $linea[15],
-            'estado_civil_nombre' => $linea[16],
-            'incapacitado_tipo_nombre' => $linea[17],
-            'nacionalidad_codigo' => $linea[18],
-            'nacionalidad_nombre' => $linea[19],
-            'provincia' => $linea[20],
-            'localidad' => $linea[21],
-            'codigo_postal' => $linea[22],
-            'calle' => $linea[23],
-            'numero' => $linea[24],
-            'piso' => $linea[25],
-            'departamento' => $linea[26],
-            'telefono_celular' => $linea[27],
-            'telefono_laboral' => $linea[28],
-            'telefono_particular' => $linea[29],
-            'email' => $linea[30],
-            'sexo' => $linea[31],
-            'numero_afiliado' => $linea[32],
-            'gerenciador_codigo' => $linea[33],
-            'gerenciador_nombre' => $linea[34],
-            'gerenciador_plan' => $linea[35],
-            'ultima_fecha_alta' => $linea[36],
-            'ultima_fecha_baja' => $linea[37],
-            'vencimiento_certificado_estudio' => $linea[38],
-            'activo' => $linea[39],
-            'ultimo_tipo_movimiento' => $linea[40],
-            'tags' => $linea[41],
-            'cuit_empleador' => $linea[42],
-            'razon_social' => $linea[43]
+            'id' => $this->encodeToUtf8($linea[0]),
+            'cuil' => $this->encodeToUtf8($linea[1]),
+            'cuil_titular' => $this->encodeToUtf8($linea[2]),
+            'parentesco_codigo' => $this->encodeToUtf8($linea[3]),
+            'parentesco_nombre' => $this->encodeToUtf8($linea[4]),
+            'tipo_documento_codigo' => $this->encodeToUtf8($linea[5]),
+            'tipo_documento_nombre' => $this->encodeToUtf8($linea[6]),
+            'numero_documento' => $this->encodeToUtf8($linea[7]),
+            'nombre' => $this->encodeToUtf8($linea[8]),
+            'apellido' => $this->encodeToUtf8($linea[9]),
+            'fecha_nacimiento' => $this->encodeToUtf8($linea[10]),
+            'tipo_beneficiario_codigo' => $this->encodeToUtf8($linea[11]),
+            'tipo_beneficiario_nombre' => $this->encodeToUtf8($linea[12]),
+            'situacion_revista_codigo' => $this->encodeToUtf8($linea[13]),
+            'situacion_revista_nombre' => $this->encodeToUtf8($linea[14]),
+            'estado_civil_codigo' => $this->encodeToUtf8($linea[15]),
+            'estado_civil_nombre' => $this->encodeToUtf8($linea[16]),
+            'incapacitado_tipo_nombre' => $this->encodeToUtf8($linea[17]),
+            'nacionalidad_codigo' => $this->encodeToUtf8($linea[18]),
+            'nacionalidad_nombre' => $this->encodeToUtf8($linea[19]),
+            'provincia' => $this->encodeToUtf8($linea[20]),
+            'localidad' => $this->encodeToUtf8($linea[21]),
+            'codigo_postal' => $this->encodeToUtf8($linea[22]),
+            'calle' => $this->encodeToUtf8($linea[23]),
+            'numero' => $this->encodeToUtf8($linea[24]),
+            'piso' => $this->encodeToUtf8($linea[25]),
+            'departamento' => $this->encodeToUtf8($linea[26]),
+            'telefono_celular' => $this->encodeToUtf8($linea[27]),
+            'telefono_laboral' => $this->encodeToUtf8($linea[28]),
+            'telefono_particular' => $this->encodeToUtf8($linea[29]),
+            'email' => $this->encodeToUtf8($linea[30]),
+            'sexo' => $this->encodeToUtf8($linea[31]),
+            'numero_afiliado' => $this->encodeToUtf8($linea[32]),
+            'gerenciador_codigo' => $this->encodeToUtf8($linea[33]),
+            'gerenciador_nombre' => $this->encodeToUtf8($linea[34]),
+            'gerenciador_plan' => $this->encodeToUtf8($linea[35]),
+            'ultima_fecha_alta' => $this->encodeToUtf8($linea[36]),
+            'ultima_fecha_baja' => $this->encodeToUtf8($linea[37]),
+            'vencimiento_certificado_estudio' => $this->encodeToUtf8($linea[38]),
+            'activo' => $this->encodeToUtf8($linea[39]),
+            'ultimo_tipo_movimiento' => $this->encodeToUtf8($linea[40]),
+            'tags' => $this->encodeToUtf8($linea[41]),
+            'cuit_empleador' => $this->encodeToUtf8($linea[42]),
+            'razon_social' => $this->encodeToUtf8($linea[43])
         ];
     }
 
@@ -74,13 +83,14 @@ class Import
         $nombre_apellido = $this->procesarNombreApellido($array);
 
         return [
-            'firstname' => $nombre_apellido['firstname'],
-            'lastname' => $nombre_apellido['lastname'],
+            'firstname' => trim($nombre_apellido['firstname']),
+            'lastname' => trim($nombre_apellido['lastname']),
             'dni' => strval((int)$array['numero_documento']),
             'email' => $array['email'],
             'birthday' => $array['fecha_nacimiento'],
             'location' => $array['localidad'],
-            'phone_number' => $array['telefono_particular'],
+            'phone_number' => $array['telefono_celular'],
+            'credential_number' => $array['numero_afiliado'],
             'affiliate_type' => $this->procesarTipoAfiliado($array['gerenciador_plan']),
             'region_id' => $this->procesarRegion($array['provincia']),
             'is_active' => $array['activo'] == 'Si'
@@ -89,15 +99,16 @@ class Import
 
     private function procesarLineaFamiliar(array $array) : array {
         $nombre_apellido = $this->procesarNombreApellido($array);
-        
+
         return [
             'firstname' => $nombre_apellido['firstname'],
             'lastname' => $nombre_apellido['lastname'],
             'dni' => strval((int)$array['numero_documento']),
             'email' => $array['email'],
+            'credential_number' => $array['numero_afiliado'],
             'affiliate_dni' => strval((int)(substr($array['cuil_titular'], -9, 8))),
             'type_of_family_member_id' => $this->procesarTipoFamiliar($array['parentesco_codigo']),
-            'phone_number' => $array['telefono_particular'],
+            'phone_number' => $array['telefono_celular'],
             'birthday' => $array['fecha_nacimiento'],
             'region_id' => $this->procesarRegion($array['provincia']),
         ];
@@ -114,12 +125,20 @@ class Import
         if ($array['nombre'] == NULL) {
             $data = explode(', ', $array['apellido']);
 
-            $procesado = ['firstname' => ucwords(strtolower($data[1])), 'lastname' => ucwords(strtolower($data[0]))];
+            $procesado = [
+                'firstname' => $this->encodeToUtf8(ucwords(mb_strtolower($data[1]))), 
+                'lastname' => $this->encodeToUtf8(ucwords(mb_strtolower($data[0]))),
+            ];
 
         } else {
-            $procesado = ['firstname' => ucwords(strtolower($array['nombre'])), 'lastname' => ucwords(strtolower($array['apellido']))];
+
+            $procesado = [
+                'firstname' => $this->encodeToUtf8(ucwords(mb_strtolower($array['nombre']))),
+                'lastname' => $this->encodeToUtf8(ucwords(mb_strtolower($array['apellido']))),
+            ];
+
         }
-        
+
         return $procesado;
     }
 
@@ -171,7 +190,6 @@ class Import
         return $id;
     }
 
-
     /*
     Todos los affiliates y affiliates_family serán desactivados y activados en la recursión del archivo csv
     Luego se actualizarán los afiliados activos en firebase y se eliminaran los documentos de los afiliados desactivos.
@@ -193,7 +211,7 @@ class Import
         try {
             $archivo = fopen($this->filename, 'r');
         }catch(\Throwable $e){
-            throw new \Exception('Ocurrió un error en la carga del archivo');
+            throw new \Exception('No se pudo leer el archivo: ' . $e->getMessage());
         }
 
         $this->em->getConnection()->query('UPDATE affiliates SET is_active = false');
@@ -209,6 +227,7 @@ class Import
             if(!$linea) continue;
             if($linea[0] == NULL) continue;
             if($ruta > 0){
+
                 $data_linea = $this->inicializarLinea($linea);
 
                 // Si es afiliado titular
@@ -224,6 +243,7 @@ class Import
                             if($family != NULL) $families[] = $family;
                         }
                     }catch(\Throwable $e){
+
                         $errors[] = 'Línea ' . $ruta . ' (' . $data_linea['id'] . '): ' . $e->getMessage();
                     }
                 }
@@ -365,7 +385,7 @@ class Import
                 $this->em->flush();
             }
             catch(\Throwable $e){
-                throw new \Exception('Error al crear registro DNI: ' . $array['dni']);
+                throw new \Exception('Error al crear registro titular DNI: ' . $array['dni']);
             }
 
         }else{
@@ -379,9 +399,10 @@ class Import
                 'birthday' => $entity->getBirthday()->format('d/m/Y'),
                 'location' => $entity->getLocation(),
                 'phone_number' => $entity->getPhoneNumber(),
+                'credential_number' => $entity->getCredentialNumber(),
                 'affiliate_type' => $entity->getAffiliateType(),
                 'region_id' => $entity->getRegionId(),
-                //'is_active' => $entity->getIsActive()
+                'is_active' => 1
             ];
 
             if($entity_tmp == $array) return NULL;
@@ -392,7 +413,7 @@ class Import
                 $this->em->flush();
             }
             catch(\Throwable $e){
-                throw new \Exception('Error al actualizar registro DNI: ' . $array['dni']);
+                throw new \Exception('Error al actualizar registro titular DNI: ' . $array['dni'] . '; ' . $e->getMessage());
             }
 
         }
@@ -417,7 +438,7 @@ class Import
                 $this->em->flush();
             }
             catch(\Throwable $e){
-                throw new \Exception('Error al crear registro DNI: ' . $array['dni']);
+                throw new \Exception('Error al crear registro familiar DNI: ' . $array['dni']);
             }
 
         }else{
@@ -428,6 +449,7 @@ class Import
                 'lastname' => $entity->getLastname(),
                 'dni' => $entity->getDni(),
                 'email' => $entity->getEmail(),
+                'credential_number' => $entity->getCredentialNumber(),
                 'affiliate_dni' => $entity->getAffiliateDni(),
                 'type_of_family_member_id' => $entity->getTypeOfFamilyMemberId(),
                 'phone_number' => $entity->getPhoneNumber(),
@@ -443,7 +465,7 @@ class Import
                 $this->em->flush();
             }
             catch(\Throwable $e){
-                throw new \Exception('Error al actualizar registro DNI: ' . $array['dni']);
+                throw new \Exception('Error al actualizar registro familiar DNI: ' . $array['dni']);
             }
         }
 
