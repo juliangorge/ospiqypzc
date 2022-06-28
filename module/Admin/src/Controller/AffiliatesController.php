@@ -222,8 +222,9 @@ class AffiliatesController extends AbstractActionController
 
     public function importAction()
     {
-        if(!empty($_SERVER['REMOTE_ADDR'])){
-            return new JsonModel(['success' => false]);
+        if($_SERVER['HTTP_USER_AGENT'] != $this->config['cronKey']){
+            header('HTTP/1.0 404 Not Found');
+            exit;
         }
 
         $import = new \Admin\Controller\Import($this->em, $this->config);
