@@ -180,7 +180,7 @@ return [
                 ['actions' => '*', 'allow' => '@'],
             ],*/
             Controller\AffiliatesController::class => [
-                ['actions' => 'import', 'allow' => '*'],
+                ['actions' => ['import'], 'allow' => '*'],
             ],
         ]
     ],
