@@ -9,6 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 */
 class News
 {
+
+    const PIECE_OF_NEWS_URL = 'https://obrasocialquimicos.com.ar/';
+    const PICTURE_URL = '';
+
     /**
     * @ORM\Id
     * @ORM\Column(name="id", type="integer")
@@ -91,10 +95,8 @@ class News
 
     private function validatePieceOfNewsUrl($piece_of_news_url){
         // Verifico que el URL sea válido
-        $url = 'https://obrasocialquimicos.com.ar/';
-
         if(filter_var($piece_of_news_url, FILTER_VALIDATE_URL) === FALSE) {
-            return $url;
+            return self::PIECE_OF_NEWS_URL;
         }else{
             return $piece_of_news_url;
         }
@@ -103,13 +105,12 @@ class News
     private function validatePictureUrl($picture_url){
         // Verifico que la imagen sea válida
 
-        $template = '';
         $headers = get_headers($picture_url, 1);
 
         if (strpos($headers['Content-Type'], 'image/') !== false) {
             return $picture_url;
         } else {
-            return $template;
+            return self::PICTURE_URL;
         }
 
     }
