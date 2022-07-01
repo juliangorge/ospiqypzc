@@ -11,7 +11,7 @@ class News
 {
 
     const PIECE_OF_NEWS_URL = 'https://obrasocialquimicos.com.ar/';
-    const PICTURE_URL = '';
+    const PICTURE_URL = 'https://obrasocialquimicos.com.ar/wp-content/uploads/2022/06/Sindicato-e1655155313930.jpg';
 
     /**
     * @ORM\Id
@@ -104,7 +104,6 @@ class News
 
     private function validatePictureUrl($picture_url){
         // Verifico que la imagen sea válida
-
         $headers = get_headers($picture_url, 1);
 
         if (strpos($headers['Content-Type'], 'image/') !== false) {

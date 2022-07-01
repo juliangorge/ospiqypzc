@@ -9,6 +9,10 @@ use Doctrine\ORM\Mapping as ORM;
 */
 class UnionNews
 {
+
+    const PIECE_OF_NEWS_URL = 'https://obrasocialquimicos.com.ar/';
+    const PICTURE_URL = '';
+
     /**
     * @ORM\Id
     * @ORM\Column(name="id", type="integer")
@@ -91,10 +95,8 @@ class UnionNews
 
     private function validatePieceOfNewsUrl($piece_of_news_url){
         // Verifico que el URL sea válido
-        $url = 'https://obrasocialquimicos.com.ar/';
-
         if(filter_var($piece_of_news_url, FILTER_VALIDATE_URL) === FALSE) {
-            return $url;
+            return self::PIECE_OF_NEWS_URL;
         }else{
             return $piece_of_news_url;
         }
@@ -102,17 +104,12 @@ class UnionNews
 
     private function validatePictureUrl($picture_url){
         // Verifico que la imagen sea válida
-        //$empty = '';
-        $template = 'https://obrasocialquimicos.com.ar/wp-content/uploads/2022/06/Sindicato-e1655155313930.jpg';
-        if($picture_url != ''){
-            if(exif_imagetype($picture_url) === FALSE) {
-                return $template;
-                //return $empty;
-            }else{
-                return $picture_url;
-            }
-        }else{
-            return $template;
+        $headers = get_headers($picture_url, 1);
+
+        if (strpos($headers['Content-Type'], 'image/') !== false) {
+            return $picture_url;
+        } else {
+            return self::PICTURE_URL;
         }
     }
 }
