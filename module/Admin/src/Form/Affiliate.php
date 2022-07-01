@@ -50,6 +50,26 @@ class Affiliate extends Form
         ]);
 
         $this->add([
+            'name' => 'credential_number',
+            'attributes' => [
+                'id' => 'credential_number',
+                'required' => true,
+                'class' => 'form-control',
+                'maxlength' => 100,
+                'placeholder' => 'Credencial'
+            ],
+            'options' => [
+                'label' => 'Credencial <small>(requiere)</small>',
+                'label_options' => [
+                    'disable_html_escape' => true,
+                ],
+                'label_attributes' => [
+                    'class' => 'col-form-label'
+                ]
+            ]
+        ]);
+
+        $this->add([
             'name' => 'dni',
             'type' => 'number',
             'attributes' => [
@@ -250,6 +270,7 @@ class Affiliate extends Form
         $this->setValidationGroup([
             'firstname',
             'lastname',
+            'credential_number',
             'dni',
             'email',
             'birthday',

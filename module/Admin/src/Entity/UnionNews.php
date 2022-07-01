@@ -69,7 +69,7 @@ class UnionNews
 
     public function toFirebase(){
         return [
-            'id' => $this->id,
+            //'id' => $this->id,
             'title' => $this->title,
             'body' => $this->body,
             'date' => $this->date->format('d/m/Y'),
