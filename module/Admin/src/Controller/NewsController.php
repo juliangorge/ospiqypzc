@@ -110,6 +110,7 @@ class NewsController extends AbstractActionController
             $form->setData($post);
 
             if($form->isValid()){
+
                 try {
                     $entity->exchangeArray($post);
                     $this->em->flush();

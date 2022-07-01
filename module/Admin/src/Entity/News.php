@@ -102,15 +102,15 @@ class News
 
     private function validatePictureUrl($picture_url){
         // Verifico que la imagen sea válida
-        $empty = '';
-        if($picture_url != ''){
-            if(exif_imagetype($picture_url) === FALSE) {
-                return $empty;
-            }else{
-                return $picture_url;
-            }
-        }else{
-            return $empty;
+
+        $template = '';
+        $headers = get_headers($picture_url, 1);
+
+        if (strpos($headers['Content-Type'], 'image/') !== false) {
+            return $picture_url;
+        } else {
+            return $template;
         }
+
     }
 }
