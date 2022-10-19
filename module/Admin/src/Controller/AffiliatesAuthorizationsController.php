@@ -41,7 +41,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
         $paginator->setCurrentPageNumber($this->params()->fromQuery('p', 1))->setItemCountPerPage(30);
 
         return new ViewModel([
-            'title' => 'Reclamos',
+            'title' => 'Autorizaciones',
             'results' => $paginator,
             'route' => $this->route
         ]);
