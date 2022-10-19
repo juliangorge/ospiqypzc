@@ -1,0 +1,29 @@
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <form id="deleteForm" method="POST" action="/<?= $route ?>/delete/">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Eliminar registro</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+                </div>
+                <div class="modal-body">¿Está seguro de eliminar el registro?</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="submit" class="btn btn-danger">Borrar</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<?php
+$this->inlineScript()->captureStart();
+echo <<<JS
+    function selectId(id)
+    {
+        document.getElementById("deleteForm").setAttribute("action", "/$route/delete/" + id);
+    };
+
+JS;
+$this->inlineScript()->captureEnd();
+?>

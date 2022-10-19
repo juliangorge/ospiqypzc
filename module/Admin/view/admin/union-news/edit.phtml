@@ -1,0 +1,31 @@
+<?php $this->headTitle($this->title); ?>
+
+<div class="row">
+	<div class="col-12">
+		<div class="page-title-box">
+			<h4 class="page-title">Editar <?= $this->title ?> <small>(Doc: <?= $this->item->getDocumentId(); ?>)</small></h5>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+				<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('action', '/' . $this->route . '/edit/' . $this->item->getId());
+				$form->setAttribute('method', 'post');
+				echo $this->form()->openTag($form);
+				?>
+	    			<div class="row">
+						<div class="col-md-12">
+							<?= $this->formCollection($form) ?>
+
+						</div>
+					</div>
+
+				<?= $this->form()->closeTag() ?>
+
+			</div>
+		</div>
+
+	</div>
+</div>

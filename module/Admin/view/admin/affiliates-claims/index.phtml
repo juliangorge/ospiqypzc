@@ -1,0 +1,43 @@
+<?php $this->headTitle($this->title); ?>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-title-box">
+			<h4 class="page-title"><?= $this->title ?></h4>
+		</div>
+
+		<div class="card">
+			<div class="card-body table-responsive">
+				<table class="table">
+					<thead>
+	                	<th><small>Afiliado</small></th>
+	                	<th><small>Título</small></th>
+	                	<th><small>Estado</small></th>
+		                <th></th>
+					</thead>
+					<tbody>
+						<?php foreach($this->results as $item): ?>
+						<tr>
+							<td><?= $item['full_name'] ?></td>
+							<td><?= $item['title'] ?></td>
+							<td>
+								<h4 class="m-0">
+									<?= $item['date_answer'] == NULL ? '<span class="badge bg-warning">Pendiente</span>' : '<span class="badge bg-success">Respondido</span>' ?>
+								</h4>
+							</td>
+							<td width="20%" align="right">
+								<a class="btn btn-secondary btn-sm" href="/<?= $this->route ?>/edit/<?= $item['id'] ?>">
+			                    	<i class="mdi mdi-eye"></i>
+			                    </a>
+							</td>
+						</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+
+				<?= $this->paginationControl($this->results, 'Sliding', 'admin/partials/pagination', ['route' => $this->route]); ?>
+			</div>
+		</div>
+
+	</div>
+</div>

@@ -1,0 +1,36 @@
+<?php $this->headTitle($this->data['title']); ?>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-title-box">
+			<h4 class="page-title"><?= $this->data['title'] ?></h4>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+
+				<?php
+
+				if($this->data['quantity'] == -1){
+
+					echo '<b>' . $this->data['errors'] . '</b>';
+
+				}else{
+
+					echo '<b class="mb-2">Cantidad de actualizaciones: ' . $this->data['quantity'] . '</b>';
+
+					foreach($this->data['errors'] as $error){
+						echo '<pre>' , print_r($error) , '</pre>';
+					}
+
+				}
+
+				echo '<p class="my-2">Tiempo de respuesta: ' . round($this->data['time'], 2) . ' segundos.</p>';
+				?>
+
+				<a href="/<?= $this->data['route'] ?>" class="btn btn-primary btn-sm">Volver atrás</a>
+			</div>
+		</div>
+
+	</div>
+</div>

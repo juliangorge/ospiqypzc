@@ -1,0 +1,48 @@
+<?php $this->headTitle($this->title); ?>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="page-title-box">
+			<h4 class="page-title">Agregar <?= $this->title ?></h4>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+				<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('action', '/' . $this->route . '/add');
+				$form->setAttribute('method', 'post');
+				echo $this->form()->openTag($form);
+				?>
+	    			<div class="row">
+	    				<div class="col-md-6">
+	    					<?= $this->formRow($form->get('first_name')) ?>
+	    				</div>
+	    				<div class="col-md-6">
+	    					<?= $this->formRow($form->get('last_name')) ?>
+	    				</div>
+	    				<div class="col-md-6">
+	    					<?= $this->formRow($form->get('email')) ?>
+	    				</div>
+	    				<div class="col-md-6">
+	    					<?= $this->formRow($form->get('rank_id')) ?>
+	    				</div>
+	    				<div class="col-md-6">
+	    					<?= $this->formRow($form->get('password')) ?>
+	    				</div>
+	    				<div class="col-md-6">
+	    					<?= $this->formRow($form->get('confirm_password')) ?>
+	    				</div>
+	    				<div class="col-md-12 my-2">
+							<?= $this->formSubmit($form->get('submit')) ?>
+						</div>
+					</div>
+
+				<?= $this->form()->closeTag() ?>
+
+			</div>
+		</div>
+
+	</div>
+</div>

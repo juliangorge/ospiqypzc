@@ -1,0 +1,112 @@
+<?php use Laminas\Mvc\Application; ?>
+
+<div class="row">
+    <div class="col-12">
+        <h1 class="h2">Error 404: La página no existe</h1>
+        <h2 class="h3"><?= $this->message ?></h2>
+
+        <?php
+        if(!empty($this->reason)) :
+            $reasonMessage = '';
+            switch ($this->reason) {
+                case Application::ERROR_CONTROLLER_CANNOT_DISPATCH:
+                    $reasonMessage = 'El controlador no permite el envío de la petición.';
+                    break;
+                case Application::ERROR_MIDDLEWARE_CANNOT_DISPATCH:
+                    $reasonMessage = 'El middleware no permite el envío de la petición.';
+                    break;
+                case Application::ERROR_CONTROLLER_NOT_FOUND:
+                    $reasonMessage = 'El controlador no pudo ser encontrado en la clase.';
+                    break;
+                case Application::ERROR_CONTROLLER_INVALID:
+                    $reasonMessage = 'El controlador no pudo ser enviado.';
+                    break;
+                case Application::ERROR_ROUTER_NO_MATCH:
+                    $reasonMessage = 'La ruta URL no fue encontrada o no está declarada.';
+                    break;
+                default:
+                    $reasonMessage = 'No pudimos determinar el origen del error.';
+                    break;
+            }
+        ?>
+
+            <p><?= $reasonMessage ?></p>
+
+        <?php endif ?>
+
+        <?php if(!empty($this->controller)): ?>
+
+            <dl>
+                <dt>Controlador:</dt>
+                <dd><?= $this->escapeHtml($this->controller) ?>
+                <?php
+                if (! empty($this->controller_class)
+                    && $this->controller_class != $this->controller
+                ) {
+                    echo sprintf('(resuelto en %s)', $this->escapeHtml($this->controller_class));
+                }
+                ?>
+
+                </dd>
+            </dl>
+
+        <?php endif ?>
+
+        <?php if(!empty($this->display_exceptions)): ?>
+
+            <?php if(isset($this->exception) && ($this->exception instanceof \Throwable || $this->exception instanceof \Exception)) : ?>
+
+            <hr/>
+            <h2 class="h3">Información adicional:</h2>
+            <h3 class="h4"><?= get_class($this->exception) ?></h3>
+
+            <dl>
+                <dt>Archivo:</dt>
+                <dd>
+                    <pre class="prettyprint linenums"><?= $this->exception->getFile() ?>:<?= $this->exception->getLine() ?></pre>
+                </dd>
+                <dt>Mensaje:</dt>
+                <dd>
+                    <pre class="prettyprint linenums"><?= $this->escapeHtml($this->exception->getMessage()) ?></pre>
+                </dd>
+                <dt>Stack trace:</dt>
+                <dd>
+                    <pre class="prettyprint linenums"><?= $this->exception->getTraceAsString() ?></pre>
+                </dd>
+            </dl>
+
+            <?php $e = $this->exception->getPrevious() ?>
+                <?php if($e) : ?>
+                    <hr/>
+                    <h2 class="h3">Excepciones previas:</h2>
+                    <ul class="unstyled">
+                        <?php while($e): ?>
+                        <li>
+                            <h3><?= get_class($e) ?></h3>
+                            <dl>
+                                <dt>Archivo:</dt>
+                                <dd>
+                                    <pre class="prettyprint linenums"><?= $e->getFile() ?>:<?= $e->getLine() ?></pre>
+                                </dd>
+                                <dt>Mensaje:</dt>
+                                <dd>
+                                    <pre class="prettyprint linenums"><?= $this->escapeHtml($e->getMessage()) ?></pre>
+                                </dd>
+                                <dt>Stack trace:</dt>
+                                <dd>
+                                    <pre class="prettyprint linenums"><?= $e->getTraceAsString() ?></pre>
+                                </dd>
+                            </dl>
+                        </li>
+                        <?php $e = $e->getPrevious() ?>
+                        <?php endwhile ?>
+                    </ul>
+                <?php endif ?>
+            <?php else: ?>
+            
+                <h3 class="h4">Sin excepciones disponibles</h3>
+
+            <?php endif ?>
+        <?php endif ?>
+    </div>
+</div>

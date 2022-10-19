@@ -1,0 +1,53 @@
+<nav aria-label="Paginacion">
+	<?php
+	//var_dump($url . ($query ? '?' . $query . (strpos($query, 'p=') === false ? '&p=' . $page : '') : '?p=' . $page));
+
+	function getUrl($url, $page){
+		$query = parse_url($_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'], PHP_URL_QUERY);
+		
+		if($query){
+			$params = explode('&', $query);
+
+			$url .= '?';
+			$attempt = 0;
+
+			foreach($params as $param){
+				if($attempt > 0) $url .= '&';
+
+				if(strpos($param, 'p=') === false){
+					$url .= $param;
+				}else{
+					$url .= 'p=' . $page;
+				}
+
+				$attempt++;
+			}
+
+			if(strpos($url, 'p=') === false){
+				$url .= '&p=' . $page;
+			}
+
+		}else{
+			$url .= '?p=' . $page;
+		}
+
+		return $url;
+	}
+
+
+	if($this->pageCount): ?>
+	<ul class="pagination justify-content-end">
+		<li class="page-item <?= (isset($this->previous) ? '' : 'disabled') ?>">
+			<a class="page-link" tabindex="-1" aria-disabled="true" href="<?= getUrl($this->url, $this->previous) ?>">&laquo;</a>
+	    </li>
+	    <?php foreach ($this->pagesInRange as $page): ?>
+		<li class="page-item <?= ($page == $this->current ? 'active' : '') ?>">
+			<a class="page-link" href="<?= getUrl($this->url, $page); ?>"><?= $page; ?></a>
+		</li>
+		<?php endforeach; ?>
+		<li class="page-item <?= (isset($this->next) ? '' : 'disabled') ?>">
+			<a class="page-link" tabindex="-1" aria-disabled="true" href="<?= getUrl($this->url, $this->next); ?>">&raquo;</a>
+	    </li>
+  	</ul>
+	<?php endif; ?>
+</nav>

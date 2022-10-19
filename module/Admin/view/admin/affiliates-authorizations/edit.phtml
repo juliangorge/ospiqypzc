@@ -1,0 +1,44 @@
+<?php $this->headTitle($this->title); ?>
+
+<div class="row">
+	<div class="col-md-8">
+		<div class="page-title-box">
+			<h4 class="page-title">Responder <?= $this->title ?> <small>(Doc: <?= $this->item->getDocumentId(); ?>)</small></h5>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+				<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('action', '/' . $this->route . '/edit/' . $item->getId());
+				$form->setAttribute('method', 'post');
+				echo $this->form()->openTag($form);
+				?>
+	    			<div class="row">
+						<div class="col-md-12 mb-2">
+							<?= $this->formRow($form->get('affiliate_fullname')) ?>
+						</div>
+						<div class="col-md-12 mb-2">
+							<?= $this->formRow($this->form->get('type_of_authorization')); ?>
+						</div>
+						<div class="col-md-12 mt-1 mb-2">
+							<?= $this->formLabel($this->form->get('status')); ?>
+							<div class="form-check"><?= $this->formElement($this->form->get('status')); ?></div>
+						</div>
+						<div class="col-md-12">
+							<?= $this->formRow($form->get('administrative_name')) ?>
+						</div>
+						<div class="col-md-12">
+							<?= $this->formHidden($form->get('user_id')->setValue($this->identity()['id'])) ?>
+							<?= $this->formSubmit($form->get('submit')) ?>
+						</div>
+					</div>
+
+				<?= $this->form()->closeTag() ?>
+
+			</div>
+		</div>
+
+	</div>
+</div>

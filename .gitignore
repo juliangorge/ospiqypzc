@@ -1,0 +1,7 @@
+*.DS_Store
+*.htpasswd
+*.json
+*.csv
+*.local.php
+vendor/*
+public/img/captcha/*

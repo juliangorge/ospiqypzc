@@ -1,0 +1,84 @@
+<?php 
+$container = $this->container;
+$actual_route = $container->current()->getRouteMatch()->getMatchedRouteName();
+
+function activeByChild(&$actual_route, &$page){
+
+	$active = false;
+
+	if(!sizeof($page->getPages())){
+		return ($actual_route == $page->getRoute());
+	}
+
+	foreach($page->getPages() as $child){
+		if($actual_route == $child->getRoute()){
+			$active = true;
+			break;
+		}
+	}
+
+	return $active;
+}
+
+?>
+
+<ul class="side-nav">
+
+<?php
+
+$param = rand(0, 1000);
+$k = 0;
+
+foreach ($container as $page):
+	if(!$this->navigation()->accept($page)) continue;
+
+	if($this->identity() == NULL) continue;
+
+	if(!$page->hasPages()){
+
+?>
+
+	<li class="side-nav-item <?php if($page->isActive() || activeByChild($actual_route, $page)) echo 'menuitem-active'; ?>">
+		<a href="<?= $page->getHref() ?>" class="side-nav-link">
+			<i class="<?= $page->get('icon') ?>"></i>
+			<span><?= $page->getLabel() ?></span>
+		</a>
+	</li>
+
+<?php 
+	}else{ 
+?>
+
+	<li class="side-nav-item <?php if($page->isActive() || activeByChild($actual_route, $page)) echo 'menuitem-active'; ?>">
+
+		<a data-bs-toggle="collapse" href="#sidebar<?= $param . $k ?>" aria-expanded="false" aria-controls="sidebar<?= $param . $k ?>" class="side-nav-link">
+			<i class="<?= $page->get('icon') ?>"></i>
+			<span><?= $page->getLabel() ?></span>
+			<span class="menu-arrow"></span>
+		</a>
+
+		<div class="collapse <?php if($page->isActive() || activeByChild($actual_route, $page)) echo 'show' ?>" id="sidebar<?= $param . $k ?>">
+			<ul class="side-nav-second-level mb-1">
+				<?php foreach ($page->getPages() as $child){ ?>
+
+				<li class="<?php if($actual_route == $child->getRoute()) echo 'menuitem-active'; ?>">
+					<a href="<?= $child->getHref() ?>">
+						<span><?= $child->getLabel() ?></span>
+					</a>
+				</li>
+
+				<?php } ?>
+			</ul>
+		</div>
+
+	</li>
+
+<?php 
+	}
+
+	$k++;
+
+endforeach;
+?>
+
+</ul>

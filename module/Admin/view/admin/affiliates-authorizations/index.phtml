@@ -1,0 +1,66 @@
+<?php $this->headTitle($this->title); ?>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-title-box">
+			<h4 class="page-title"><?= $this->title ?></h4>
+		</div>
+
+		<div class="card">
+			<div class="card-body table-responsive">
+				<table class="table">
+					<thead>
+	                	<th><small>Fecha</small></th>
+	                	<th><small>Afiliado</small></th>
+	                	<th><small>Administrativo</small></th>
+	                	<th><small>¿Aprobado?</small></th>
+	                	<th><small>Tipo de Autorización</small></th>
+		                <th></th>
+					</thead>
+					<tbody>
+						<?php foreach($this->results as $item): ?>
+						<tr>
+							<td><?= $item['date_created']->format('d/m/y H:i') ?></td>
+							<td><?= $item['full_name'] ?></td>
+							<td><?= $item['administrative_name'] ?></td>
+							<td>
+								<h4 class="m-0">
+									<?php
+
+									if($item['authorization_date'] == NULL){
+										echo '<span class="badge bg-info">Pendiente</span>';
+									}
+									else{
+										switch($item['status']){
+											case 0:
+												echo '<span class="badge bg-warning">No autorizado</span>';
+												break;
+											case 1:
+												echo '<span class="badge bg-success">Autorizado</span>';
+												break;
+											case 2:
+												echo '<span class="badge bg-secondary">Comunicarse con OS</span>';
+												break;
+										}
+									}
+
+									?>
+								</h4>
+							</td>
+							<td><?= $item['type_of_authorization'] ?></td>
+							<td width="20%" align="right">
+								<a class="btn btn-secondary btn-sm" href="/<?= $this->route ?>/edit/<?= $item['id'] ?>">
+			                    	<i class="mdi mdi-eye"></i>
+			                    </a>
+							</td>
+						</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+
+				<?= $this->paginationControl($this->results, 'Sliding', 'admin/partials/pagination', ['route' => $this->route]); ?>
+			</div>
+		</div>
+
+	</div>
+</div>

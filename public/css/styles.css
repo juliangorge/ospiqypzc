@@ -1,0 +1,24 @@
+.container-fluid>.alert {
+    position: fixed;
+    bottom: 0px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.logo-lg img,
+.logo-sm img {
+    opacity: 0.9;
+}
+
+input[readonly],
+textarea[readonly] {
+  background: #edeef2!important;
+}
+
+:root {
+    --ct-body-color: #6c757d!important;
+}
+
+.cursor-pointer {
+    cursor: pointer!important;
+}
