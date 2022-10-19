@@ -5,3 +5,4 @@
 *.local.php
 vendor/*
 public/img/captcha/*
+*.lock
