@@ -6,3 +6,4 @@
 vendor/*
 public/img/captcha/*
 *.lock
+data/cache/*
