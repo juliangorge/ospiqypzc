@@ -3,6 +3,8 @@
 return [
     'acl' => [
         'roles' => [
+            'medico_auditor' => NULL,
+            'gerencia' => NULL,
             'administrador' => NULL
         ],
         'resources' => [
@@ -14,25 +16,25 @@ return [
                     'all' => NULL
                 ],
                 'Admin\Controller\NewsController' => [
-                    'all' => NULL
+                    'all' => ['gerencia', 'administrador']
                 ],
                 'Admin\Controller\UnionNewsController' => [
-                    'all' => NULL
+                    'all' => ['gerencia', 'administrador']
                 ],
                 'Admin\Controller\UsersController' => [
-                    'all' => NULL
+                    'all' => ['gerencia', 'administrador']
                 ],
                 'Admin\Controller\AffiliatesController' => [
-                    'all' => NULL
+                    'all' => ['medico_auditor', 'gerencia', 'administrador']
                 ],
                 'Admin\Controller\AffiliatesFamilyController' => [
-                    'all' => NULL
+                    'all' => ['medico_auditor', 'gerencia', 'administrador']
                 ],
                 'Admin\Controller\AffiliatesAuthorizationsController' => [
-                    'all' => NULL
+                    'all' => ['medico_auditor', 'gerencia', 'administrador']
                 ],
                 'Admin\Controller\AffiliatesClaimsController' => [
-                    'all' => NULL
+                    'all' => ['gerencia', 'administrador']
                 ],
             ],
         ],

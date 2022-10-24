@@ -121,7 +121,15 @@
                 
                 <div class="h-100 show" id="leftside-menu-container" data-simplebar>
                     
-                    <?= $this->navigation('Laminas\Navigation\Admin')->menu()->setPartial('admin/partials/navigation.phtml'); ?>
+                    <?php
+                    if($this->identity() == NULL){
+                        $navigation = 'Guest';
+                    }else{
+                        $navigation = $this->identity()['rank_level'];
+                    }
+
+                    echo $this->navigation('Laminas\Navigation\\' . $navigation)->menu()->setPartial('admin/partials/navigation.phtml');
+                    ?>
 
                     <div class="clearfix"></div>
 
