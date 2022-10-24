@@ -124,6 +124,14 @@ class AffiliatesAuthorizations
     public function getComplementaryStudiesImageUrl(){ return $this->complementary_studies_image_url; }
     public function getDocumentId(){ return $this->document_id; }
 
+    public function getAttachedImageFile($attachedUrl){
+        if($attachedUrl == NULL) return NULL;
+        $url = urldecode(strtok($attachedUrl, '?'));
+
+        $split = explode('ospiqyp-oridhean.appspot.com/o/', $url);
+        return $split[1];
+    }
+
     public function getStatusText(){
         if($this->authorization_date == NULL) return 'Pendiente';
 

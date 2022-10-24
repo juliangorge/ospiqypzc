@@ -22,6 +22,23 @@
 						<div class="col-md-12 mb-2">
 							<?= $this->formRow($this->form->get('type_of_authorization')); ?>
 						</div>
+						<div class="col-md-6 mb-2 text-center">
+							<?php 
+							if($this->images['medical_order_image'] != NULL){
+								echo '<img src="' . $this->images['medical_order_image'] . '" class="img-fluid p-1" />
+								<small>Orden médica</small>';
+							}
+							?>
+						</div>
+						<div class="col-md-6 mb-2 text-center">
+							<?php 
+							if($this->images['complementary_studies_image'] != NULL){
+								echo '<img src="' . $this->images['complementary_studies_image'] . '" class="img-fluid p-1" />
+								<small>Estudios complementarios</small>';
+							}
+							?>
+						</div>
+
 						<div class="col-md-12 mt-1 mb-2">
 							<?= $this->formLabel($this->form->get('status')); ?>
 							<div class="form-check"><?= $this->formElement($this->form->get('status')); ?></div>

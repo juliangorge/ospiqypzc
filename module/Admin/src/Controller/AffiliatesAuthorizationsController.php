@@ -7,6 +7,8 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
 use Google\Cloud\Firestore\FirestoreClient;
+use Google\Cloud\Storage\StorageClient;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineModule\Paginator\Adapter\Collection as CollectionAdapter;
 use Laminas\Paginator\Paginator;
@@ -106,10 +108,30 @@ class AffiliatesAuthorizationsController extends AbstractActionController
             }
         }
 
+        $storage = new StorageClient([
+            'projectId' => $this->config['firestore_projectId'],
+            'keyFilePath' => $this->config['firestore_keyFilePath']
+        ]);
+
+        $bucket = $storage->bucket('ospiqyp-oridhean.appspot.com');
+
+        $medical_order_image = $entity->getAttachedImageFile($entity->getMedicalOrderImageUrl());
+        $complementary_studies_image = $entity->getAttachedImageFile($entity->getComplementaryStudiesImageUrl());
+        $images = [
+            'medical_order_image' => $medical_order_image == NULL ? NULL : $bucket->object($medical_order_image),
+            'complementary_studies_image' => $complementary_studies_image == NULL ? NULL : $bucket->object($complementary_studies_image),
+        ];
+
+        foreach($images as $key => $value){
+            if($value == NULL) continue;
+            $images[$key] = $value->signedUrl(new \DateTime('1 min'), ['version' => 'v4']);
+        }
+
         return new ViewModel([
             'form' => $form,
             'title' => 'Autorización',
             'item' => $entity,
+            'images' => $images,
             'route' => $this->route
         ]);
     }

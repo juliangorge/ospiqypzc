@@ -21,7 +21,9 @@ return [
     'facebookAppId' => '',
     'authModule' => [
         'allowRegister' => false,
-        'logoWidth' => '50%'
+        'logoWidth' => 'calc(100%/2)',
+        'showFooter' => true,
+        'showTitle' => false
     ],
     'reCAPTCHA_public_key' => '6Le6z5EiAAAAAOEa4ecYbeB54JhZTUt37XD3czHN',
 ];
