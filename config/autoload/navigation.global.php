@@ -77,6 +77,7 @@ return [
 	'navigation' => [
         'guest' => $menu_default,
         'medico_auditor' => $medico_auditor,
+        'administrativo' => $menu_default,
         'gerencia' => $administrador,
         'administrador' => $administrador,
     ],
