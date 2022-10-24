@@ -16,11 +16,11 @@ class AffiliatesAuthorizations extends Form
                 'required' => true,
                 'class' => 'form-control',
                 'maxlength' => 100,
-                'placeholder' => 'Afiliado',
+                'placeholder' => 'Afiliado/Familiar',
                 'readonly' => 'readonly'
             ],
             'options' => [
-                'label' => 'Afiliado',
+                'label' => 'Afiliado/Familiar',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

@@ -126,10 +126,11 @@ class AffiliatesAuthorizationsController extends AbstractActionController
             i.type_of_authorization,
             i.medical_order_image_url,
             i.complementary_studies_image_url,
-            CONCAT(a.first_name, \' \', a.last_name) as full_name,
+            (CASE WHEN a.dni IS NOT NULL THEN (CONCAT(a.first_name, \' \', a.last_name)) ELSE (CONCAT(f.first_name, \' \', f.last_name)) END) as full_name,
             CONCAT(u.first_name, \' \', u.last_name) as administrative_name
             FROM Admin\Entity\AffiliatesAuthorizations i 
-            INNER JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
+            LEFT JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
+            LEFT JOIN Admin\Entity\AffiliatesFamily f WITH f.dni = i.dni
             LEFT JOIN Juliangorge\Users\Entity\User u WITH u.id = i.user_id
             ORDER BY i.id DESC
         ')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
