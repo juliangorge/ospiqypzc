@@ -1,7 +1,7 @@
 <?php
 namespace Admin\Form;
 
-use Juliangorge\Users\Form\UserForm as OriginalForm;
+use Juliangorge\Users\Form\RegisterForm as OriginalForm;
 
 class Users extends OriginalForm
 {
