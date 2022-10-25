@@ -28,4 +28,58 @@ class AppPlugin extends AbstractPlugin
     public function getUser(){
         return ($this->authManager->getIdentity() ? $this->authManager->getIdentity()['id'] : null);
     }
+
+    public function buildForDataTables(array $postData){
+        $column_array = [];
+        $columns = '';
+        $filter_by = '';
+        foreach($postData['columns'] as $key => $value){
+            if($columns != '') $columns .= ', ';
+            $columns .= 'i.' . $value['data'];
+            $columns_array[$key] = $value['data'];
+
+            if($value['searchable'] == 'true' && $postData['search']['value'] != ''){
+                if($filter_by != '') $filter_by .= ' OR ';
+                $filter_by .= 'i.' . $value['data'] . ' LIKE :search_value ';
+            }
+        }
+
+        $order_by = '';
+        foreach($postData['order'] as $order){
+            if($order_by != '') $order_by = ', ';
+            $order_by .= 'i.' . $columns_array[$order['column']] . ' ' . $order['dir'];
+        }
+
+        $parameters = [];
+        if($postData['search']['value'] != ''){
+            $parameters['search_value'] = '%' . $postData['search']['value'] . '%';
+        }
+
+        return [
+            'parameters' => $parameters,
+            'columns' => $columns,
+            'order_by' => $order_by,
+            'filter_by' => $filter_by,
+            'start' => $postData['start'],
+            'length' => $postData['length']
+        ];
+    }
+
+    public function filterForDataTables(string $entity, array $filterData){
+        $data = $this->em->createQuery('
+            SELECT ' . $filterData['columns'] . '
+            FROM ' . $entity . ' i
+            ' . ($filterData['filter_by'] != '' ? 'WHERE '. $filterData['filter_by'] : '') . '
+            ORDER BY ' . $filterData['order_by'] . '
+        ')
+        ->setParameters($filterData['parameters'])
+        ->setFirstResult($filterData['start'])
+        ->setMaxResults($filterData['length'])->getResult();
+
+        return [
+            'recordsTotal' => $filterData['length'],
+            'recordsFiltered' => $this->em->createQuery('SELECT COUNT(i.id) FROM ' . $entity . ' i')->getSingleScalarResult(),
+            'data' => $data
+        ];
+    }
 }

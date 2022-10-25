@@ -1,5 +1,11 @@
 <?php $this->headTitle($this->title); ?>
 
+<?php 
+echo $this->headLink()
+	->prependStylesheet('/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css')
+	->prependStylesheet('/vendor/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css')
+?>
+
 <div class="row">
 	<div class="col-12">
 		<div class="page-title-box">
@@ -8,7 +14,7 @@
 
 		<div class="card">
 			<div class="card-body table-responsive">
-				<table class="table">
+				<table id="datatable" class="table dt-responsive nowrap w-100">
 					<thead>
 	                  	<th><small>Nombre completo</small></th>
 	                  	<th><small>DNI</small></th>
@@ -16,22 +22,54 @@
 	                  	<th><small>Email</small></th>
 	                  	<th><small>Teléfono</small></th>
 					</thead>
-					<tbody>
-						<?php foreach($this->results as $item): ?>
-						<tr>
-							<td><?= $item['full_name'] ?></td>
-							<td><?= $item['dni'] ?></td>
-							<td><?= $item['affiliate_full_name'] ?></td>
-							<td><?= $item['email'] ?></td>
-							<td><?= $item['phone_number'] ?></td>
-						</tr>
-						<?php endforeach; ?>
-					</tbody>
 				</table>
-
-				<?= $this->paginationControl($this->results, 'Sliding', 'admin/partials/pagination', ['route' => $this->route]); ?>
 			</div>
 		</div>
 
 	</div>
 </div>
+
+<?php
+$this->inlineScript()
+	->prependFile('/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js')
+	->prependFile('/vendor/datatables.net-responsive/js/dataTables.responsive.min.js')
+	->prependFile('/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js')
+	->prependFile('/vendor/datatables.net/js/jquery.dataTables.min.js')
+	->captureStart();
+
+echo <<<JS
+
+$(document).ready(function () {
+    "use strict";
+    $("#datatable").DataTable({
+    	ajax: {
+			url: '/$this->route/get',
+			type: 'POST',
+        },
+        columns: [
+			{ data: 'full_name' },
+			{ data: 'dni' },
+			{ data: 'affiliate_full_name' },
+			{ data: 'email' },
+			{ data: 'phone_number' },
+        ],
+        info: false,
+        serverSide: true,
+        ordering: true,
+        searching: true,
+        keys: true,
+        language: { 
+        	url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+        },
+        drawCallback: function () {
+            $(".dataTables_paginate > .pagination").addClass("mt-2");
+        }
+    });
+    $(".dataTables_length select").addClass("form-select form-select-sm"),
+    $(".dataTables_length label").addClass("form-label");
+});
+
+
+JS;
+$this->inlineScript()->captureEnd();
+?>

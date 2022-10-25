@@ -122,7 +122,7 @@ return [
             Plugin\AppPlugin::class => Plugin\Factory\AppPluginFactory::class,
         ],
         'aliases' => [
-            'AppPlugin' => Plugin\Factory\AppPluginFactory::class,
+            'appPlugin' => Plugin\AppPlugin::class
         ]
     ],
     'access_filter' => [

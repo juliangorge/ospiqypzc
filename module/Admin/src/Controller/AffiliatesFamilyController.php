@@ -7,9 +7,6 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
 use Google\Cloud\Firestore\FirestoreClient;
-use Doctrine\Common\Collections\ArrayCollection;
-use DoctrineModule\Paginator\Adapter\Collection as CollectionAdapter;
-use Laminas\Paginator\Paginator;
 
 class AffiliatesFamilyController extends AbstractActionController
 {
@@ -35,14 +32,8 @@ class AffiliatesFamilyController extends AbstractActionController
 
     public function indexAction()
     {
-        $doctrineCollection = new ArrayCollection($this->fetchAll());
-        $adapter = new CollectionAdapter($doctrineCollection);
-        $paginator = new Paginator($adapter);
-        $paginator->setCurrentPageNumber($this->params()->fromQuery('p', 1))->setItemCountPerPage(30);
-
         return new ViewModel([
             'title' => 'Familiares de Afiliados',
-            'results' => $paginator,
             'route' => $this->route
         ]);
     }
@@ -55,6 +46,57 @@ class AffiliatesFamilyController extends AbstractActionController
             FROM Admin\Entity\AffiliatesFamily i 
             INNER JOIN Admin\Entity\Affiliates a WITH a.dni = i.affiliate_dni
             ORDER BY a.last_name DESC')->getResult();
+    }
+
+    public function getAction(){
+        if(!$this->getRequest()->isPost()){
+            header('HTTP/1.0 404 Not Found');
+            exit;
+        }
+        
+        $data = $this->getRequest()->getPost()->toArray();
+
+        $plugin = $this->plugin(\Admin\Plugin\AppPlugin::class);
+        $filterData = $plugin->buildForDataTables($data);
+
+        $filterData['columns'] = str_replace(
+            [
+                'i.full_name',
+                'i.affiliate_full_name'
+            ], 
+            [
+                'CONCAT(i.first_name, \' \', i.last_name) as full_name',
+                'CONCAT(a.first_name, \' \', a.last_name) as affiliate_full_name',
+            ], 
+            $filterData['columns']
+        );
+
+        $filterData['order_by'] = str_replace(
+            [
+                'i.full_name'
+            ],
+            [
+                'i.first_name'
+            ], 
+            $filterData['order_by']
+        );
+
+        $data = $this->em->createQuery('
+            SELECT ' . $filterData['columns'] . '
+            FROM Admin\Entity\AffiliatesFamily i
+            JOIN Admin\Entity\Affiliates a WITH a.dni = i.affiliate_dni
+            ' . ($filterData['filter_by'] != '' ? 'WHERE '. $filterData['filter_by'] : '') . '
+            ORDER BY ' . $filterData['order_by'] . '
+        ')
+        ->setParameters($filterData['parameters'])
+        ->setFirstResult($filterData['start'])
+        ->setMaxResults($filterData['length'])->getResult();
+
+        return new JsonModel([
+            'recordsTotal' => $filterData['length'],
+            'recordsFiltered' => $this->em->createQuery('SELECT COUNT(i.id) FROM Admin\Entity\AffiliatesFamily i')->getSingleScalarResult(),
+            'data' => $data
+        ]);
     }
 
 }
