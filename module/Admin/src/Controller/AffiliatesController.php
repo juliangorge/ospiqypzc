@@ -59,6 +59,7 @@ class AffiliatesController extends AbstractActionController
     }
 
     private function import(){
+        $start = microtime(true);
         $bucket = new \Admin\Service\AffiliatesBucket($this->em, $this->config);
 
         try {
