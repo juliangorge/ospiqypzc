@@ -1,0 +1,51 @@
+<?php $this->headTitle($this->title); ?>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="page-title-box">
+			<h4 class="page-title"><?= $this->title ?> #<?= $this->item['claim_id'] ?></h4>
+		</div>
+
+		<div class="card">
+            <div class="card-body">
+            	<h5 class="mt-0 mb-2">
+	            	<?php 
+	        		if($this->item['date_answer'] == NULL){
+	        			echo '<span class="badge bg-warning">Pendiente</span> ';
+	        		}else{
+	        			echo '<span class="badge bg-success">Respondido</span> ';
+	        		}
+	        		?>
+	        	</h5>
+                <h4 class="header-title mt-0 mb-2">
+            		<?= $this->item['title'] ?>
+                </h4>
+                <p class="text-muted font-13"><?= $this->item['details'] ?></p>
+
+                <div class="text-start">
+                	<p class="text-muted">
+                		<strong>Fecha :</strong> <span class="ms-2"><?= $this->item['date_created']->format('d/m/Y H:i') ?></span>
+                		<br>
+                		<strong>Afiliado :</strong> <span class="ms-2"><?= $this->item['full_name'] ?>, <small>(DNI: <?= $this->item['dni'] ?>)</small></span>
+                	</p>
+
+                </div>
+                
+                <?php if($this->item['date_answer'] != NULL): ?>
+                	<hr class="my-3"> 
+                	<h4 class="header-title mt-0 mb-2">Respuesta</h4>
+                	<p class="text-muted font-13"><?= $this->item['details_answer'] ?></p>
+
+	                <div class="text-start">
+	                	<p class="text-muted">
+	                		<strong>Fecha :</strong> <span class="ms-2"><?= $this->item['date_answer']->format('d/m/Y H:i') ?></span>
+	                		<br>
+	                		<strong>Auditor :</strong> <span class="ms-2"><?= $this->item['administrative_name'] ?></span>
+	                	</p>
+	                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+	</div>
+</div>

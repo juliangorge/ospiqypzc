@@ -34,6 +34,9 @@ class AffiliatesClaims
     /** @ORM\Column(name="date_answer", type="datetime", nullable=true) */    
     protected $date_answer;
 
+    /** @ORM\Column(name="date_created", type="datetime", nullable=false, options={"default": "CURRENT_TIMESTAMP"}) */
+    protected $date_created;
+
     /** @ORM\Column(name="status", type="integer", nullable=false, options={"default": 0}) */
     protected $status;
 
@@ -54,6 +57,7 @@ class AffiliatesClaims
             'details' => $this->details,
             'details_answer' => $this->details_answer,
             'date_answer' => $this->date_answer,
+            'date_created' => $this->date_created,
             'status' => $this->status,
             'user_id' => $this->user_id,
             'dni' => $this->dni,
@@ -67,6 +71,7 @@ class AffiliatesClaims
         $this->details = $array['details'];
         $this->details_answer = $array['details_answer'];
         $this->date_answer = $array['date_answer'];
+        $this->date_created = new \DateTime();
         $this->status = 0;
         $this->user_id = $array['user_id'];
         $this->dni = $array['dni'];
@@ -85,6 +90,7 @@ class AffiliatesClaims
         $this->details = $array['detail'];
         $this->details_answer = $array['response'];
         $this->date_answer = $array['response_date'] == '' ? NULL : \DateTime::createFromFormat('d/m/Y', $array['response_date']);
+        $this->date_created = $array['date'] == '' ? NULL : \DateTime::createFromFormat('d/m/Y', $array['date']);
         $this->status = $array['response_date'] != '';
         $this->user_id = 1; //$array['user_id'];
         $this->dni = $array['affiliate_dni'];
@@ -104,6 +110,7 @@ class AffiliatesClaims
     public function getDetails(){ return $this->details; }
     public function getDetailsAnswer(){ return $this->details_answer; }
     public function getDateAnswer(){ return $this->date_answer; }
+    public function getDateCreated(){ return $this->date_created; }
     public function getStatus(){ return $this->status; }
     public function getDni(){ return $this->dni; }
     public function getUserId(){ return $this->user_id; }
@@ -114,6 +121,7 @@ class AffiliatesClaims
     public function setDetails($v){ $this->details = $v; }
     public function setDetailsAnswer($v){ $this->details_answer = $v; }
     public function setDateAnswer($v){ $this->date_answer = $v; }
+    public function setDateCreated($v){ $this->date_created = $v; }
     public function setStatus($v){ $this->status = $v; }
     public function setDni($v){ $this->dni = $v; }
     public function setUserId($v){ $this->user_id = $v; }

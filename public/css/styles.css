@@ -1,4 +1,4 @@
-.container-fluid>.alert {
+.alert.fixed {
     position: fixed;
     bottom: 0px;
     right: 10px;
@@ -17,8 +17,20 @@ textarea[readonly] {
 
 :root {
     --ct-body-color: #6c757d!important;
+    --ct-card-color: #6c757d!important;
+    --ct-page-title-color: #6c757d!important;
 }
 
 .cursor-pointer {
-    cursor: pointer!important;
+    cursor: pointer;
+}
+
+.card {
+    border: 1px solid #eaecf3!important;
+}
+
+.btn-secondary {
+    color: #273444!important;
+    background-color: #eaecf3!important;
+    border-color: #eaecf3!important;
 }

@@ -29,6 +29,10 @@ class AppPlugin extends AbstractPlugin
         return ($this->authManager->getIdentity() ? $this->authManager->getIdentity()['id'] : null);
     }
 
+    public function getUserRole(){
+        return ($this->authManager->getIdentity() ? $this->authManager->getIdentity()['rank_level'] : null);
+    }
+
     public function buildForDataTables(array $postData){
         $column_array = [];
         $columns = '';

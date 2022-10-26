@@ -63,6 +63,8 @@ $menu_app = [
 
 $medico_auditor = array_merge($menu_default, $menu_afiliados, $menu_app);
 
+$administrativo = array_merge($menu_default, $menu_afiliados, $menu_app);
+
 $administrador = array_merge($menu_default, $menu_noticias, $menu_afiliados, $menu_app, [
     [
         'label'      => 'Usuarios',
@@ -77,7 +79,7 @@ return [
 	'navigation' => [
         'guest' => $menu_default,
         'medico_auditor' => $medico_auditor,
-        'administrativo' => $menu_default,
+        'administrativo' => $administrativo,
         'gerencia' => $administrador,
         'administrador' => $administrador,
     ],

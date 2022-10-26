@@ -43,7 +43,8 @@ class AffiliatesClaimsController extends AbstractActionController
         return new ViewModel([
             'title' => 'Reclamos',
             'results' => $paginator,
-            'route' => $this->route
+            'route' => $this->route,
+            'role' => $this->appPlugin()->getUserRole()
         ]);
     }
 
@@ -108,6 +109,41 @@ class AffiliatesClaimsController extends AbstractActionController
         ]);
     }
 
+    public function viewAction(){
+        $id = $this->params()->fromRoute('id', 0);
+        if(!$id) return $this->redirect()->toRoute($this->route);
+
+        $entity = $this->em->createQuery('
+            SELECT
+            i.id,
+            i.claim_id,
+            i.title,
+            i.details,
+            i.details_answer,
+            i.date_answer,
+            i.date_created,
+            i.status,
+            i.user_id,
+            i.dni,
+            i.document_id,
+            CONCAT(a.first_name, \' \', a.last_name) as full_name,
+            CONCAT(u.first_name, \' \', u.last_name) as administrative_name
+            FROM Admin\Entity\AffiliatesClaims i 
+            INNER JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
+            LEFT JOIN Juliangorge\Users\Entity\User u WITH u.id = i.user_id
+            WHERE i.id = :id
+        ')->setParameters(['id' => $id])
+        ->getOneOrNullResult();
+
+        if($entity == NULL) return $this->redirect()->toRoute($this->route);
+
+        return new ViewModel([
+            'title' => 'Reclamo',
+            'item' => $entity,
+            'route' => $this->route
+        ]);   
+    }
+
     private function fetchAll($as_array = false){
         return $this->em->createQuery('
             SELECT
@@ -117,6 +153,7 @@ class AffiliatesClaimsController extends AbstractActionController
             i.details,
             i.details_answer,
             i.date_answer,
+            i.date_created,
             i.status,
             i.user_id,
             i.dni,

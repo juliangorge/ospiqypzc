@@ -45,7 +45,8 @@ class AffiliatesAuthorizationsController extends AbstractActionController
         return new ViewModel([
             'title' => 'Autorizaciones',
             'results' => $paginator,
-            'route' => $this->route
+            'route' => $this->route,
+            'role' => $this->appPlugin()->getUserRole()
         ]);
     }
 
@@ -108,6 +109,71 @@ class AffiliatesAuthorizationsController extends AbstractActionController
             }
         }
 
+        $images = $this->getImages($entity);
+
+        return new ViewModel([
+            'form' => $form,
+            'title' => 'Autorización',
+            'item' => $entity,
+            'images' => $images,
+            'route' => $this->route
+        ]);
+    }
+
+    public function viewAction(){
+        $id = $this->params()->fromRoute('id', 0);
+        if(!$id) return $this->redirect()->toRoute($this->route);
+
+        $entity = $this->em->createQuery('
+            SELECT
+            i as authorization,
+            (CASE WHEN a.dni IS NOT NULL THEN (CONCAT(a.first_name, \' \', a.last_name)) ELSE (CONCAT(f.first_name, \' \', f.last_name)) END) as full_name,
+            CONCAT(u.first_name, \' \', u.last_name) as administrative_name
+            FROM Admin\Entity\AffiliatesAuthorizations i 
+            LEFT JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
+            LEFT JOIN Admin\Entity\AffiliatesFamily f WITH f.dni = i.dni
+            LEFT JOIN Juliangorge\Users\Entity\User u WITH u.id = i.user_id
+            WHERE i.id = :id
+            ORDER BY i.id DESC
+        ')->setParameters(['id' => $id])
+        ->getOneOrNullResult();
+
+        if($entity == NULL) return $this->redirect()->toRoute($this->route);
+
+        $images = $this->getImages($entity['authorization']);
+
+        return new ViewModel([
+            'title' => 'Autorización',
+            'item' => $entity,
+            'images' => $images,
+            'route' => $this->route
+        ]);   
+    }
+
+    private function fetchAll($as_array = false){
+        return $this->em->createQuery('
+            SELECT
+            i.id,
+            i.authorization_id,
+            i.dni,
+            i.user_id,
+            i.authorization_date,
+            i.date_created,
+            i.status,
+            i.type_of_authorization,
+            i.medical_order_image_url,
+            i.complementary_studies_image_url,
+            (CASE WHEN a.dni IS NOT NULL THEN (CONCAT(a.first_name, \' \', a.last_name)) ELSE (CONCAT(f.first_name, \' \', f.last_name)) END) as full_name,
+            CONCAT(u.first_name, \' \', u.last_name) as administrative_name
+            FROM Admin\Entity\AffiliatesAuthorizations i 
+            LEFT JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
+            LEFT JOIN Admin\Entity\AffiliatesFamily f WITH f.dni = i.dni
+            LEFT JOIN Juliangorge\Users\Entity\User u WITH u.id = i.user_id
+            ORDER BY i.id DESC
+        ')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
+    }
+
+    protected function getImages(object $entity){
         $storage = new StorageClient([
             'projectId' => $this->config['firestore_projectId'],
             'keyFilePath' => $this->config['firestore_keyFilePath']
@@ -127,35 +193,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
             $images[$key] = $value->signedUrl(new \DateTime('1 min'), ['version' => 'v4']);
         }
 
-        return new ViewModel([
-            'form' => $form,
-            'title' => 'Autorización',
-            'item' => $entity,
-            'images' => $images,
-            'route' => $this->route
-        ]);
-    }
-
-    private function fetchAll($as_array = false){
-        return $this->em->createQuery('
-            SELECT
-            i.id,
-            i.dni,
-            i.user_id,
-            i.authorization_date,
-            i.date_created,
-            i.status,
-            i.type_of_authorization,
-            i.medical_order_image_url,
-            i.complementary_studies_image_url,
-            (CASE WHEN a.dni IS NOT NULL THEN (CONCAT(a.first_name, \' \', a.last_name)) ELSE (CONCAT(f.first_name, \' \', f.last_name)) END) as full_name,
-            CONCAT(u.first_name, \' \', u.last_name) as administrative_name
-            FROM Admin\Entity\AffiliatesAuthorizations i 
-            LEFT JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
-            LEFT JOIN Admin\Entity\AffiliatesFamily f WITH f.dni = i.dni
-            LEFT JOIN Juliangorge\Users\Entity\User u WITH u.id = i.user_id
-            ORDER BY i.id DESC
-        ')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
+        return $images;
     }
 
 }

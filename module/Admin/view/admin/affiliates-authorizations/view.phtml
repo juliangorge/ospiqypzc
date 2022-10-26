@@ -1,0 +1,73 @@
+<?php $this->headTitle($this->title); ?>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="page-title-box">
+			<h4 class="page-title"><?= $this->title ?> #<?= $this->item['authorization']->getAuthorizationId() ?></h4>
+		</div>
+
+		<div class="card">
+            <div class="card-body">
+            	<h5 class="mt-0 mb-2">
+	            	<?php 
+	        		if($this->item['authorization']->getAuthorizationDate() == NULL){
+						echo '<span class="badge bg-info">Pendiente</span>';
+					}
+					else{
+						switch($this->item['status']){
+							case 0:
+								echo '<span class="badge bg-warning">No autorizado</span>';
+								break;
+							case 1:
+								echo '<span class="badge bg-success">Autorizado</span>';
+								break;
+							case 2:
+								echo '<span class="badge bg-secondary">Comunicarse con OS</span>';
+								break;
+						}
+					}
+	        		?>
+	        	</h5>
+                <h4 class="header-title mt-0 mb-2">
+            		<?= $this->item['authorization']->getTypeOfAuthorization() ?>
+                </h4>
+                <div class="row">
+                	<div class="col-md-6 mb-2 text-center">
+						<?php 
+						if($this->images['medical_order_image'] != NULL){
+							echo '<img src="' . $this->images['medical_order_image'] . '" class="img-fluid p-1" />
+							<small>Orden médica</small>';
+						}
+						?>
+					</div>
+					<div class="col-md-6 mb-2 text-center">
+						<?php 
+						if($this->images['complementary_studies_image'] != NULL){
+							echo '<img src="' . $this->images['complementary_studies_image'] . '" class="img-fluid p-1" />
+							<small>Estudios complementarios</small>';
+						}
+						?>
+					</div>
+                </div>
+
+                <div class="text-start">
+                	<p class="text-muted">
+                		<strong>Fecha :</strong> <span class="ms-2"><?= $this->item['authorization']->getDateCreated()->format('d/m/Y H:i') ?></span>
+                		<br>
+                		<strong>Afiliado :</strong> <span class="ms-2"><?= $this->item['full_name'] ?>, <small>(DNI: <?= $this->item['authorization']->getDni() ?>)</small></span>
+                	</p>
+
+                </div>
+                
+                <?php if($this->item['authorization']->getAuthorizationDate() != NULL): ?>
+                	<hr class="my-3"> 
+                	<h4 class="header-title mt-0 mb-2">Respuesta</h4>
+                	<div class="text-start">
+	                	<strong>Auditor :</strong> <span class="ms-2"><?= $this->item['administrative_name'] ?></span>
+	                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+
+	</div>
+</div>
