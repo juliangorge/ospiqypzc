@@ -92,6 +92,7 @@ class AffiliatesController extends AbstractActionController
         $filter = $plugin->buildForDataTables($data);
 
         $filter['columns'] = str_replace('i.full_name', 'CONCAT(i.first_name, \' \', i.last_name) as full_name', $filter['columns']);
+        $filter['filter_by'] = str_replace('i.full_name', 'i.first_name', $filter['filter_by']);
         $filter['order_by'] = str_replace('i.full_name', 'i.first_name', $filter['order_by']);
 
         return new JsonModel(
