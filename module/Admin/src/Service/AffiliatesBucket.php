@@ -14,7 +14,16 @@ class AffiliatesBucket {
 		$this->em = $em;
 		$this->config = $config;
 
-		shell_exec('aws s3 cp s3://saas-padron-backup/10/export-afiliados-' . date('Ymd', strtotime('-1 days')) . '.csv ' . $this->config['exportAfiliadosFile']);
+		$output = shell_exec('aws s3 cp s3://saas-padron-backup/10/export-afiliados-' . date('Ymd', strtotime('-1 days')) . '.csv ' . $this->config['exportAfiliadosFile']);
+
+        if($output != ''){
+            echo '<pre>' , print_r($output) , '</pre>';
+            die;
+        }
+
+        exec('aws s3 cp s3://saas-padron-backup/10/export-afiliados-' . date('Ymd', strtotime('-1 days')) . '.csv ' . $this->config['exportAfiliadosFile']);
+
+        die;
 
 		$this->filename = $this->config['exportAfiliadosFile'];
 		$this->firestore = new FirestoreClient([
