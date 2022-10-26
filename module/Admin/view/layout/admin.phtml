@@ -8,7 +8,7 @@
         echo $this->headTitle('Admin ' . $this->web['config']['name'])->setSeparator(' | ')->setAutoEscape(false);
         echo $this->headMeta()->appendName('viewport', 'width=device-width, initial-scale=1, shrink-to-fit=no')->appendHttpEquiv('X-UA-Compatible', 'IE=edge');
 
-        echo $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => '/img/favicon.svg'])
+        echo $this->headLink(['rel' => 'shortcut icon', 'type' => 'image/vnd.microsoft.icon', 'href' => '/img/favicon.svg', 'id' => 'dark-scheme-icon'])
             ->prependStylesheet('/css/styles.css')
             ->prependStylesheet('/css/app-creative.min.css')
             ->prependStylesheet('/css/icons.min.css');
@@ -76,7 +76,7 @@
                             </a>
                             
                             <div class="dropdown-menu dropdown-menu-end dropdown-menu-animated topbar-dropdown-menu profile-dropdown" style="">
-                                <a href="javascript:void(0)" class="dropdown-item notify-item disabled">
+                                <a href="/admin/dashboard/mi-cuenta" class="dropdown-item notify-item">
                                     <i class="mdi mdi-account-circle me-1"></i>
                                     <span>Mi Cuenta</span>
                                 </a>

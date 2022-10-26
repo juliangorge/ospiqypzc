@@ -1,0 +1,30 @@
+<div class="row">
+	<div class="col-md-4 my-4">
+	    <div class="card mb-4">
+			<div class="card-body py-3">
+				<h1 class="h3 text-center mb-3"><?= $this->user->getFullName() ?></h1>
+
+				<div class="text-start">
+                    <p class="text-muted">
+                    	<strong>Creación :</strong> <span class="ms-2"><?= $this->user->getDateCreated()->format('d/m/Y') ?></span>
+                    </p>
+
+                    <p class="text-muted">
+                    	<strong>Rango :</strong><span class="ms-2"><?= $this->user->getRankId()->getName() ?></span>
+                    </p>
+
+                    <p class="text-muted">
+                    	<strong>Email :</strong> <span class="ms-2"><?= $this->user->getEmail() ?></span>
+                    </p>
+
+                    <hr>
+
+                    <a class="btn btn-outline-danger btn-sm" href="/admin/dashboard/cambiar-contraseña">
+                    	Cambiar contraseña
+                    </a>
+
+                </div>
+			</div>
+		</div>
+	</div>
+</div>

@@ -167,6 +167,7 @@ return [
             'layout/admin'           => __DIR__ . '/../view/layout/admin.phtml',
             'admin/error'            => __DIR__ . '/../view/layout/error.phtml',
             'admin/index/index'		 => __DIR__ . '/../view/admin/index/index.phtml',
+            'admin/index/cambiar-contrase-ña' => __DIR__ . '/../view/admin/users/change-password.phtml',
             'error/404'              => __DIR__ . '/../view/error/404.phtml',
             'error/index'            => __DIR__ . '/../view/error/index.phtml',
         ],
