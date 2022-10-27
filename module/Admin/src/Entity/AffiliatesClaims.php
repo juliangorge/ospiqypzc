@@ -90,9 +90,9 @@ class AffiliatesClaims
         $this->details = $array['detail'];
         $this->details_answer = $array['response'];
         $this->date_answer = $array['response_date'] == '' ? NULL : \DateTime::createFromFormat('d/m/Y', $array['response_date']);
-        $this->date_created = $array['date'] == '' ? NULL : \DateTime::createFromFormat('d/m/Y', $array['date']);
+        $this->date_created = new \DateTime();
         $this->status = $array['response_date'] != '';
-        $this->user_id = 1; //$array['user_id'];
+        $this->user_id = 1;
         $this->dni = $array['affiliate_dni'];
         $this->document_id = $array['document_id'];
     }
