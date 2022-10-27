@@ -201,7 +201,7 @@ return [
             ],
             3 => [
                 'name' => 'date_created',
-                'required' => true,
+                'required' => false,
                 'filters' => [],
                 'validators' => [],
             ],
