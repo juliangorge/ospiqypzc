@@ -13,9 +13,4 @@ return [
             ],
         ],
     ],
-    'laminas-cli' => [
-        'commands' => [
-            'admin:affiliates_sync' => Admin\Scripts\AffiliatesSync::class,
-        ],
-    ],
 ];
