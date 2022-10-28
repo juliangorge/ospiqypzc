@@ -131,9 +131,6 @@ return [
         ],
         'controllers' => [
             //@ autorizados, * todos
-            Controller\AffiliatesController::class => [
-                ['actions' => ['importFromCron'], 'allow' => '*'],
-            ],
         ]
     ],
     'doctrine' => [

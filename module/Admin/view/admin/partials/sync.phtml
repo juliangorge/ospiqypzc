@@ -1,0 +1,35 @@
+<?php $this->headTitle($this->data['title']); ?>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-title-box">
+			<h4 class="page-title"><?= $this->data['title'] ?></h4>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+
+				<?php
+				echo '<b class="mb-2">';
+
+				echo 'Creaciones: ' . ($this->data['created'] == -1 ? $this->data['errors'] : $this->data['created']);
+
+				echo  '</b><br>';
+				echo '<b class="mb-2">';
+
+				echo 'Actualizaciones: ' . ($this->data['updates'] == -1 ? $this->data['errors'] : $this->data['updates']);
+				echo  '</b><br>';
+
+				foreach($this->data['errors'] as $error){
+					echo '<pre>' , print_r($error) , '</pre>';
+				}
+
+				echo '<p class="my-2">Tiempo de respuesta: ' . round($this->data['time'], 2) . ' segundos.</p>';
+				?>
+
+				<a href="/<?= $this->data['route'] ?>" class="btn btn-primary btn-sm">Volver atrás</a>
+			</div>
+		</div>
+
+	</div>
+</div>

@@ -38,7 +38,7 @@ class AffiliatesController extends AbstractActionController
         ]);
     }
 
-    public function importAction(){
+    /*public function importAction(){
         $array = $this->import();
         $array['title'] = 'Importación desde AWS Bucket S3';
         $array['route'] = $this->route;
@@ -46,35 +46,7 @@ class AffiliatesController extends AbstractActionController
         return new ViewModel([
             'data' => $array
         ]);
-    }
-
-    public function importFromCronAction(){
-        if($_SERVER['HTTP_USER_AGENT'] != $this->config['cronKey']){
-            header('HTTP/1.0 404 Not Found');
-            exit;
-        }
-
-        $this->import();
-        return new JsonModel(['success' => true]);
-    }
-
-    private function import(){
-        $start = microtime(true);
-        $bucket = new \Admin\Service\AffiliatesBucket($this->em, $this->config);
-
-        try {
-            $results = $bucket->import();
-        }
-        catch(\Throwable $e){
-            return [
-                'quantity' => -1, 
-                'errors' => $e->getMessage(),
-                'time' => microtime(true) - $start
-            ];
-        }
-
-        return $results;
-    }
+    }*/
 
     private function fetchAll($as_array = false){
         return $this->em->createQuery('SELECT i FROM Admin\Entity\Affiliates i ORDER BY i.id DESC')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);

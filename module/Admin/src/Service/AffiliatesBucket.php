@@ -36,7 +36,6 @@ class AffiliatesBucket {
     */
 	public function import()
 	{
-		$start = microtime(true);
 		ini_set('max_execution_time', '30000');
         set_time_limit(30000);
         ini_set('memory_limit', '-1');
@@ -53,7 +52,6 @@ class AffiliatesBucket {
         $this->em->getConnection()->query('UPDATE affiliates_family SET is_active = false');
 
         $ruta = 0;
-        $i = 0;
         $affiliates = [];
         $families = [];
 
@@ -90,24 +88,28 @@ class AffiliatesBucket {
 
         fclose($archivo);
 
+        $stats = [
+            'created' => 0,
+            'updates' => 0
+        ];
+
         try {
-            $i += $this->actualizarAfiliadosEnFirebase($affiliates);
+            $this->actualizarAfiliadosEnFirebase($affiliates, $stats);
         }
         catch(\Throwable $e){
             $errors[] = $e->getMessage();
         }
 
         try {
-            $i += $this->actualizarFamiliaresEnFirebase($families);
+            $this->actualizarFamiliaresEnFirebase($families, $stats);
         }
         catch(\Throwable $e){
             $errors[] = $e->getMessage();
         }
 
         return [
-            'quantity' => $i, 
-            'errors' => $errors,
-            'time' => microtime(true) - $start,
+            'stats' => $stats, 
+            'errors' => $errors
         ];
 	}
 
@@ -288,8 +290,7 @@ class AffiliatesBucket {
         return $id;
     }
 
-    private function actualizarAfiliadosEnFirebase(array $affiliates){
-    	$i = 0;
+    private function actualizarAfiliadosEnFirebase(array $affiliates, &$stats){
         foreach($affiliates as $affiliate){
 
             if($affiliate->getIsActive()){
@@ -307,6 +308,8 @@ class AffiliatesBucket {
                         throw new \Exception('Error al actualizar registro para la APP (Firebase), DNI: ' . $affiliate->getDni());
                     }
 
+                    $stats['updates']++;
+
                 }else{
                     // Create
                     $to_firebase = $affiliate->toFirebase(true);
@@ -323,6 +326,8 @@ class AffiliatesBucket {
                     catch(\Throwable $e){
                         throw new \Exception('Error al crear registro para la APP (Firebase), DNI: ' . $affiliate->getDni());
                     }
+
+                    $stats['creates']++;
                 }
 
             }else{
@@ -330,16 +335,14 @@ class AffiliatesBucket {
                 $docRef = $this->firestore->collection('affiliates_data')->document($affiliate->getDocumentId());
                 $docRef->set(['active_user' => false], ['merge' => true]);
 
+                $stats['updates']++;
+
             }
 
-            $i++;
         }
-
-        return $i;
     }
 
-    private function actualizarFamiliaresEnFirebase(array $families){
-    	$i = 0;
+    private function actualizarFamiliaresEnFirebase(array $families, &$stats){
     	foreach($families as $family){
 
             //if($family->getIsActive()){
@@ -361,6 +364,8 @@ class AffiliatesBucket {
                         throw new \Exception('Error al actualizar registro para la APP (Firebase), DNI: ' . $family->getDni());
                     }
 
+                    $stats['updates']++;
+
                 }else{
                     // Create
                     $to_firebase = $family->toFirebase(true);
@@ -377,20 +382,20 @@ class AffiliatesBucket {
                     catch(\Throwable $e){
                         throw new \Exception('Error al crear registro para la APP (Firebase), DNI: ' . $family->getDni());
                     }
+
+                    $stats['created']++;
                 }
 
             //}else{
 
                 //$docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
                 //$docRef->set(['is_active' => false], ['merge' => true]);
-
+                //$stats['updates']++;
 
             //}
 
-			$i++;
         }
 
-        return $i;
     }
 
     private function cargarAfiliado(array $array){
