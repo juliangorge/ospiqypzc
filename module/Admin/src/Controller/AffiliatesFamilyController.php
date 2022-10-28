@@ -71,27 +71,8 @@ class AffiliatesFamilyController extends AbstractActionController
             $filterData['columns']
         );
 
-        $filterData['filter_by'] = str_replace(
-            [
-                'i.full_name',
-                'i.affiliate_full_name'
-            ],
-            [
-                'i.first_name',
-                'a.first_name'
-            ], 
-            $filterData['filter_by']
-        );
-
-        $filterData['order_by'] = str_replace(
-            [
-                'i.full_name'
-            ],
-            [
-                'i.first_name'
-            ], 
-            $filterData['order_by']
-        );
+        $filterData['filter_by'] = str_replace(['i.full_name','i.affiliate_full_name'], ['i.first_name','a.first_name'], $filterData['filter_by']);
+        $filterData['order_by'] = str_replace(['i.full_name','i.affiliate_full_name'], ['i.first_name','a.first_name'], $filterData['order_by']);
 
         $data = $this->em->createQuery('
             SELECT ' . $filterData['columns'] . '
