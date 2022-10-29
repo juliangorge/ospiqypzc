@@ -37,6 +37,7 @@ return [
     'DoctrineORMModule',
     'Juliangorge\Users',
     'Juliangorge\Mail',
+    'Juliangorge\Notifications',
     'Laminas\Diactoros',
     'Admin',
     'Application',
