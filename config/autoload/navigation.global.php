@@ -58,8 +58,21 @@ $menu_app = [
         'icon'       => 'mdi mdi-book-check',
         'resource'   => 'Admin\Controller\AffiliatesAuthorizationsController',
     ],
+    [
+        'label'      => 'Profesionales',
+        'route'      => 'admin/professionals',
+        'action'     => 'index',
+        'icon'       => 'mdi mdi-doctor',
+        'resource'   => 'Admin\Controller\ProfessionalsController',
+    ],
+    [
+        'label'      => 'Especialidades',
+        'route'      => 'admin/specialties',
+        'action'     => 'index',
+        'icon'       => 'mdi mdi-format-list-bulleted-square',
+        'resource'   => 'Admin\Controller\SpecialitiesController',
+    ],
 ];
-
 
 $medico_auditor = array_merge($menu_default, $menu_afiliados, $menu_app);
 

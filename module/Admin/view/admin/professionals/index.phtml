@@ -1,0 +1,49 @@
+<?php $this->headTitle($this->title); ?>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-title-box">
+			<div class="page-title-right d-block">
+				<a href="/<?= $this->route ?>/add" class="btn btn-primary btn-sm"><i class="mdi mdi-pencil"></i> Nuevo</a>
+			</div>
+
+			<h4 class="page-title"><?= $this->title ?></h4>
+		</div>
+
+		<div class="card">
+			<div class="card-body table-responsive">
+				<table class="table">
+					<thead>
+	                	<th><small>Nombre</small></th>
+	                	<th><small>Especialidad</small></th>
+	                	<th><small>Tipo de Atención</small></th>
+		                <th></th>
+					</thead>
+					<tbody>
+						<?php foreach($this->results as $item): ?>
+						<tr>
+							<td><?= $item->getFullName() ?></td>
+							<td><?= $item->getSpecialtyId()->getName() ?></td>
+							<td><?= $item->getTypeOfAttentionId()->getName() ?></td>
+							<td width="20%" align="right">
+								<a class="btn btn-primary btn-sm" href="/<?= $this->route ?>/edit/<?= $item->getId() ?>">
+			                    	<i class="mdi mdi-pencil"></i>
+			                    </a>
+
+			                    <a class="btn btn-danger btn-sm" data-bs-toggle="modal" onclick="selectId(<?= $item->getId() ?>)" data-bs-target="#deleteModal">
+			                    	<i class="mdi mdi-delete"></i>
+			                    </a>
+							</td>
+						</tr>
+						<?php endforeach; ?>
+					</tbody>
+				</table>
+
+				<?= $this->paginationControl($this->results, 'Sliding', 'admin/partials/pagination', ['route' => $this->route]); ?>
+			</div>
+		</div>
+
+	</div>
+</div>
+
+<?= $this->partial('/admin/partials/deleteModal', ['route' => $this->route]); ?>

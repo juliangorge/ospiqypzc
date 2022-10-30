@@ -1,0 +1,40 @@
+<?php $this->headTitle($this->title); ?>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="page-title-box">
+			<h4 class="page-title">Agregar <?= $this->title ?></h4>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+				<?php
+				$form = $this->form;
+				$form->prepare();
+				$form->setAttribute('action', '/' . $this->route . '/add');
+				$form->setAttribute('method', 'post');
+				echo $this->form()->openTag($form);
+				?>
+	    			<div class="row">
+						<div class="col-md-6 mb-2">
+							<?= $this->formRow($form->get('name')) ?>
+						</div>
+						<div class="col-md-6 mb-2"></div>
+						<div class="col-md-6">
+							<?= $this->formRow($form->get('attention_intervals')) ?>
+						</div>
+						<div class="col-md-6">
+							<?= $this->formRow($form->get('allow_edoctor')) ?>
+						</div>
+						<div class="col-md-12">
+							<?= $this->formSubmit($form->get('submit')) ?>
+						</div>
+					</div>
+
+				<?= $this->form()->closeTag() ?>
+
+			</div>
+		</div>
+
+	</div>
+</div>

@@ -101,6 +101,26 @@ return [
                             ],
                         ],
                     ],
+                    'professionals' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/professionals[/:action[/:id]]',
+                            'defaults' => [
+                                'controller'    => Controller\ProfessionalsController::class,
+                                'action'        => 'index',
+                            ],
+                        ],
+                    ],
+                    'specialties' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/specialties[/:action[/:id]]',
+                            'defaults' => [
+                                'controller'    => Controller\SpecialtiesController::class,
+                                'action'        => 'index',
+                            ],
+                        ],
+                    ],
                 ],
             ],
         ],
@@ -115,6 +135,8 @@ return [
             Controller\AffiliatesFamilyController::class    => Controller\Factory\ControllerFactory::class,
             Controller\AffiliatesAuthorizationsController::class    => Controller\Factory\ControllerFactory::class,
             Controller\AffiliatesClaimsController::class    => Controller\Factory\ControllerFactory::class,
+            Controller\ProfessionalsController::class    => Controller\Factory\ControllerFactory::class,
+            Controller\SpecialtiesController::class    => Controller\Factory\ControllerFactory::class,
         ],
     ],
     'controller_plugins' => [

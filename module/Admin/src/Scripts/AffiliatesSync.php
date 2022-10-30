@@ -34,7 +34,8 @@ class AffiliatesSync extends Command
         
         $output->writeln('Tiempo en ejecución: ' . round(microtime(true) - $start, 2) . ' segundos');
 
-        if(sizeof($results['errors'])){
+        $has_errors = (sizeof($results['errors']) > 0);
+        if($has_errors){
             $this->mail->send($this->config['mail_errors'], 
                             'CRON: Error al actualizar', 
                             '<pre>' , print_r($results['errors']) , '</pre>',

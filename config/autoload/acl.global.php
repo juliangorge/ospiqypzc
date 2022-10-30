@@ -41,6 +41,18 @@ return [
                     'view' => ['administrativo'],
                     'all' => ['medico_auditor', 'gerencia', 'administrador']
                 ],
+                'Admin\Controller\ProfessionalsController' => [
+                    'index' => ['administrativo'],
+                    'get' => ['administrativo'],
+                    'view' => ['administrativo'],
+                    'all' => ['gerencia', 'administrador']
+                ],
+                'Admin\Controller\SpecialtiesController' => [
+                    'index' => ['administrativo'],
+                    'get' => ['administrativo'],
+                    'view' => ['administrativo'],
+                    'all' => ['gerencia', 'administrador']
+                ],
                 'Admin\Controller\AffiliatesClaimsController' => [
                     'index' => ['administrativo'],
                     'get' => ['administrativo'],
