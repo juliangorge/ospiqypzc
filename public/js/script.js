@@ -1,3 +1,5 @@
+moment.locale('es');
+
 // <!-- Notifications -->
 
 function reqListener () {
@@ -15,12 +17,12 @@ function reqListener () {
 
   	for (var key in content){
   		notifications.innerHTML += `
-			<a href="javascript:void(0);" class="dropdown-item notify-item">
+			<a href="javascript:void(0);" class="dropdown-item notify-item px-2">
             	<div class="notify-icon bg-warning">
                 	<i class="mdi mdi-exclamation-thick"></i>
 				</div>
                 <p class="notify-details">` + content[key].text + `
-           			<small class="text-muted">Hace 1 min</small>
+           			<small class="text-muted">` + moment(content[key].date.date).fromNow() + `</small>
             	</p>
 			</a>
 		`;
@@ -30,7 +32,7 @@ function reqListener () {
 function getNotifications(){
 	var oReq = new XMLHttpRequest();
 	oReq.addEventListener("load", reqListener);
-	oReq.open("GET", "/admin/dashboard/getNotifications");
+	oReq.open("GET", "/admin/dashboard/getActiveNotifications");
 	oReq.send();
 
 	//setInterval(function(){ getNotifications(); }, 300000);
@@ -40,4 +42,9 @@ $(document).ready(function() {
     setTimeout(function(){
         $('.alert').alert('close');
     }, 2000);
+
+    $('.loading-effect').click(function(){
+    	$(this).html('<i class="mdi mdi-loading mdi-spin"></i> Cargando...');
+    	$(this).addClass('disabled');
+    });
 });

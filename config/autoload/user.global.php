@@ -17,9 +17,10 @@ declare(strict_types=1);
 return [
     'name' => 'OSPIQyPZC',
     'analytics' => '',
-    'version' => '3.0.2',
+    'version' => '3.1',
     'facebookAppId' => '',
     'authModule' => [
+        'userEntity' => 'Admin\Entity\User',
         'allowRegister' => false,
         'logoWidth' => 'calc(100%/2)',
         'showFooter' => true,

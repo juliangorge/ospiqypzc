@@ -12,16 +12,16 @@
 				<?php
 				echo '<b class="mb-2">';
 
-				echo 'Creaciones: ' . ($this->data['created'] == -1 ? $this->data['errors'] : $this->data['created']);
+				echo 'Creaciones: ' . ($this->data['stats']['created'] == -1 ? '0' : $this->data['stats']['created']);
 
 				echo  '</b><br>';
 				echo '<b class="mb-2">';
 
-				echo 'Actualizaciones: ' . ($this->data['updates'] == -1 ? $this->data['errors'] : $this->data['updates']);
-				echo  '</b><br>';
+				echo 'Actualizaciones: ' . ($this->data['stats']['updates'] == -1 ? '0' : $this->data['stats']['updates']);
+				echo  '</b><br><br>';
 
 				foreach($this->data['errors'] as $error){
-					echo '<pre>' , print_r($error) , '</pre>';
+					echo '<pre>' , var_dump($error) , '</pre>';
 				}
 
 				echo '<p class="my-2">Tiempo de respuesta: ' . round($this->data['time'], 2) . ' segundos.</p>';

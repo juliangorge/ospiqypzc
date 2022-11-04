@@ -6,27 +6,16 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
-use Google\Cloud\Firestore\FirestoreClient;
-
 class AffiliatesFamilyController extends AbstractActionController
 {
 
     private $em;
     private $config;
-    private $firestore;
-    private $colection;
     private $route;
 
     public function __construct($em, $config){
         $this->em = $em;
         $this->config = $config;
-
-        $this->firestore = new FirestoreClient([
-            'projectId' => $this->config['firestore_projectId'],
-            'keyFilePath' => $this->config['firestore_keyFilePath']
-        ]);
-
-        $this->collection = 'affiliates_family';
         $this->route = 'admin/affiliates_family';
     }
 

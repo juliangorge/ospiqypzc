@@ -23,7 +23,7 @@
 					<tbody>
 						<?php foreach($this->results as $item): ?>
 						<tr>
-							<td><?= $item->getFirstName() . ' ' . $item->getLastName() ?></td>
+							<td><?= $item->getDisplayName() ?></td>
 							<td><?= $item->getEmail() ?></td>
 							<td><?= $item->getRankId()->getName() ?></td>
 							<td><?= $item->getStatusDetails() ?></td>

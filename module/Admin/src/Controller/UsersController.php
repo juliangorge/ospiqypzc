@@ -48,7 +48,7 @@ class UsersController extends AbstractActionController
 
     public function addAction()
     {
-        $form = new \Admin\Form\Users('create', $this->em);
+        $form = new \Admin\Form\Users('create', $this->em, $this->config['authModule']['userEntity']);
         $request = $this->getRequest();
 
 
@@ -93,10 +93,10 @@ class UsersController extends AbstractActionController
         $id = $this->params()->fromRoute('id', 0);
         if(!$id) return $this->redirect()->toRoute($this->route);
 
-        $entity = $this->em->find('Juliangorge\Users\Entity\User', $id);
+        $entity = $this->em->find($this->config['authModule']['userEntity'], $id);
         if($entity == NULL) return $this->redirect()->toRoute($this->route);
 
-        $form = new \Admin\Form\Users('update', $this->em, $entity);
+        $form = new \Admin\Form\Users('update', $this->em, $this->config['authModule']['userEntity'], $entity);
         $form->bind($entity);
 
         $request = $this->getRequest();
@@ -145,7 +145,7 @@ class UsersController extends AbstractActionController
         $id = $this->params()->fromRoute('id', 0);
         if(!$id) return $this->redirect()->toRoute($this->route);
 
-        $entity = $this->em->find('Juliangorge\Users\Entity\User', $id);
+        $entity = $this->em->find($this->config['authModule']['userEntity'], $id);
         if($entity == NULL) return $this->redirect()->toRoute($this->route);
 
         $this->em->remove($entity);
@@ -160,7 +160,7 @@ class UsersController extends AbstractActionController
         $id = $this->params()->fromRoute('id', 0);
         if(!$id) return $this->redirect()->toRoute($this->route);
 
-        $entity = $this->em->find('Juliangorge\Users\Entity\User', $id);
+        $entity = $this->em->find($this->config['authModule']['userEntity'], $id);
         if($entity == NULL) return $this->redirect()->toRoute($this->route);
 
         $form = new \Juliangorge\Users\Form\PasswordChangeForm($this->em);
@@ -204,7 +204,7 @@ class UsersController extends AbstractActionController
 
     private function fetchAll($as_array = false)
     {
-        return $this->em->createQuery('SELECT i FROM Juliangorge\Users\Entity\User i ORDER BY i.id DESC')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
+        return $this->em->createQuery('SELECT i FROM ' . $this->config['authModule']['userEntity'] . ' i ORDER BY i.id DESC')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
     }
 
 }

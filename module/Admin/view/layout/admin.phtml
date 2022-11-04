@@ -51,7 +51,7 @@
                                             <h6 class="m-0 font-16 fw-semibold"> Notificaciones</h6>
                                         </div>
                                         <div class="col-auto">
-                                            <a href="javascript: void(0);" class="text-dark text-decoration-underline clear-btn">
+                                            <a href="/admin/dashboard/limpiarNotificaciones" class="text-dark text-decoration-underline clear-btn">
                                                 <small>Limpiar todo</small>
                                             </a>
                                         </div>
@@ -61,7 +61,7 @@
 
                                     </div>
                                 </div>
-                                <a href="/notificaciones" class="dropdown-item text-center text-primary notify-item notify-all">Ver todo</a>
+                                <a href="/admin/dashboard/notificaciones" class="dropdown-item text-center text-primary notify-item notify-all">Ver todo</a>
                             </div>
                         </li>
                         <li class="dropdown notification-list">
@@ -70,7 +70,7 @@
                                     <img src="/img/avatar.jpg" alt="user-image" class="rounded-circle">
                                 </span>
                                 <span>
-                                    <span class="account-user-name"><?= $this->identity()['first_name'] . ' ' . $this->identity()['last_name'] ?></span>
+                                    <span class="account-user-name"><?= $this->identity()['display_name'] ?></span>
                                     <span class="account-position"><?= $this->identity()['rank_name'] ?></span>
                                 </span>
                             </a>
@@ -143,7 +143,7 @@
                         <?php 
                         function alertMessage($text, $type = 'info'){
                             return '
-                            <div class="alert alert-' . $type . ' alert-dismissible bg-' . $type . ' text-white border-0 fade show" role="alert">
+                            <div class="alert alert-' . $type . ' alert-dismissible bg-' . $type . ' text-white border-0 fixed fade show" role="alert">
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                                 ' . $text . '
 
@@ -167,11 +167,11 @@
                             }
                         }
 
-                        echo $this->flashMessenger()->render('error', ['alert', 'alert-danger bg-danger text-white border-0 fade show']);
+                        echo $this->flashMessenger()->render('error', ['alert', 'alert-danger bg-danger text-white border-0 fixed fade show']);
 
-                        echo $this->flashMessenger()->render('success', ['alert', 'alert-success bg-success text-white border-0 fade show']);
+                        echo $this->flashMessenger()->render('success', ['alert', 'alert-success bg-success text-white border-0 fixed fade show']);
 
-                        echo $this->flashMessenger()->render('info', ['alert', 'alert-info bg-info text-white border-0 fade show']);
+                        echo $this->flashMessenger()->render('info', ['alert', 'alert-info bg-info text-white border-0 fixed fade show']);
                         
                         echo $this->content;
 

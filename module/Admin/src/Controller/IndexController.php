@@ -31,19 +31,21 @@ class IndexController extends AbstractActionController
 
     public function logsAction()
     {
-        
+        return new ViewModel([
+            'title' => 'Logs'
+        ]);   
     }
 
     public function miCuentaAction()
     {
         return new ViewModel([
-            'user' => $this->em->find('Juliangorge\Users\Entity\User', $this->identity()['id'])
+            'user' => $this->em->find($this->config['authModule']['userEntity'], $this->identity()['id'])
         ]);
     }
 
     public function cambiarContraseñaAction()
     {
-        $entity = $this->em->find('Juliangorge\Users\Entity\User', $this->identity()['id']);
+        $entity = $this->em->find($this->config['authModule']['userEntity'], $this->identity()['id']);
         if($entity == NULL) return $this->redirect()->toRoute($this->route);
 
         $form = new \Juliangorge\Users\Form\PasswordChangeForm($this->em);
@@ -86,9 +88,53 @@ class IndexController extends AbstractActionController
         ]);
     }
 
-    public function getNotificationsAction()
-    {
-        return new JsonModel();
+    public function notificacionesAction(){
+        return new ViewModel([
+            'title' => 'Notificaciones',
+        ]);
+    }
+
+    public function limpiarNotificacionesAction(){
+        $entities = $this->em->getRepository('Juliangorge\Notifications\Entity\PanelNotification')
+            ->findBy(['user_id' => $this->identity(), 'active' => true]);
+        foreach($entities as $e){
+            $e->setActive(false);
+        }
+        $this->em->flush();
+
+        return $this->redirect()->toRoute('home');
+    }
+
+    public function getNotificationsAction(){
+        if(!$this->getRequest()->isPost()){
+            header('HTTP/1.0 404 Not Found');
+            exit;
+        }
+
+        $data = $this->getRequest()->getPost()->toArray();
+
+        $plugin = $this->plugin(\Admin\Plugin\AppPlugin::class);
+        $filterData = $plugin->buildForDataTables($data);
+
+        $data = $this->em->createQuery('
+            SELECT ' . $filterData['columns'] . '
+            FROM Juliangorge\Notifications\Entity\PanelNotification i
+            ' . ($filterData['filter_by'] != '' ? 'WHERE '. $filterData['filter_by'] : '') . '
+            ' . ($filterData['order_by'] != '' ? 'ORDER BY ' . $filterData['order_by'] : '') . '
+        ')
+        ->setParameters($filterData['parameters'])
+        ->setFirstResult($filterData['start'])
+        ->setMaxResults($filterData['length'])->getResult();
+
+        return new JsonModel([
+            'recordsTotal' => $filterData['length'],
+            'recordsFiltered' => $this->em->createQuery('SELECT COUNT(i.id) FROM Juliangorge\Notifications\Entity\PanelNotification i')->getSingleScalarResult(),
+            'data' => $data
+        ]);
+    }
+
+    public function getActiveNotificationsAction(){
+        return new JsonModel($this->notifications()->getActivesByUserId($this->identity()['id']));
     }
 
 }

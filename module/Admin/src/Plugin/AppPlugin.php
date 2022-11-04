@@ -20,38 +20,60 @@ class AppPlugin extends AbstractPlugin
 
     public function getWeb(){
         return [
-        	'config'   => $this->config,
+            'config'   => $this->config,
             #'dynamic'  => $this->em->createQuery('SELECT w FROM Admin\Entity\Web w')->getSingleResult(),
         ];
     }
 
-    public function getUser(){
-        return ($this->authManager->getIdentity() ? $this->authManager->getIdentity()['id'] : null);
-    }
-
-    public function getUserRole(){
-        return ($this->authManager->getIdentity() ? $this->authManager->getIdentity()['rank_level'] : null);
+    public function ping(){
+        return 'pong';
     }
 
     public function buildForDataTables(array $postData){
         $column_array = [];
         $columns = '';
         $filter_by = '';
+
         foreach($postData['columns'] as $key => $value){
             if($columns != '') $columns .= ', ';
-            $columns .= 'i.' . $value['data'];
-            $columns_array[$key] = $value['data'];
+
+            if(is_array($value['data'])){
+                $subcolumns = '';
+                foreach($value['data'] as $data){
+                    if($subcolumns != '') $subcolumns .= ', ';
+
+                    $subcolumns .= 'i.' . $data;
+                    $columns_array[$key] = $data;
+                }
+
+                $columns .= $subcolumns;
+            }else{
+                $columns .= 'i.' . $value['data'];
+                $columns_array[$key] = $value['data'];
+            }
 
             if($value['searchable'] == 'true' && $postData['search']['value'] != ''){
                 if($filter_by != '') $filter_by .= ' OR ';
-                $filter_by .= 'i.' . $value['data'] . ' LIKE :search_value ';
+
+                if(is_array($value['data'])){
+                    $subfilter_by = '';
+                    foreach($value['data'] as $data){
+                        if($subfilter_by != '') $subfilter_by .= ' OR ';
+
+                        $subfilter_by .= 'i.' . $data . ' LIKE :search_value ';
+                    }
+                }else{
+                    $filter_by .= 'i.' . $value['data'] . ' LIKE :search_value ';
+                }
             }
         }
 
         $order_by = '';
-        foreach($postData['order'] as $order){
-            if($order_by != '') $order_by = ', ';
-            $order_by .= 'i.' . $columns_array[$order['column']] . ' ' . $order['dir'];
+        if(isset($postData['order'])){
+            foreach($postData['order'] as $order){
+                if($order_by != '') $order_by = ', ';
+                $order_by .= 'i.' . $columns_array[$order['column']] . ' ' . $order['dir'];
+            }
         }
 
         $parameters = [];
@@ -74,7 +96,7 @@ class AppPlugin extends AbstractPlugin
             SELECT ' . $filterData['columns'] . '
             FROM ' . $entity . ' i
             ' . ($filterData['filter_by'] != '' ? 'WHERE '. $filterData['filter_by'] : '') . '
-            ORDER BY ' . $filterData['order_by'] . '
+            ' . ($filterData['order_by'] != '' ? 'ORDER BY ' . $filterData['order_by'] : '') . '
         ')
         ->setParameters($filterData['parameters'])
         ->setFirstResult($filterData['start'])

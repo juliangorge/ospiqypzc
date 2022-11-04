@@ -8,6 +8,7 @@ use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Google\Cloud\Firestore\FirestoreClient;
 
 class AffiliatesSync extends Command
 {
@@ -15,12 +16,18 @@ class AffiliatesSync extends Command
     protected $em;
     protected $config;
     protected $mail;
+    protected $firestore;
 
     public function __construct($em, $config)
     {
         $this->em = $em;
         $this->config = $config;
         $this->mail = new \Juliangorge\Mail\Plugin\MailPlugin($config);
+
+        $this->firestore = new FirestoreClient([
+            'projectId' => $this->config['firestore_projectId'],
+            'keyFilePath' => $this->config['firestore_keyFilePath']
+        ]);
 
         parent::__construct();
     }
@@ -44,6 +51,27 @@ class AffiliatesSync extends Command
         }
 
         $output->writeln('Creaciones: ' . $results['stats']['created'] . ', actualizaciones: ' . $results['stats']['updates']);
+
+        $this->exportToFirebase();
+
         return Command::SUCCESS;
     }
+
+    protected function exportToFirebase() : void
+    {
+
+        $affiliates = $this->em->getRepository('Admin\Entity\Affiliates')->findBy(['document_id' => NULL]);
+
+        foreach($affiliates as $affiliate){
+            $this->firestore->collection('affiliates_dni')->add($affiliate->toAffiliateDni());
+            
+            $documentReference = $this->firestore->collection('affiliates_data')->add($affiliate->toFirebase());
+            $affiliate->setDocumentId($documentReference->id());
+        }
+
+        $this->em->flush();
+
+
+    }
+
 }
