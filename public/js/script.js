@@ -2,13 +2,16 @@ moment.locale('es');
 
 // <!-- Notifications -->
 
+var title = document.title;
 function reqListener () {
 	var content = JSON.parse(this.responseText);
+
 	document.querySelector('.noti-icon-badge').setAttribute("style", (!content.length ? 'visibility: hidden' : 'visibility: visible'));
 
 	if(!content.length){
 		document.querySelector('.clear-btn').setAttribute('onclick', 'return false;');
 	}else{
+		document.title = '(' + content.length + ') ' + title;
 		document.querySelector('.clear-btn').removeAttribute('onclick');
 	}
 
@@ -34,16 +37,24 @@ function getNotifications(){
 	oReq.addEventListener("load", reqListener);
 	oReq.open("GET", "/admin/dashboard/getActiveNotifications");
 	oReq.send();
-
-	//setInterval(function(){ getNotifications(); }, 300000);
 }
 
-$(document).ready(function() {
-    setTimeout(function(){
+setInterval(() => { 
+	getNotifications(); 
+}, 300000);
+
+$('.notification-list a').click(() => {
+	var oReq = new XMLHttpRequest();
+	oReq.open("POST", "/admin/dashboard/deactivateNotifications");
+	oReq.send();
+});
+
+$(document).ready(() => {
+    setTimeout(() => {
         $('.alert').alert('close');
     }, 2000);
 
-    $('.loading-effect').click(function(){
+    $('.loading-effect').click(() => {
     	$(this).html('<i class="mdi mdi-loading mdi-spin"></i> Cargando...');
     	$(this).addClass('disabled');
     });

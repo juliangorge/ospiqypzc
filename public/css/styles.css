@@ -12,7 +12,7 @@
 
 input[readonly],
 textarea[readonly] {
-  background: #edeef2!important;
+  background-color: var(--ct-input-disabled-bg);
 }
 
 :root {
@@ -33,4 +33,10 @@ textarea[readonly] {
     color: #273444!important;
     background-color: #eaecf3!important;
     border-color: #eaecf3!important;
+}
+
+.notification-list .noti-icon-badge {
+    height: 9px!important;
+    width: 9px!important;
+    color: #ff4444!important;
 }

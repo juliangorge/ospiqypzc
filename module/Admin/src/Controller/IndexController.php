@@ -89,6 +89,8 @@ class IndexController extends AbstractActionController
     }
 
     public function notificacionesAction(){
+        $this->deactivateNotifications();
+
         return new ViewModel([
             'title' => 'Notificaciones',
         ]);
@@ -131,6 +133,28 @@ class IndexController extends AbstractActionController
             'recordsFiltered' => $this->em->createQuery('SELECT COUNT(i.id) FROM Juliangorge\Notifications\Entity\PanelNotification i')->getSingleScalarResult(),
             'data' => $data
         ]);
+    }
+
+    public function deactivateNotificationsAction(){
+        if(!$this->getRequest()->isPost()){
+            header('HTTP/1.0 404 Not Found');
+            exit;
+        }
+
+        $this->deactivateNotifications();
+        header('HTTP/1.0 200');
+        exit;
+    }
+
+    private function deactivateNotifications(){
+        $notifications = $this->notifications()->getActivesByUserId($this->identity()['id']);
+
+        foreach($notifications as $notification){
+            $entity = $this->em->find('Juliangorge\Notifications\Entity\PanelNotification', $notification['id']);
+            $entity->setActive(0);
+        }
+        
+        $this->em->flush();
     }
 
     public function getActiveNotificationsAction(){
