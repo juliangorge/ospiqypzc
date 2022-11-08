@@ -70,7 +70,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
         $form->get('affiliate_fullname')->setValue($affiliate->getFullName());
 
         if($entity->getUserId() != NULL){
-            $user = $this->em->find('Juliangorge\Users\Entity\User', $entity->getUserId());
+            $user = $this->em->find($this->config['authModule']['userEntity'], $entity->getUserId());
             $form->get('administrative_name')->setValue($user->getFullName());
         }
 
@@ -98,7 +98,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
             if($success){
                 $to_firebase = $entity->toFirebase();
 
-                $user = $this->em->find('Juliangorge\Users\Entity\User', $entity->getUserId());
+                $user = $this->em->find($this->config['authModule']['userEntity'], $entity->getUserId());
                 $to_firebase['administrative_name'] = $user->getFullName();
 
                 $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
@@ -132,7 +132,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
             FROM Admin\Entity\AffiliatesAuthorizations i 
             LEFT JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
             LEFT JOIN Admin\Entity\AffiliatesFamily f WITH f.dni = i.dni
-            LEFT JOIN Juliangorge\Users\Entity\User u WITH u.id = i.user_id
+            LEFT JOIN ' . $this->config['authModule']['userEntity'] . ' u WITH u.id = i.user_id
             WHERE i.id = :id
             ORDER BY i.id DESC
         ')->setParameters(['id' => $id])
@@ -168,7 +168,7 @@ class AffiliatesAuthorizationsController extends AbstractActionController
             FROM Admin\Entity\AffiliatesAuthorizations i 
             LEFT JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
             LEFT JOIN Admin\Entity\AffiliatesFamily f WITH f.dni = i.dni
-            LEFT JOIN Juliangorge\Users\Entity\User u WITH u.id = i.user_id
+            LEFT JOIN ' . $this->config['authModule']['userEntity'] . ' u WITH u.id = i.user_id
             ORDER BY i.id DESC
         ')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
     }

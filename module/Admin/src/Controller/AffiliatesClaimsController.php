@@ -90,7 +90,7 @@ class AffiliatesClaimsController extends AbstractActionController
             if($success){
                 $to_firebase = $entity->toFirebase();
 
-                $user = $this->em->find('Juliangorge\Users\Entity\User', $entity->getUserId());
+                $user = $this->em->find($this->config['authModule']['userEntity'], $entity->getUserId());
                 $to_firebase['administrative_name'] = $user->getFullName();
 
                 $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
@@ -130,7 +130,7 @@ class AffiliatesClaimsController extends AbstractActionController
             CONCAT(u.first_name, \' \', u.last_name) as administrative_name
             FROM Admin\Entity\AffiliatesClaims i 
             INNER JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
-            LEFT JOIN Juliangorge\Users\Entity\User u WITH u.id = i.user_id
+            LEFT JOIN ' . $this->config['authModule']['userEntity'] . ' u WITH u.id = i.user_id
             WHERE i.id = :id
         ')->setParameters(['id' => $id])
         ->getOneOrNullResult();

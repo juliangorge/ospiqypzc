@@ -25,6 +25,14 @@ class AppPlugin extends AbstractPlugin
         ];
     }
 
+    public function getUser(){
+        return ($this->authManager->getIdentity() ? $this->authManager->getIdentity()['id'] : null);
+    }
+
+    public function getUserRole(){
+        return ($this->authManager->getIdentity() ? $this->authManager->getIdentity()['rank_level'] : null);
+    }
+
     public function ping(){
         return 'pong';
     }
