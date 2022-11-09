@@ -70,6 +70,8 @@ class AppPlugin extends AbstractPlugin
 
                         $subfilter_by .= 'i.' . $data . ' LIKE :search_value ';
                     }
+
+                    $filter_by .= $subfilter_by;
                 }else{
                     $filter_by .= 'i.' . $value['data'] . ' LIKE :search_value ';
                 }
