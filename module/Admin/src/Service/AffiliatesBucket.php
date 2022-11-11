@@ -48,8 +48,8 @@ class AffiliatesBucket {
             throw new \Exception('No se pudo leer el archivo: ' . $e->getMessage());
         }
 
-        $this->em->getConnection()->query('UPDATE affiliates SET is_active = false');
-        $this->em->getConnection()->query('UPDATE affiliates_family SET is_active = false');
+        #$this->em->getConnection()->query('UPDATE affiliates SET is_active = false');
+        #$this->em->getConnection()->query('UPDATE affiliates_family SET is_active = false');
 
         $ruta = 0;
         $affiliates = [];
@@ -64,7 +64,6 @@ class AffiliatesBucket {
 
                 $data_linea = $this->inicializarLinea($linea);
 
-                // Si es afiliado titular
                 if ($data_linea['activo'] == 'Si'){
                     try {
                         if ($data_linea['parentesco_codigo'] == 0) {
@@ -87,6 +86,7 @@ class AffiliatesBucket {
         }
 
         fclose($archivo);
+        $this->em->flush();
 
         $stats = [
             'created' => 0,
@@ -106,6 +106,8 @@ class AffiliatesBucket {
         catch(\Throwable $e){
             $errors[] = $e->getMessage();
         }
+
+        $this->em->flush();
 
         return [
             'stats' => $stats, 
@@ -298,11 +300,9 @@ class AffiliatesBucket {
                 if($affiliate->getDocumentId()){
                     // Update
 
-                    $docRef = $this->firestore->collection('affiliates_data')->document($affiliate->getDocumentId());
-                    $docRef->set($affiliate->toFirebase(), ['merge' => true]);
-
                     try {
-                        $this->em->flush();
+                        $docRef = $this->firestore->collection('affiliates_data')->document($affiliate->getDocumentId());
+                        $docRef->set($affiliate->toFirebase(), ['merge' => true]);
                     }
                     catch(\Throwable $e){
                         throw new \Exception('Error al actualizar registro para la APP (Firebase), DNI: ' . $affiliate->getDni());
@@ -311,6 +311,7 @@ class AffiliatesBucket {
                     $stats['updates']++;
 
                 }else{
+
                     // Create
                     $to_firebase = $affiliate->toFirebase(true);
 
@@ -319,7 +320,7 @@ class AffiliatesBucket {
 
                     $documentReference = $this->firestore->collection('affiliates_data')->add($to_firebase);
                     $affiliate->setDocumentId($documentReference->id());
-
+                    
                     try {
                         $this->em->flush();
                     }
@@ -340,6 +341,16 @@ class AffiliatesBucket {
             }
 
         }
+
+        $discard_affiliates = $this->em->getRepository('Admin\Entity\Affiliates')->findBy(['is_active' => false]);
+        foreach($discard_affiliates as $affiliate){
+            if($affiliate->getDocumentId()){
+                $docDniRef = $this->firestore->collection('affiliates_dni')->where('dni', '=', $affiliate->getDni())->documents();
+                foreach($docDniRef as $dni){
+                    $this->firestore->collection('affiliates_dni')->document($dni->id())->delete();
+                }
+            }
+        }
     }
 
     private function actualizarFamiliaresEnFirebase(array $families, &$stats){
@@ -348,17 +359,16 @@ class AffiliatesBucket {
             //if($family->getIsActive()){
 
                 if($family->getDocumentId()){
-                    // Update
-                    $docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
                     
-                    $to_firebase = $family->toFirebase();
-                    $to_firebase['affiliate_number'] = $this->obtenerCredencialFamiliar($to_firebase);
-                    $to_firebase['type_of_family_member'] = $this->obtenerMiembroFamiliar($to_firebase);
-                    unset($to_firebase['type_of_family_member_id']);
-                    $docRef->set($to_firebase, ['merge' => true]);
-
                     try {
-                        $this->em->flush();
+                        // Update
+                        $docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
+                        
+                        $to_firebase = $family->toFirebase();
+                        $to_firebase['affiliate_number'] = $this->obtenerCredencialFamiliar($to_firebase);
+                        $to_firebase['type_of_family_member'] = $this->obtenerMiembroFamiliar($to_firebase);
+                        unset($to_firebase['type_of_family_member_id']);
+                        $docRef->set($to_firebase, ['merge' => true]);    
                     }
                     catch(\Throwable $e){
                         throw new \Exception('Error al actualizar registro para la APP (Firebase), DNI: ' . $family->getDni());
@@ -367,6 +377,7 @@ class AffiliatesBucket {
                     $stats['updates']++;
 
                 }else{
+
                     // Create
                     $to_firebase = $family->toFirebase(true);
                     $to_firebase['affiliate_number'] = $this->obtenerCredencialFamiliar($to_firebase);
@@ -396,13 +407,24 @@ class AffiliatesBucket {
 
         }
 
+        /*
+        $discard_families = $this->em->getRepository('Admin\Entity\AffiliatesFamilies')->findBy(['is_active' => false]);
+        foreach($discard_families as $affiliate){
+            if($affiliate->getDocumentId()){
+                $docDniRef = $this->firestore->collection('affiliates_dni')->where('dni', '=', $afiliado->getDni())->documents();
+                foreach($docDniRef as $dni){
+                    $this->firestore->collection('affiliates_dni')->document($dni->id())->delete();
+                }
+            }
+        }
+        */
+
     }
 
     private function cargarAfiliado(array $array){
         // Verifico si existe un afiliado con el numero de documento
         // Si existe actualizo
         // Si no, lo creo.
-
         $entity = $this->em->getRepository('Admin\Entity\Affiliates')->findOneBy(['dni' => $array['dni']]);
 
         if($entity == NULL){
@@ -411,12 +433,12 @@ class AffiliatesBucket {
             $entity->fromImport($array);
             $this->em->persist($entity);
 
-            try {
+            /*try {
                 $this->em->flush();
             }
             catch(\Throwable $e){
                 throw new \Exception('Error al crear registro titular DNI: ' . $array['dni']);
-            }
+            }*/
 
         }else{
 
@@ -432,7 +454,7 @@ class AffiliatesBucket {
                 'credential_number' => $entity->getCredentialNumber(),
                 'affiliate_type' => $entity->getAffiliateType(),
                 'region_id' => $entity->getRegionId(),
-                'is_active' => 1
+                'is_active' => $entity->getIsActive()
             ];
 
             if($entity_tmp == $array) return NULL;
@@ -445,7 +467,6 @@ class AffiliatesBucket {
             catch(\Throwable $e){
                 throw new \Exception('Error al actualizar registro titular DNI: ' . $array['dni'] . '; ' . $e->getMessage());
             }
-
         }
 
         return $entity;
@@ -464,12 +485,12 @@ class AffiliatesBucket {
             $entity->fromImport($array);
             $this->em->persist($entity);
 
-            try {
+            /*try {
                 $this->em->flush();
             }
             catch(\Throwable $e){
                 throw new \Exception('Error al crear registro familiar DNI: ' . $array['dni']);
-            }
+            }*/
 
         }else{
             // Actualizo campo a campo para no pegarle a firebase siempre
@@ -487,7 +508,7 @@ class AffiliatesBucket {
                 'region_id' => $entity->getRegionId(),
             ];
 
-            if($entity_tmp == $array) return NULL;
+            if($entity_tmp == $array) return;
 
             $entity->fromImport($array);
 

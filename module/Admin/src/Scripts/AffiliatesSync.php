@@ -52,26 +52,7 @@ class AffiliatesSync extends Command
 
         $output->writeln('Creaciones: ' . $results['stats']['created'] . ', actualizaciones: ' . $results['stats']['updates']);
 
-        $this->exportToFirebase();
-
         return Command::SUCCESS;
-    }
-
-    protected function exportToFirebase() : void
-    {
-
-        $affiliates = $this->em->getRepository('Admin\Entity\Affiliates')->findBy(['document_id' => NULL]);
-
-        foreach($affiliates as $affiliate){
-            $this->firestore->collection('affiliates_dni')->add($affiliate->toAffiliateDni());
-            
-            $documentReference = $this->firestore->collection('affiliates_data')->add($affiliate->toFirebase());
-            $affiliate->setDocumentId($documentReference->id());
-        }
-
-        $this->em->flush();
-
-
     }
 
 }
