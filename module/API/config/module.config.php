@@ -122,7 +122,7 @@ return [
     ],
     'api-tools' => [
         'db-connected' => [
-            'API\\V1\\Rest\\AffiliatesAuthorizations\\AffiliatesAuthorizationsResource' => [
+            \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsResource::class => [
                 'adapter_name' => 'dbadapter',
                 'table_name' => 'affiliates_authorizations',
                 'hydrator_name' => \Laminas\Hydrator\ArraySerializableHydrator::class,
@@ -130,7 +130,7 @@ return [
                 'entity_identifier_name' => 'id',
                 'table_service' => 'API\\V1\\Rest\\AffiliatesAuthorizations\\AffiliatesAuthorizationsResource\\Table',
             ],
-            'API\\V1\\Rest\\AffiliatesClaims\\AffiliatesClaimsResource' => [
+            \API\V1\Rest\AffiliatesClaims\AffiliatesClaimsResource::class => [
                 'adapter_name' => 'dbadapter',
                 'table_name' => 'affiliates_claims',
                 'hydrator_name' => \Laminas\Hydrator\ArraySerializableHydrator::class,
@@ -278,7 +278,7 @@ return [
             ],
             7 => [
                 'name' => 'status',
-                'required' => true,
+                'required' => false,
                 'filters' => [
                     0 => [
                         'name' => \Laminas\Filter\StripTags::class,
@@ -493,6 +493,19 @@ return [
             ],
         ],
     ],
+    'service_manager' => [
+        'factories' => [
+            \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsResource::class 
+                => \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsResourceFactory::class,
+            \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsTableGateway::class 
+                => \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsTableGatewayFactory::class,
+
+            \API\V1\Rest\AffiliatesClaims\AffiliatesClaimsResource::class 
+                => \API\V1\Rest\AffiliatesClaims\AffiliatesClaimsResourceFactory::class,
+            \API\V1\Rest\AffiliatesClaims\AffiliatesClaimsTableGateway::class 
+                => \API\V1\Rest\AffiliatesClaims\AffiliatesClaimsTableGatewayFactory::class,
+        ],
+    ],
     'api-tools-mvc-auth' => [
         'authorization' => [
             'API\\V1\\Rest\\AffiliatesAuthorizations\\Controller' => [
@@ -527,14 +540,6 @@ return [
                     'DELETE' => false,
                 ],
             ],
-        ],
-    ],
-    'service_manager' => [
-        'factories' => [
-            \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsResource::class => \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsResourceFactory::class,
-            \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsTableGateway::class => \API\V1\Rest\AffiliatesAuthorizations\AffiliatesAuthorizationsTableGatewayFactory::class,
-            \API\V1\Rest\AffiliatesClaims\AffiliatesClaimsResource::class => \API\V1\Rest\AffiliatesClaims\AffiliatesClaimsResourceFactory::class,
-            \API\V1\Rest\AffiliatesClaims\AffiliatesClaimsTableGateway::class => \API\V1\Rest\AffiliatesClaims\AffiliatesClaimsTableGatewayFactory::class,
         ],
     ],
 ];
