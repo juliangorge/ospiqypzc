@@ -23,6 +23,7 @@ class AffiliatesAuthorizationsResource extends DbConnectedResource
         unset($data['status']);
         unset($data['user_id']);
         unset($data['authorization_date']);
+        $data['status'] = 0;
 
         $this->table->insert($data);
         $id = $this->table->getLastInsertValue();
