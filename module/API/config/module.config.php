@@ -355,44 +355,14 @@ return [
             2 => [
                 'name' => 'details',
                 'required' => true,
-                'filters' => [
-                    0 => [
-                        'name' => \Laminas\Filter\StringTrim::class,
-                    ],
-                    1 => [
-                        'name' => \Laminas\Filter\StripTags::class,
-                    ],
-                ],
-                'validators' => [
-                    0 => [
-                        'name' => \Laminas\Validator\StringLength::class,
-                        'options' => [
-                            'min' => 1,
-                            'max' => '65535',
-                        ],
-                    ],
-                ],
+                'filters' => [],
+                'validators' => [],
             ],
             3 => [
                 'name' => 'details_answer',
                 'required' => false,
-                'filters' => [
-                    0 => [
-                        'name' => \Laminas\Filter\StringTrim::class,
-                    ],
-                    1 => [
-                        'name' => \Laminas\Filter\StripTags::class,
-                    ],
-                ],
-                'validators' => [
-                    0 => [
-                        'name' => \Laminas\Validator\StringLength::class,
-                        'options' => [
-                            'min' => 1,
-                            'max' => '65535',
-                        ],
-                    ],
-                ],
+                'filters' => [],
+                'validators' => [],
             ],
             4 => [
                 'name' => 'dni',
