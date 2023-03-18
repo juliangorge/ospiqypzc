@@ -85,24 +85,24 @@ class Users extends OriginalForm
         }
 
         $this->add([
-            'name' => 'rank_id',
+            'name' => 'role_id',
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
             'attributes' => [
-                'id' => 'rank_id',
+                'id' => 'role_id',
                 'required' => true,
                 'class' => 'form-control'
             ],
             'options' => [
-                'label' => 'Rango',
+                'label' => 'Rol',
                 'label_attributes' => [
                     'class' => 'col-sm-12 col-form-label'
                 ],
                 'object_manager' => $this->entityManager,
-                'target_class' => 'Juliangorge\Users\Entity\UserRank',
+                'target_class' => 'Juliangorge\Users\Entity\UserRole',
                 'property' => 'name',
                 'is_method' => false,
                 'display_empty_item' => true,
-                'empty_item_label' => 'Seleccionar Rango',
+                'empty_item_label' => 'Seleccionar Rol',
                 'find_method' => [
                     'name'   => 'findBy',
                     'params' => [

@@ -38,9 +38,11 @@ return [
     'Juliangorge\Users',
     'Juliangorge\Mail',
     'Juliangorge\Notifications',
+    'Juliangorge\MedicalShifts',
     'Laminas\Diactoros',
     'Admin',
     'Application',
     'API',
+    'TurnosAPI',
     'ErrorHeroModule'
 ];

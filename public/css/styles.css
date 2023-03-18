@@ -40,3 +40,12 @@ textarea[readonly] {
     width: 9px!important;
     color: #ff4444!important;
 }
+
+.select2-container .select2-selection--multiple {
+    min-height: 38px!important;
+    padding: 0.15rem 0.4rem!important;
+}
+
+.select2-container .select2-selection--multiple .select2-selection__choice {
+    color: #000!important;
+}

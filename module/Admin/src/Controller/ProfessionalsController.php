@@ -48,7 +48,7 @@ class ProfessionalsController extends AbstractActionController
     }
 
     public function addAction(){
-        $form = new \Admin\Form\Professionals($this->em);
+        $form = new \Admin\Form\Professional($this->em);
         $request = $this->getRequest();
 
         $success = true;
@@ -58,31 +58,30 @@ class ProfessionalsController extends AbstractActionController
 
             if($form->isValid()){
 
-                $entity = new \Admin\Entity\Professionals();
-                $post['specialty_id'] = $this->em->find('Admin\Entity\Specialties', $post['specialty_id']);
-                $post['type_of_medical_attention_id'] = $this->em->find('Admin\Entity\TypesOfMedicalAttention', $post['type_of_medical_attention_id']);
-                $entity->initialize($post);
+                $post['specialties'] = $this->em->getRepository('Admin\Entity\Specialty')
+                        ->findBy(['id' => $post['specialties']]);
+                $entity = new \Admin\Entity\Professional($post);
                 $this->em->persist($entity);
 
                 try {
                     $this->em->flush();
                 }catch(\Throwable $e){
-                    $this->flashMessenger()->addErrorMessage($e->getMessage());
+                    $this->layout()->errorMessage = $e->getMessage();
                     $success = false;
                 }
 
                 if($success){                
                     
-                    $to_firebase = $entity->toFirebase();
+                    /*$to_firebase = $entity->toFirebase();
                     $documentReference = $this->firestore->collection($this->collection)->add($to_firebase);
                     $entity->setDocumentId($documentReference->id());
                     
                     try {
                         $this->em->flush();
                     }catch(\Throwable $e){
-                        $this->flashMessenger()->addErrorMessage($e->getMessage());
+                        $this->layout()->errorMessage = $e->getMessage();
                         $success = false;   
-                    }
+                    }*/
                     
                 }
                 
@@ -109,11 +108,12 @@ class ProfessionalsController extends AbstractActionController
         $id = $this->params()->fromRoute('id', 0);
         if(!$id) return $this->redirect()->toRoute($this->route);
 
-        $entity = $this->em->find('Admin\Entity\Professionals', $id);
+        $entity = $this->em->find('Admin\Entity\Professional', $id);
         if($entity == NULL) return $this->redirect()->toRoute($this->route);
 
-        $form = new \Admin\Form\Professionals($this->em);
+        $form = new \Admin\Form\Professional($this->em);
         $form->bind($entity);
+        $form->get('specialties')->setValue(array_column($entity->getSpecialtiesArray(), 'id'));
 
         $request = $this->getRequest();
 
@@ -125,26 +125,25 @@ class ProfessionalsController extends AbstractActionController
             if($form->isValid()){
 
                 try {
-                    $post['specialty_id'] = $this->em->find('Admin\Entity\Specialties', $post['specialty_id']);
-                    $post['type_of_medical_attention_id'] = $this->em->find('Admin\Entity\TypesOfMedicalAttention', $post['type_of_medical_attention_id']);
-
+                    $post['specialties'] = $this->em->getRepository('Admin\Entity\Specialty')
+                        ->findBy(['id' => $post['specialties']]);
                     $entity->exchangeArray($post);
                     $this->em->flush();
                 }catch(\Throwable $e){
-                    $this->flashMessenger()->addErrorMessage($e->getMessage());
+                    $this->layout()->errorMessage = $e->getMessage();
                     $success = false;
                 }
 
             }else{
-                $this->flashMessenger()->addErrorMessage($form->getMessages());
+                $this->layout()->errorMessage = $e->getMessage();
                 $success = false;
             }
             
             if($success){
                 
-                $to_firebase = $entity->toFirebase();
-                $docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
-                $docRef->set($to_firebase, ['merge' => true]);
+                #$to_firebase = $entity->toFirebase();
+                #$docRef = $this->firestore->collection($this->collection)->document($entity->getDocumentId());
+                #$docRef->set($to_firebase, ['merge' => true]);
 
                 $this->flashMessenger()->addSuccessMessage('Carga exitosa');
                 return $this->redirect()->toRoute($this->route);
@@ -159,13 +158,13 @@ class ProfessionalsController extends AbstractActionController
         ]);
     }
 
-    public function deleteAction(){
+    /*public function deleteAction(){
         if(!$this->getRequest()->isPost()) return $this->redirect()->toRoute($this->route);
 
         $id = $this->params()->fromRoute('id', 0);
         if(!$id) return $this->redirect()->toRoute($this->route);
 
-        $entity = $this->em->find('Admin\Entity\Professionals', $id);
+        $entity = $this->em->find('Admin\Entity\Professional', $id);
         if($entity == NULL) return $this->redirect()->toRoute($this->route);
 
         if($entity->getDocumentId() != NULL){
@@ -177,10 +176,30 @@ class ProfessionalsController extends AbstractActionController
                 
         $this->flashMessenger()->addSuccessMessage('Borrado exitoso');
         return $this->redirect()->toRoute($this->route);
+    }*/
+
+    public function getBySpecialtiesAction(){
+        $request = $this->getRequest();
+        if(!$request->isPost()){
+            header('HTTP/1.0 401');
+            exit;
+        }
+
+        $data = $request->getPost()->toArray();
+        $professionals = $this->em->getRepository('Admin\Entity\Professional')->findAll();
+
+        $array = [];
+        foreach($professionals as $i){
+            if($i->hasSpecialty($data['specialty_id'])) $array[] = [
+                'id' => $i->getId(),
+                'full_name' => $i->getFullName(),
+            ];
+        }
+
+        return new JsonModel($array);
     }
 
     private function fetchAll($as_array = false){
-        return $this->em->createQuery('SELECT i FROM Admin\Entity\Professionals i ORDER BY i.last_name ASC')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
+        return $this->em->getRepository('Admin\Entity\Professional')->findAll();
     }
-
 }

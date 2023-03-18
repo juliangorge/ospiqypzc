@@ -1,0 +1,38 @@
+<?php $this->headTitle($this->title); ?>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="page-title-box">
+			<h4 class="page-title"><?= $this->title ?></h4>
+		</div>
+
+	    <div class="card mb-4">
+			<div class="card-body py-3">
+				<?php
+				$form = $this->form;
+				$form->prepare();
+
+				if(!$id){
+					$form->setAttribute('action', '/' . $this->route . '/role');
+				}else{
+					$form->setAttribute('action', '/' . $this->route . '/role/' . $id);
+				}
+
+				$form->setAttribute('method', 'post');
+				echo $this->form()->openTag($form);
+				?>
+	    			<div class="row">
+						<div class="col-md-12">
+							<?= $this->formRow($form->get('name')) ?>
+						</div>
+						<div class="col-md-12">
+							<?= $this->formSubmit($form->get('submit')) ?>
+						</div>
+					</div>
+
+				<?= $this->form()->closeTag($form) ?>
+
+			</div>
+		</div>
+	</div>
+</div>

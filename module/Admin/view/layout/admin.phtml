@@ -71,7 +71,7 @@
                                 </span>
                                 <span>
                                     <span class="account-user-name"><?= $this->identity()['display_name'] ?></span>
-                                    <span class="account-position"><?= $this->identity()['rank_name'] ?></span>
+                                    <span class="account-position"><?= $this->identity()['role_name'] ?></span>
                                 </span>
                             </a>
                             
@@ -123,7 +123,7 @@
                     if($this->identity() == NULL){
                         $navigation = 'Guest';
                     }else{
-                        $navigation = $this->identity()['rank_level'];
+                        $navigation = str_replace(' ', '_', iconv('UTF-8', 'ASCII//TRANSLIT', $this->identity()['role_name']));
                     }
 
                     echo $this->navigation('Laminas\Navigation\\' . $navigation)->menu()->setPartial('admin/partials/navigation.phtml');

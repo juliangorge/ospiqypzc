@@ -61,7 +61,7 @@ class UsersController extends AbstractActionController
 
                 try {
                     $userManager = $this->serviceManager->get($this->config['authModule']['userManager']);
-                    $post['rank_id'] = $this->em->find('Juliangorge\Users\Entity\UserRank', $post['rank_id']);
+                    $post['role_id'] = $this->em->find('Juliangorge\Users\Entity\UserRole', $post['role_id']);
                     $userManager->addUser($post);
 
                 }catch(\Throwable $e){
@@ -110,7 +110,7 @@ class UsersController extends AbstractActionController
 
                 try {
                     $userManager = $this->serviceManager->get($this->config['authModule']['userManager']);
-                    $post['rank_id'] = $this->em->find('Juliangorge\Users\Entity\UserRank', $post['rank_id']);
+                    $post['role_id'] = $this->em->find('Juliangorge\Users\Entity\UserRole', $post['role_id']);
                     $post['status'] = $entity->getStatus();
                     $userManager->updateUser($entity, $post);
 
@@ -153,6 +153,107 @@ class UsersController extends AbstractActionController
 
         $this->flashMessenger()->addSuccessMessage('Borrado exitoso');
         return $this->redirect()->toRoute($this->route);
+    }
+
+    public function privilegesByRoleAction(){
+        $id = $this->params()->fromRoute('id', 0);
+        $form = new \Admin\Form\UserPrivilegeByRole($this->em);
+        $success = false;
+
+        $entity = $this->em->find('Juliangorge\Users\Entity\UserRole', $id);
+        if($entity == NULL) return $this->redirect()->toRoute($this->route, ['action' => 'roles']);
+
+        $form->get('privileges')->setValue(array_column($entity->getPrivilegesArray(), 'id'));
+
+        if($this->getRequest()->isPost()){
+            $data = $this->getRequest()->getPost()->toArray();
+            $form->setData($data);
+
+            if($form->isValid()){
+                $data = $form->getData();
+
+                $data['privileges'] = $this->em->getRepository('Juliangorge\Users\Entity\UserPrivilege')
+                    ->findBy(['id' => $data['privileges']]);
+                $entity->addPrivileges($data['privileges']);
+
+                $this->em->flush();
+                $success = true;
+            }else{
+                $this->layout()->addErrorMessage = $form->getMessages();
+            }
+        }
+
+        if($success){
+            $this->flashMessenger()->addSuccessMessage('Cambios aplicados');
+            return $this->redirect()->toRoute($this->route, ['action' => 'roles']);
+        }
+
+        return new ViewModel([
+            'title' => 'Rol',
+            'form' => $form,
+            'route' => $this->route,
+            'id' => $id
+        ]);
+    }
+
+    public function roleAction()
+    {
+        $id = $this->params()->fromRoute('id', 0);
+        $form = new \Admin\Form\UserRole($this->em);
+        $success = false;
+
+        if($id){
+            $entity = $this->em->find('Juliangorge\Users\Entity\UserRole', $id);
+            if($entity == NULL) return $this->redirect()->toRoute($this->route, ['action' => 'roles']);
+            $form->bind($entity);
+        }
+
+        if($this->getRequest()->isPost()){
+            $data = $this->getRequest()->getPost()->toArray();
+            $form->setData($data);
+
+            if($form->isValid()){
+                $data = $form->getData();
+                if(!$id){
+                    $role = new \Juliangorge\Users\Entity\UserRole($data);
+                    $this->em->persist($role);
+                }
+                $this->em->flush();
+                $success = true;
+            }else{
+                $this->layout()->addErrorMessage = $form->getMessages();
+            }
+        }
+
+        if($success){
+            $this->flashMessenger()->addSuccessMessage('Cambios aplicados');
+            return $this->redirect()->toRoute($this->route, ['action' => 'roles']);
+        }
+
+        return new ViewModel([
+            'title' => 'Rol',
+            'form' => $form,
+            'route' => $this->route,
+            'id' => $id
+        ]);
+    }
+
+    public function rolesAction()
+    {
+        return new ViewModel([
+            'title' => 'Roles',
+            'data' => $this->em->createQuery('SELECT a.id, a.name FROM Juliangorge\Users\Entity\UserRole a')->getResult(),
+            'route' => $this->route
+        ]);
+    }
+
+    public function privilegesAction()
+    {
+        return new ViewModel([
+            'title' => 'Privilegios',
+            'data' => $this->em->createQuery('SELECT a.id, a.name, a.functionality, a.action FROM Juliangorge\Users\Entity\UserPrivilege a')->getResult(),
+            'route' => $this->route
+        ]);
     }
 
     public function changePasswordAction()

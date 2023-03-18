@@ -2,15 +2,13 @@
 namespace Admin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 /**
 * @ORM\Entity
-* @ORM\Table(name="professionals", indexes={
-    * @ORM\Index(name="specialty_id", columns={"specialty_id"}),
-    * @ORM\Index(name="type_of_medical_attention_id", columns={"type_of_medical_attention_id"})
-* })
+* @ORM\Table(name="professionals")
 */
-class Professionals
+class Professional
 {
     /**
     * @ORM\Id
@@ -29,16 +27,15 @@ class Professionals
     protected $dni;
 
     /**
-    * @ORM\ManyToOne(targetEntity="Admin\Entity\Specialties")
-    * @ORM\JoinColumn(name="specialty_id", referencedColumnName="id")
+    * Many Professional have Many Specialties.
+    * @ORM\ManyToMany(targetEntity="Admin\Entity\Specialty")
+    * @ORM\JoinTable(name="specialties_by_professional",
+    *      joinColumns={@ORM\JoinColumn(name="professional_id", referencedColumnName="id")},
+    *      inverseJoinColumns={@ORM\JoinColumn(name="specialty_id", referencedColumnName="id", unique=false)}
+    * )
+    * @var Collection<int, Admin\Entity\Specialty>
     */
-    protected $specialty_id;
-
-    /**
-    * @ORM\ManyToOne(targetEntity="Admin\Entity\TypesOfMedicalAttention")
-    * @ORM\JoinColumn(name="type_of_medical_attention_id", referencedColumnName="id")
-    */
-    protected $type_of_medical_attention_id;
+    protected Collection $specialties;
 
     /** @ORM\Column(name="registration", type="string", nullable=true) */    
     protected $registration;
@@ -49,10 +46,10 @@ class Professionals
     /** @ORM\Column(name="cuit", type="string", nullable=false) */
     protected $cuit;
 
-    /** @ORM\Column(name="phone_number", type="string", nullable=false) */
+    /** @ORM\Column(name="phone_number", type="string", nullable=true) */
     protected $phone_number;
 
-    /** @ORM\Column(name="email", type="string", nullable=false) */
+    /** @ORM\Column(name="email", type="string", nullable=true) */
     protected $email;
 
     /** @ORM\Column(name="is_active", type="boolean", nullable=false) */
@@ -67,8 +64,6 @@ class Professionals
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'dni' => $this->dni,
-            'specialty_id' => $this->specialty_id,
-            'type_of_medical_attention_id' => $this->type_of_medical_attention_id,
             'registration' => $this->registration,
             'college' => $this->college,
             'cuit' => $this->cuit,
@@ -79,12 +74,11 @@ class Professionals
         ];
     }
 
-    public function initialize(array $array){
+    public function __construct(array $array){
         $this->first_name = $array['first_name'];
         $this->last_name = $array['last_name'];
         $this->dni = $array['dni'];
-        $this->specialty_id = $array['specialty_id'];
-        $this->type_of_medical_attention_id = $array['type_of_medical_attention_id'];
+        $this->addSpecialties($array['specialties']);
         $this->registration = $array['registration'];
         $this->college = $array['college'];
         $this->cuit = $array['cuit'];
@@ -97,8 +91,7 @@ class Professionals
         $this->first_name = $array['first_name'];
         $this->last_name = $array['last_name'];
         $this->dni = $array['dni'];
-        $this->specialty_id = $array['specialty_id'];
-        $this->type_of_medical_attention_id = $array['type_of_medical_attention_id'];
+        $this->addSpecialties($array['specialties']);
         $this->registration = $array['registration'];
         $this->college = $array['college'];
         $this->cuit = $array['cuit'];
@@ -111,8 +104,7 @@ class Professionals
         return [
             'name' => $this->last_name . ', ' .  $this->first_name,
             'dni' => $this->dni,
-            'specialty' => $this->specialty_id->getName(),
-            'type_of_attention' => $this->type_of_medical_attention_id->getName()
+            'type_of_attention' => 'Consultorio'
         ];
     }
 
@@ -123,10 +115,34 @@ class Professionals
     public function getId(){ return $this->id; }
     public function getFirstName(){ return $this->first_name; }
     public function getLastName(){ return $this->last_name; }
-    public function getFullName(){ return $this->last_name . ' ' . $this->first_name; }
+    public function getFullName(){ return strtoupper($this->last_name) . ', ' . $this->first_name; }
     public function getDni(){ return $this->dni; }
-    public function getSpecialtyId(){ return $this->specialty_id; }
-    public function getTypeOfAttentionId(){ return $this->type_of_medical_attention_id; }
+
+    public function hasSpecialties() { return !$this->specialties->isEmpty(); }
+    public function getSpecialties() { return $this->specialties; }
+    public function getSpecialtiesArray(){
+        $array = [];
+        foreach($this->specialties as $item){
+            $array[] = [
+                'id' => $item->getId(),
+                'name' => $item->getName()
+            ];
+        }
+        return $array;
+    }
+
+    public function hasSpecialty(int $specialty_id){
+        $found = false;
+        foreach($this->specialties as $item){
+            if($item->getId() == $specialty_id){
+                $found = true;
+                break;
+            }
+        }
+
+        return $found;
+    }
+
     public function getRegistration(){ return $this->registration; }
     public function getCollege(){ return $this->college; }
     public function getCuit(){ return $this->cuit; }
@@ -138,8 +154,12 @@ class Professionals
     public function setFirstName($v){ $this->first_name = $v; }
     public function setLastName($v){ $this->last_name = $v; }
     public function setDni($v){ $this->dni = $v; }
-    public function setSpecialtyId($v){ $this->specialty_id = $v; }
-    public function setTypeOfAttentionId($v){ $this->type_of_medical_attention_id = $v; }
+    public function addSpecialties($array){ 
+        $this->specialties = new ArrayCollection();
+        foreach($array as $item){
+            $this->specialties->add($item);
+        }
+    }
     public function setRegistration($v){ $this->registration = $v; }
     public function setCollege($v){ $this->college = $v; }
     public function setCuit($v){ $this->cuit = $v; }

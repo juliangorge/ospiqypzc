@@ -19,7 +19,7 @@ class News extends Form
                 'placeholder' => 'Título'
             ],
             'options' => [
-                'label' => 'Título <small>(requiere)</small>',
+                'label' => 'Título <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -40,7 +40,7 @@ class News extends Form
                 'placeholder' => 'Cuerpo'
             ],
             'options' => [
-                'label' => 'Cuerpo <small>(requiere)</small>',
+                'label' => 'Cuerpo <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -59,7 +59,7 @@ class News extends Form
                 'type' => 'date',
             ],
             'options' => [
-                'label' => 'Fecha de publicación (según Web) <small>(requiere)</small>',
+                'label' => 'Fecha de publicación (según Web) <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -99,7 +99,7 @@ class News extends Form
                 'placeholder' => 'https://....'
             ],
             'options' => [
-                'label' => 'URL de la Publicación <small>(requiere)</small>',
+                'label' => 'URL de la Publicación <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

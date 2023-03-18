@@ -9,23 +9,22 @@
 
 			<h4 class="page-title"><?= $this->title ?></h4>
 		</div>
-
+	</div>
+</div>
+<div class="row">
+	<div class="col-md-6">
 		<div class="card">
 			<div class="card-body table-responsive">
 				<table class="table">
 					<thead>
 	                	<th><small>Nombre</small></th>
-	                	<th><small>Telemedicina</small></th>
-	                	<th><small>Intervalo de Consulta</small></th>
 		                <th></th>
 					</thead>
 					<tbody>
 						<?php foreach($this->results as $item): ?>
 						<tr>
 							<td><?= $item->getName() ?></td>
-							<td><?= $item->getAllowEdoctor() ? 'Sí' : '-' ?></td>
-							<td><?= $item->getAttentionIntervals() ?></td>
-							<td width="20%" align="right">
+							<td align="right">
 								<a class="btn btn-primary btn-sm" href="/<?= $this->route ?>/edit/<?= $item->getId() ?>">
 			                    	<i class="mdi mdi-pencil"></i>
 			                    </a>

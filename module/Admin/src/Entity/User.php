@@ -25,7 +25,7 @@ class User extends UserSuperclassBase
             'email' => $this->email,
             'password' => $this->password,
             'status' => $this->status,
-            'rank_id' => $this->rank_id,
+            'role_id' => $this->role_id,
             'date_created' => $this->date_created,
             'password_reset_token' => $this->password_reset_token,
             'password_reset_token_date' => $this->password_reset_token_date,
@@ -42,7 +42,7 @@ class User extends UserSuperclassBase
         $this->password = $bcrypt->create($array['password']);
 
         $this->status = self::ACTIVE;
-        $this->rank_id = $array['rank_id'];
+        $this->role_id = $array['role_id'];
         $this->date_created = new \DateTime();
         $this->last_modified_date = new \DateTime();
     }
@@ -51,7 +51,7 @@ class User extends UserSuperclassBase
         $this->first_name = $array['first_name'];
         $this->last_name = $array['last_name'];
 		$this->status = $array['status'];
-        $this->rank_id = $array['rank_id'];
+        $this->role_id = $array['role_id'];
         $this->last_modified_date = new \DateTime();
     }
 

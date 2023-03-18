@@ -127,7 +127,7 @@ class AffiliatesClaims extends Form
                 'readonly' => $readonly
             ],
             'options' => [
-                'label' => 'Respuesta <small>(requiere)</small>',
+                'label' => 'Respuesta <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

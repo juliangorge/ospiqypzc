@@ -136,7 +136,7 @@ class AffiliatesFamily
     public function toFirebase(){
         return [
             'name' => $this->getFullName(),
-            'dni' => $this->dni,
+            'dni' => strval($this->dni),
             'email' => ($this->email == NULL ? '' : $this->email),
             'birthday' => $this->birthday->format('d/m/Y'),
             'phone_number' => ($this->phone_number == NULL ? '' : $this->phone_number),

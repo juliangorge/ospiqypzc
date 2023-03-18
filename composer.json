@@ -38,6 +38,7 @@
         "juliangorge/mail": "dev-main",
         "juliangorge/notifications": "dev-main",
         "juliangorge/users": "dev-main",
+        "juliangorge/medical-shifts": "dev-main",
         "laminas-api-tools/api-tools": "^1.6.0",
         "laminas-api-tools/api-tools-content-negotiation": "^1.6.0",
         "laminas-api-tools/api-tools-documentation": "^1.3",
@@ -90,7 +91,8 @@
     "autoload": {
         "psr-4": {
             "Application\\": "module/Application/src/",
-            "Admin\\": "module/Admin/src/"
+            "Admin\\": "module/Admin/src/",
+            "TurnosAPI\\": "module/TurnosAPI/src/"
         }
     },
     "autoload-dev": {
@@ -129,6 +131,10 @@
         {
             "type": "vcs",
             "url": "git@github.com:juliangorge/notifications.git"
+        },
+        {
+            "type": "vcs",
+            "url": "git@github.com:juliangorge/medical-shifts.git"
         }
     ]
 }

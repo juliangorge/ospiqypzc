@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 * @ORM\Entity
 * @ORM\Table(name="specialties")
 */
-class Specialties
+class Specialty
 {
     /**
     * @ORM\Id
@@ -30,7 +30,7 @@ class Specialties
         ];
     }
 
-    public function initialize(array $array){
+    public function __construct(array $array){
         $this->name = $array['name'];
     }
 

@@ -1,0 +1,81 @@
+<?php 
+$this->headTitle($this->title);
+$this->headLink()
+	->prependStylesheet('/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css')
+	->prependStylesheet('/vendor/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css')
+?>
+
+<div class="row">
+	<div class="col-md-12">
+		<div class="page-title-box">
+			<div class="page-title-right d-block">
+				<a href="/<?= $this->route ?>/privilege" class="btn btn-primary btn-sm"><i class="mdi mdi-pencil"></i> Nuevo</a>
+			</div>
+			<h4 class="page-title"><?= $this->title ?></h4>
+		</div>
+
+	    <div class="card mb-4">
+			<div class="card-body py-3">
+				<div class="table-responsive mb-2">
+					<table id="datatable" class="table dt-responsive nowrap w-100">
+						<thead>
+							<th><small>Nombre</small></th>
+							<th></th>
+						</thead>
+						<tbody></tbody>
+					</table>
+            	</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php
+$data = json_encode($this->data);
+$this->inlineScript()
+	->prependFile('/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js')
+	->prependFile('/vendor/datatables.net-responsive/js/dataTables.responsive.min.js')
+	->prependFile('/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js')
+	->prependFile('/vendor/datatables.net/js/jquery.dataTables.min.js')
+	->captureStart();
+
+echo <<<JS
+
+$(document).ready(function () {
+    "use strict";
+
+	$("#datatable").DataTable({
+    	data: $data,
+        columns: [
+			{ data: 'name' },
+			{ data: 'id',
+				sortable: false,
+        		className: 'dt-body-right',
+				render: function(data, type, row, meta){
+					return `
+						<a class="btn btn-secondary btn-sm" href="/admin/users/privileges-by-role/` + data + `"><i class="mdi mdi-pencil"></i> Privilegios</a>
+						<a class="btn btn-primary btn-sm" href="/admin/users/role/` + data + `"><i class="mdi mdi-pencil"></i></a>
+					`;
+					//<a class="btn btn-danger btn-sm" href="/admin/dashboard/eliminar-privilegio/` + data + `"><i class="mdi mdi-delete"></i></a>
+				}
+			},
+        ],
+        info: false,
+        ordering: true,
+        searching: true,
+        keys: true,
+        language: { 
+        	url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+        },
+        drawCallback: function () {
+            $(".dataTables_paginate > .pagination").addClass("mt-2");
+        }
+    });
+    $(".dataTables_length select").addClass("form-select form-select-sm"),
+    $(".dataTables_length label").addClass("form-label");
+});
+
+
+JS;
+$this->inlineScript()->captureEnd();
+?>

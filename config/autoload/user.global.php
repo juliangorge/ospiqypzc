@@ -24,7 +24,8 @@ return [
         'allowRegister' => false,
         'logoWidth' => 'calc(100%/2)',
         'showFooter' => true,
-        'showTitle' => false
+        'showTitle' => false,
+        'favicon' => 'favicon.svg'
     ],
     'reCAPTCHA_public_key' => '6Le6z5EiAAAAAOEa4ecYbeB54JhZTUt37XD3czHN',
 ];

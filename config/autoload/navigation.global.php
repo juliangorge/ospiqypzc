@@ -59,6 +59,20 @@ $menu_app = [
         'resource'   => 'Admin\Controller\AffiliatesAuthorizationsController',
     ],
     [
+        'label'      => 'Turnos Médicos',
+        'route'      => 'admin/medical_shifts',
+        'action'     => 'index',
+        'icon'       => 'mdi mdi-heart-plus-outline',
+        'resource'   => 'Admin\Controller\MedicalShiftsController',
+    ],
+    [
+        'label'      => 'Agenda Profesional',
+        'route'      => 'admin/professional_calendar',
+        'action'     => 'index',
+        'icon'       => 'mdi mdi-calendar',
+        'resource'   => 'Admin\Controller\ProfessionalCalendarController',
+    ],
+    [
         'label'      => 'Profesionales',
         'route'      => 'admin/professionals',
         'action'     => 'index',

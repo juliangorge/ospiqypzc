@@ -59,6 +59,12 @@ return [
                     'view' => ['administrativo'],
                     'all' => ['gerencia', 'administrador']
                 ],
+                'Admin\Controller\MedicalShiftsController' => [
+                    'all' => ['administrativo', 'gerencia', 'administrador']
+                ],
+                'Admin\Controller\ProfessionalCalendarController' => [
+                    'all' => ['administrativo', 'gerencia', 'administrador']
+                ],
             ],
         ],
     ],

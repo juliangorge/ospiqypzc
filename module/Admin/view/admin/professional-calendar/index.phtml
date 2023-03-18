@@ -1,0 +1,217 @@
+<?php $this->headLink()->prependStylesheet('/css/fullcalendar/main.min.css') ?>
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+	    	<div class="page-title-right d-block">
+	    		<div class="d-flex">
+	    			<select id="medical_center_id" class="form-control form-control-sm d-flex mx-2">
+						<?php foreach($this->medical_centers as $m){
+							echo '<option value="' . $m->getId() . '" ' . ($m->getId() == $this->selected_medical_center->getId() ? 'selected' : '' ) . '>' . $m->getName() . '</option>';
+						}
+						?>
+	    			</select>
+
+	    			<button data-bs-toggle="modal" href="#event-modal" class="btn btn-primary btn-sm d-flex"><i class="mdi mdi-pencil"></i>&nbsp;Nuevo</button>
+		    	</div>
+			</div>
+            <h4 class="page-title"><?= $this->title ?></h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body">
+		        <div class="row">
+		            <div class="col-lg-12">
+		                <div class="mt-4 mt-lg-0">
+		                    <div id="calendar"></div>
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade" id="event-modal" tabindex="-1">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Nueva agenda para <?= $this->selected_medical_center->getName() ?></h4>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true"></button>
+			</div>
+			<form name="newEvent" method="POST" action="/<?= $this->route ?>/add">
+				<div class="modal-body">
+					<h5>Profesional</h5>
+
+					<select name="professional_id" class="form-control form-control-sm mb-3" required>
+						<option>Profesional</option>
+						<?php foreach($this->professionals as $p){
+							echo '<option value="' . $p->getId() . '">' . $p->getFullName() . '</option>';
+						}
+						?>
+					</select>
+
+					<div class="row">
+						<div class="col">
+							<h5>Seleccione el día</h5>
+							<input name="starting_day_at" class="form-control form-control-sm mb-3" type="date" required>
+						</div>
+
+						<div class="col">
+							<h5>Intervalo de atención <small>(en minutos)</small></h5>
+							<input name="interval_time" class="form-control form-control-sm mb-3" type="number" min="5" max="180" value="10" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col">
+							<h5>Hora de Inicio</h5>
+							<input name="starting_hour_at" class="form-control form-control-sm mb-3" type="time" required>
+						</div>
+						<div class="col">
+							<h5>Hora de Fin</h5>
+							<input name="ending_hour_at" class="form-control form-control-sm mb-3" type="time" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="col-6">
+							<h5>Hasta el día</h5>
+							<input name="ending_day_at" class="form-control form-control-sm mb-3" type="date" required>
+						</div>
+					</div>
+
+				</div>
+				<div class="modal-footer">
+					<input name="medical_center_id" type="hidden" value="<?= $this->selected_medical_center->getId() ?>">
+					<button type="submit" class="btn btn-primary">Guardar</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+<?php
+
+$this->inlineScript()
+	->prependFile('/js/fullcalendar/locales/es.js')
+	->prependFile('/js/fullcalendar/main.min.js')
+	->captureStart();
+
+echo <<<JS
+
+document.addEventListener('DOMContentLoaded', function() {
+
+	var calendarEl = document.getElementById('calendar');
+
+	var calendar = new FullCalendar.Calendar(calendarEl, {
+		themeSystem: 'bootstrap',
+		initialView: 'dayGridMonth',
+		locale: 'es',
+		firstDay: 0,
+		buttonText: { today: "Hoy", month: "Mes", week: "Semana", day: "Día", list: "Agenda", prev: "Prev", next: "Sig" },
+		initialView: "dayGridMonth",
+		handleWindowResize: true,
+		headerToolbar: { left: "prev,next today", center: "title", right: "dayGridMonth,timeGridWeek,timeGridDay,listMonth" },
+		editable: false,
+		selectable: true,
+		displayEventTime: true,
+		eventClassNames: ['bg-info'],
+		eventColor: '#FFF',
+		eventSources: [
+			{
+				url: '/admin/professional_calendar/get',
+				method: 'POST',
+				extraParams: {
+					medical_center_id: document.getElementById('medical_center_id').value
+				},
+				failure: function() {
+					alert('Ocurrió un error. Intente más tarde');
+				},
+			}
+		],
+		dateClick: function(info){
+			//
+		},
+		eventClick: function(info){
+			if(window.confirm('Desea eliminar?')){
+				$.ajax({
+					method: 'POST',
+					url: '/$this->route/delete/' + info.event.id,
+					success: function(data){
+						if(data.success){
+							calendar.refetchEvents();
+						}else{
+							alert('Ocurrió un error. Intente más tarde');
+							console.log(data.error);	
+						}
+					},
+					error: function(){
+						alert('Ocurrió un error. Intente más tarde');
+					}
+				});
+			}
+		},
+	});
+	calendar.render();
+
+	$('input[name="starting_day_at"]').change(function(){
+		var value = $(this).val();
+		if($('input[name="ending_day_at"]').val() == ''){
+			$('input[name="ending_day_at"]').val(value);
+		}
+
+		$('input[name="ending_day_at"]').attr('min', value);
+	});
+
+	$('input[name="starting_hour_at"]').keyup(function(){
+		var value = $(this).val();
+		$('input[name="ending_hour_at"]').attr('min', value);
+	});
+		
+
+	// Verificar fecha desde < hasta
+
+	$('#medical_center_id').change(function(){
+		$.ajax({
+			method: 'POST',
+			url: '/$this->route/setMedicalCenterId',
+			data: {
+				medical_center_id: $(this).val()
+			},
+			success: function(){
+				window.location.reload();
+			},
+			error: function(){
+				alert('Ocurrió un error. Intente más tarde');
+			}
+		});
+	});
+
+	$('form[name="newEvent"]').submit(function(e){
+		e.preventDefault();
+		$.ajax({
+			method: 'POST',
+			url: '/$this->route/add',
+			data: $(this).serialize(),
+			success: function(data){
+				if(data.success){
+					window.location.reload();
+				}else{
+					alert('Ocurrió un error. Intente más tarde');
+					console.log(data.error);
+				}
+			},
+			error: function(){
+				alert('Ocurrió un error. Intente más tarde');
+			}
+		});
+	});
+});
+
+JS;
+$this->inlineScript()->captureEnd();
+?>

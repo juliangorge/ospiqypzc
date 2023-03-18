@@ -3,7 +3,7 @@ namespace Admin\Form;
 
 use Laminas\Form\Form;
 
-class Professionals extends Form
+class Professional extends Form
 {
     public function __construct($em, $name = null)
     {
@@ -19,7 +19,7 @@ class Professionals extends Form
                 'placeholder' => 'Nombre'
             ],
             'options' => [
-                'label' => 'Nombre <small>(requiere)</small>',
+                'label' => 'Nombre <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -39,7 +39,7 @@ class Professionals extends Form
                 'placeholder' => 'Apellido'
             ],
             'options' => [
-                'label' => 'Apellido <small>(requiere)</small>',
+                'label' => 'Apellido <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -60,7 +60,7 @@ class Professionals extends Form
                 'placeholder' => 'DNI'
             ],
             'options' => [
-                'label' => 'DNI <small>(requiere)</small>',
+                'label' => 'DNI <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -71,15 +71,16 @@ class Professionals extends Form
         ]);
 
         $this->add([
-            'name' => 'specialty_id',
+            'name' => 'specialties',
             'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
             'attributes' => [
-                'id' => 'specialty_id',
+                'id' => 'specialties',
                 'required' => true,
-                'class' => 'form-control'
+                'class' => 'select2 form-control select2-multiple',
+                'multiple' => 'multiple'
             ],
             'options' => [
-                'label' => 'Especialidad <small>(requiere)</small>',
+                'label' => 'Especialidad <small>(requerido)</small>',
                 'label_attributes' => [
                     'class' => 'col-form-label'
                 ],
@@ -87,48 +88,14 @@ class Professionals extends Form
                     'disable_html_escape' => true,
                 ],
                 'object_manager' => $em,
-                'target_class' => 'Juliangorge\OsycTools\Entity\Specialties',
+                'target_class' => 'Admin\Entity\Specialty',
                 'property' => 'name',
                 'is_method' => false,
-                'display_empty_item' => true,
-                'empty_item_label' => 'Seleccionar Especialidad',
                 'find_method' => [
                     'name'   => 'findBy',
                     'params' => [
                         'criteria' => [],
                         'orderBy'  => ['name' => 'ASC'],
-                    ],
-                ],
-            ],
-        ]);
-
-        $this->add([
-            'name' => 'type_of_medical_attention_id',
-            'type'  => 'DoctrineModule\Form\Element\ObjectSelect',
-            'attributes' => [
-                'id' => 'type_of_medical_attention_id',
-                'required' => true,
-                'class' => 'form-control'
-            ],
-            'options' => [
-                'label' => 'Tipo de Atención <small>(requiere)</small>',
-                'label_attributes' => [
-                    'class' => 'col-form-label'
-                ],
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
-                'object_manager' => $em,
-                'target_class' => 'Juliangorge\OsycTools\Entity\TypesOfMedicalAttention',
-                'property' => 'name',
-                'is_method' => false,
-                'display_empty_item' => true,
-                'empty_item_label' => 'Seleccionar Tipo de Atención',
-                'find_method' => [
-                    'name'   => 'findBy',
-                    'params' => [
-                        'criteria' => [],
-                        'orderBy'  => ['id' => 'ASC'],
                     ],
                 ],
             ],
@@ -144,7 +111,7 @@ class Professionals extends Form
                 'placeholder' => 'Matrícula'
             ],
             'options' => [
-                'label' => 'Matrícula <small>(requiere)</small>',
+                'label' => 'Matrícula <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -164,7 +131,7 @@ class Professionals extends Form
                 'placeholder' => 'Universidad'
             ],
             'options' => [
-                'label' => 'Universidad <small>(requiere)</small>',
+                'label' => 'Universidad <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -184,7 +151,7 @@ class Professionals extends Form
                 'placeholder' => 'CUIT'
             ],
             'options' => [
-                'label' => 'CUIT <small>(requiere)</small>',
+                'label' => 'CUIT <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -205,7 +172,7 @@ class Professionals extends Form
                 'placeholder' => 'Teléfono'
             ],
             'options' => [
-                'label' => 'Teléfono <small>(requiere)</small>',
+                'label' => 'Teléfono <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -226,7 +193,7 @@ class Professionals extends Form
                 'placeholder' => 'Email'
             ],
             'options' => [
-                'label' => 'Email <small>(requiere)</small>',
+                'label' => 'Email <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -270,8 +237,7 @@ class Professionals extends Form
             'first_name',
             'last_name',
             'dni',
-            'specialty_id',
-            'type_of_medical_attention_id',
+            'specialties',
             'registration',
             'college',
             'cuit',

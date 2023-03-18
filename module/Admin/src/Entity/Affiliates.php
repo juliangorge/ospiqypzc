@@ -154,7 +154,7 @@ class Affiliates
     public function toFirebase($new_affiliate = false){
         $array = [
             'name' => $this->getFullName(),
-            'dni' => $this->dni,
+            'dni' => strval($this->dni),
             'email' => ($this->email == NULL ? '' : $this->email),
             'birthday' => $this->birthday->format('d/m/Y'),
             'location' => ($this->location == NULL ? '' : $this->location),

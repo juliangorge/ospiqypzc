@@ -30,7 +30,7 @@ class AppPlugin extends AbstractPlugin
     }
 
     public function getUserRole(){
-        return ($this->authManager->getIdentity() ? $this->authManager->getIdentity()['rank_level'] : null);
+        return ($this->authManager->getIdentity() ? $this->authManager->getIdentity()['role_name'] : null);
     }
 
     public function ping(){

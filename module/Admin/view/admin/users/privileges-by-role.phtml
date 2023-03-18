@@ -1,0 +1,60 @@
+<?php 
+$this->headTitle($this->title);
+$this->headLink()
+  ->prependStylesheet('//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css')
+  ->prependStylesheet('//cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css')
+?>
+
+<div class="row">
+	<div class="col-md-6">
+		<div class="page-title-box">
+			<h4 class="page-title"><?= $this->title ?></h4>
+		</div>
+
+	    <div class="card mb-4">
+			<div class="card-body py-3">
+				<?php
+				$form = $this->form;
+				$form->prepare();
+
+				if(!$id){
+					$form->setAttribute('action', '/' . $this->route . '/privileges-by-role');
+				}else{
+					$form->setAttribute('action', '/' . $this->route . '/privileges-by-role/' . $id);
+				}
+
+				$form->setAttribute('method', 'post');
+				echo $this->form()->openTag($form);
+				?>
+	    			<div class="row">
+						<div class="col-md-12">
+							<?= $this->formRow($form->get('privileges')) ?>
+						</div>
+						<div class="col-md-12">
+							<?= $this->formSubmit($form->get('submit')) ?>
+						</div>
+					</div>
+
+				<?= $this->form()->closeTag($form) ?>
+
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php 
+$this->inlineScript()
+  ->prependFile('//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/i18n/es.js')
+  ->prependFile('//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js');
+
+$this->inlineScript()->captureStart();
+  	echo <<<JS
+	    $(document).ready(function(){
+	  		$('.form-select').select2({
+	        	theme: 'bootstrap-5',
+	        	width: '100%',
+	      	});
+	  	});
+	JS;
+$this->inlineScript()->captureEnd();
+?>

@@ -2,7 +2,7 @@
 	<div class="col-md-4 my-4">
 	    <div class="card mb-4">
 			<div class="card-body py-3">
-				<h1 class="h3 text-center mb-3"><?= $this->user->getDisplayName() ?></h1>
+				<h1 class="h3 mb-3"><?= $this->user->getDisplayName() ?></h1>
 
 				<div class="text-start">
                     <p class="text-muted">
@@ -10,7 +10,7 @@
                     </p>
 
                     <p class="text-muted">
-                    	<strong>Rango :</strong><span class="ms-2"><?= $this->user->getRankId()->getName() ?></span>
+                    	<strong>Rol :</strong><span class="ms-2"><?= $this->user->getRoleId()->getName() ?></span>
                     </p>
 
                     <p class="text-muted">
@@ -23,6 +23,30 @@
                     	Cambiar contraseña
                     </a>
 
+                </div>
+			</div>
+		</div>
+
+		<div class="card mb-4">
+			<div class="card-body py-3">
+				<h1 class="h4">
+					Privilegios
+					<?php if($this->identity()['role_id'] == 1): ?>
+					<a class="btn btn-outline-danger btn-sm" href="/admin/dashboard/privilegios">
+	                	Editar
+	                </a>
+	            	<?php endif; ?>
+                </h1>
+
+				<div class="text-start">
+					<ul class="list-group">
+						<?php
+						foreach($this->identity()['role_privileges'] as $privilege)
+							echo '<li class="list-group-item">' . $privilege['functionality'] . ' <span class="badge text-bg-light">' . $privilege['action'] . '</span>
+							</li>';
+                    	?>
+					</ul>
+                    
                 </div>
 			</div>
 		</div>

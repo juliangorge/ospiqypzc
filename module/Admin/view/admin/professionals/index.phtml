@@ -16,15 +16,20 @@
 					<thead>
 	                	<th><small>Nombre</small></th>
 	                	<th><small>Especialidad</small></th>
-	                	<th><small>Tipo de Atención</small></th>
 		                <th></th>
 					</thead>
 					<tbody>
 						<?php foreach($this->results as $item): ?>
 						<tr>
 							<td><?= $item->getFullName() ?></td>
-							<td><?= $item->getSpecialtyId()->getName() ?></td>
-							<td><?= $item->getTypeOfAttentionId()->getName() ?></td>
+							<td>
+								<h4 class="m-0">
+								<?php 
+								foreach($item->getSpecialtiesArray() as $specialty) echo '<span class="badge bg-primary me-1">' . $specialty['name'] . '</span>';
+								?>
+								</h4>
+
+							</td>
 							<td width="20%" align="right">
 								<a class="btn btn-primary btn-sm" href="/<?= $this->route ?>/edit/<?= $item->getId() ?>">
 			                    	<i class="mdi mdi-pencil"></i>

@@ -3,7 +3,7 @@ namespace Admin\Form;
 
 use Laminas\Form\Form;
 
-class Specialties extends Form
+class Specialty extends Form
 {
     public function __construct($name = null)
     {
@@ -19,7 +19,7 @@ class Specialties extends Form
                 'placeholder' => 'Nombre'
             ],
             'options' => [
-                'label' => 'Nombre <small>(requiere)</small>',
+                'label' => 'Nombre <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -63,7 +63,7 @@ class Specialties extends Form
                 'placeholder' => 'Intervalo'
             ],
             'options' => [
-                'label' => 'Intervalo <small>(requiere)</small>',
+                'label' => 'Intervalo <small>(requerido)</small>',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],

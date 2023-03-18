@@ -1,0 +1,163 @@
+<?php 
+$this->headTitle($this->title);
+$this->headLink()
+	->prependStylesheet('/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css')
+	->prependStylesheet('/vendor/datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css')
+?>
+
+<div class="row">
+    <div class="col-12">
+        <div class="page-title-box">
+	    	<div class="page-title-right d-block">
+	    		<div class="d-flex">
+	    			<a class="btn btn-primary btn-sm d-flex" href="/admin/medical_shifts/add">
+	    				<i class="mdi mdi-pencil"></i>&nbsp;Nuevo
+	    			</a>
+		    	</div>
+			</div>
+            <h4 class="page-title"><?= $this->title ?></h4>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+	<div class="col-12">
+		<div class="card">
+			<div class="card-body table-responsive">
+				<table id="datatable" class="table dt-responsive nowrap w-100">
+					<thead>
+						<th><small>Estado</small></th>
+	                	<th><small>Especialidad</small></th>
+	                  	<th><small>Profesional</small></th>
+	                	<th><small>Centro médico</small></th>
+	                  	<th><small>Afiliado/familiar</small></th>
+	                  	<th><small>Fecha</small></th>
+	                  	<th></th>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="anularModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="danger-header-modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header modal-colored-header bg-danger">
+                <h4 class="modal-title" id="danger-header-modalLabel">Anular Transferencia</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Está por anular el turno. Esta acción no se puede deshacer.
+                <br>
+
+                ¿Está seguro que desea continuar?
+            </div>
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-light" data-bs-dismiss="modal">Cancelar</button>
+
+                <form action="/admin/medical_shifts/cancel" method="POST">
+                  <input id="medical_shift_id" type="hidden" name="medical_shift_id">
+                  <button type="submit" class="btn btn-danger">Anular</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<?php
+$this->inlineScript()
+	->prependFile('/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js')
+	->prependFile('/vendor/datatables.net-responsive/js/dataTables.responsive.min.js')
+	->prependFile('/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js')
+	->prependFile('/vendor/datatables.net/js/jquery.dataTables.min.js')
+	->captureStart();
+
+echo <<<JS
+
+
+function setModal(id){
+	$('#medical_shift_id').val(id);
+}
+
+$(document).ready(function () {
+    "use strict";
+    $("#datatable").DataTable({
+    	ajax: {
+			url: '/$this->route/get',
+			type: 'POST',
+        },
+        columns: [
+        	{ data: 'status',
+	            render: function(data, type, row, meta){
+	            	return data ? 'Anulado' : 'Asignado';
+	            }
+	        },
+			{ data: 'specialty_name' },
+			{ data: 
+	            {
+	            	professional_first_name: 'professional_first_name',
+	            	professional_last_name: 'professional_last_name',
+	            },
+	            render: function(data, type, row, meta){
+	            	return data.professional_name
+	            }
+	        },
+	        { data: 'medical_center_name' },
+			{ data: 
+	            {
+	            	affiliate_first_name: 'affiliate_first_name',
+	            	affiliate_last_name: 'affiliate_last_name',
+	            	family_first_name: 'family_first_name',
+	            	family_last_name: 'family_last_name'
+	            },
+	            render: function(data, type, row, meta){
+	            	if(data.affiliate_full_name != null){
+	            		return data.affiliate_full_name;
+	            	}else{
+	            		return data.family_full_name;
+	            	}
+	            }
+			},
+			{ data: 'shift_datetime' },
+			{ data: 'id',
+				sortable: false,
+				className: 'dt-body-right',
+				render: function(data, type, row, meta){
+					/*return `
+						<span data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
+							<a href="/admin/medical_shifts/edit/` + data + `" class="action-icon">
+								<i class="uil-pen"></i>
+							</a>
+						</span>*/
+					return `
+						<span data-bs-toggle="modal" data-bs-target="#anularModal">
+		                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="Anular" class="action-icon cursor-pointer" onclick="setModal(` + data + `)">
+		                      <i class="mdi mdi-close"></i>
+		                    </a>
+	                  	</span>
+                  	`;
+				}
+			}
+        ],
+        info: false,
+        serverSide: true,
+        ordering: true,
+        searching: true,
+        keys: true,
+        language: { 
+        	url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+        },
+        drawCallback: function () {
+            $(".dataTables_paginate > .pagination").addClass("mt-2");
+        }
+    });
+    $(".dataTables_length select").addClass("form-select form-select-sm"),
+    $(".dataTables_length label").addClass("form-label");
+
+});
+
+JS;
+$this->inlineScript()->captureEnd();
+?>

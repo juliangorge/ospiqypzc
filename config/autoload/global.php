@@ -13,4 +13,7 @@ return [
             ],
         ],
     ],
+    'session_containers' => [
+        'medical_centers'
+    ],
 ];

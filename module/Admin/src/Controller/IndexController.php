@@ -26,7 +26,6 @@ class IndexController extends AbstractActionController
 
     public function indexAction()
     {
-
     }
 
     public function logsAction()
@@ -38,8 +37,64 @@ class IndexController extends AbstractActionController
 
     public function miCuentaAction()
     {
+        $role = $this->em->find('Juliangorge\Users\Entity\UserRole', $this->identity()['role_id']);
+        $this->serviceManager->get('Juliangorge\Users\Service\AuthManager')->setRole($role);
+
         return new ViewModel([
             'user' => $this->em->find($this->config['authModule']['userEntity'], $this->identity()['id'])
+        ]);
+    }
+
+    public function privilegioAction()
+    {
+        $id = $this->params()->fromRoute('id', 0);
+        $form = new \Admin\Form\Privilege($this->em);
+        $success = false;
+
+        if($id){
+            $entity = $this->em->find('Juliangorge\Users\Entity\UserPrivilege', $id);
+            if($entity == NULL) return $this->redirect()->toRoute('admin/dashboard', ['action' => 'privilegios']);
+            $form->bind($entity);
+        }
+
+        if($this->getRequest()->isPost()){
+            $data = $this->getRequest()->getPost()->toArray();
+            $form->setData($data);
+
+            if($form->isValid()){
+                $data = $form->getData();
+                if(!$id){
+                    $data['module'] = NULL;
+                    $data['controller'] = NULL;
+                    $privilege = new \Juliangorge\Users\Entity\UserPrivilege($data);
+                    $this->em->persist($privilege);
+                }
+                $this->em->flush();
+                $success = true;
+            }else{
+                $this->layout()->addErrorMessage = $form->getMessages();
+            }
+        }
+
+        if($success){
+            $this->flashMessenger()->addSuccessMessage('Cambios aplicados');
+            return $this->redirect()->toRoute('admin/dashboard', ['action' => 'privilegios']);
+        }
+
+        return new ViewModel([
+            'title' => 'Privilegio',
+            'form' => $form,
+            'id' => $id,
+        ]);
+    }
+
+    public function privilegiosAction()
+    {
+        $privileges = $this->em->createQuery('SELECT a.id, a.name, a.functionality, a.action FROM Juliangorge\Users\Entity\UserPrivilege a')->getResult();
+
+        return new ViewModel([
+            'title' => 'Privilegios',
+            'data' => $privileges
         ]);
     }
 

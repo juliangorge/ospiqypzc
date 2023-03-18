@@ -1,0 +1,29 @@
+<div class="row">
+	<div class="col-md-8 my-4">
+	    <div class="card mb-4">
+			<div class="card-body py-3">
+				<h1 class="h3 text-center mb-3"><?= $this->title ?></h1>
+				
+				<div class="table-responsive mb-2">
+					<table id="datatable" class="table dt-responsive nowrap w-100">
+						<thead>
+							<th><small>Modulo</small></th>
+							<th><small>Controlador</small></th>
+							<th><small>Acción</small></th>
+						</thead>
+						<tbody>
+							<?php 
+							foreach($this->data as $item): ?>
+							<tr>
+								<td><?= $item['module'] ?></td>
+								<td><?= $item['controller'] ?></td>
+								<td><?= $item['action'] ?></td>
+							</tr>
+							<?php endforeach; ?>
+						</tbody>
+					</table>
+            	</div>
+			</div>
+		</div>
+	</div>
+</div>

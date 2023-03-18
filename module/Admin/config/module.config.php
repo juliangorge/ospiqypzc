@@ -101,6 +101,26 @@ return [
                             ],
                         ],
                     ],
+                    'medical_shifts' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/medical_shifts[/:action[/:id]]',
+                            'defaults' => [
+                                'controller'    => Controller\MedicalShiftsController::class,
+                                'action'        => 'index',
+                            ],
+                        ],
+                    ],
+                    'professional_calendar' => [
+                        'type' => Segment::class,
+                        'options' => [
+                            'route' => '/professional_calendar[/:action[/:id]]',
+                            'defaults' => [
+                                'controller'    => Controller\ProfessionalCalendarController::class,
+                                'action'        => 'index',
+                            ],
+                        ],
+                    ],
                     'professionals' => [
                         'type' => Segment::class,
                         'options' => [
@@ -135,6 +155,8 @@ return [
             Controller\AffiliatesFamilyController::class    => Controller\Factory\ControllerFactory::class,
             Controller\AffiliatesAuthorizationsController::class    => Controller\Factory\ControllerFactory::class,
             Controller\AffiliatesClaimsController::class    => Controller\Factory\ControllerFactory::class,
+            Controller\MedicalShiftsController::class    => Controller\Factory\ControllerFactory::class,
+            Controller\ProfessionalCalendarController::class    => Controller\Factory\ControllerFactory::class,
             Controller\ProfessionalsController::class    => Controller\Factory\ControllerFactory::class,
             Controller\SpecialtiesController::class    => Controller\Factory\ControllerFactory::class,
         ],

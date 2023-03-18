@@ -1,0 +1,167 @@
+<style type="text/css">
+	.datepicker td.day {
+		background: #353535;
+		color: #FFF;
+	}
+	.datepicker td.day.disabled {
+	    background: 0 0;
+	    color: #999;
+	}
+</style>
+
+<?php
+$this->headLink()->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css');
+?>
+
+<div class="row">
+	<div class="col-md-8">
+		<div class="page-title-box">
+			<h4 class="page-title">Nuevo Turno</h4>
+		</div>
+
+		<div class="card">
+			<div class="card-body">
+				<?php
+				$form = $this->form;
+				$form->prepare();
+
+				echo $this->form()->openTag($form);
+
+				echo $this->formCollection($form);
+
+				echo $this->form()->closeTag($form);
+
+				?>
+			</div>
+		</div>
+	</div>
+</div>
+
+<?php
+$api_username = $this->api_credentials['username'];
+$api_password = $this->api_credentials['password'];
+$this->inlineScript()
+	->prependFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/locales/bootstrap-datepicker.es.min.js')
+	->prependFile('//cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js');
+
+$this->inlineScript()->captureStart();
+	echo <<<JS
+
+		function onChangeMedicalCenterId(){
+			var specialties = $('#specialty_id');
+			specialties.html('<option value="">Seleccionar</option');
+
+			$.ajax({
+				url: '/shifts/medical_centers/' + $('#medical_center_id').val() + '/specialties',
+				type: 'GET',
+				dataType: 'json',
+				headers: {
+					"Authorization": "Basic " + btoa("$api_username:$api_password")
+			  	},
+			  	success: function(data) {
+			    	$.each(data, function(k, v) {
+			      		specialties.append('<option value="' + v.id + '">' + v.name + '</option>');
+			    	});
+			    	specialties.change();
+			  	},
+			  	error: function(jqXHR, textStatus, errorThrown) {
+			    	// Handle error
+			  	}
+			});
+
+		}
+
+		function onChangeSpecialtyId(){
+			var professionals = $('#professional_id');
+			professionals.html('<option value="">Seleccionar</option');
+			if($('#specialty_id').val() == '') return true;
+
+			$.ajax({
+				url: '/shifts/specialties/' + $('#specialty_id').val() + '/professionals',
+				type: 'GET',
+				dataType: 'json',
+				headers: {
+					"Authorization": "Basic " + btoa("$api_username:$api_password")
+			  	},
+			  	success: function(data) {
+			    	$.each(data, function(k, v){
+						professionals.append('<option value="' + v.id + '">' + v.first_name + ' ' + v.last_name + '</option>');
+					});
+				   	professionals.change();
+			  	},
+			  	error: function(jqXHR, textStatus, errorThrown) {
+			    	// Handle error
+			  	}
+			});
+		}
+
+		function onChangeProfessionalId(){
+			var days = $('#day');
+			days.html('<option value="">Seleccionar</option');
+			if($('#specialty_id').val() == '' || $('#professional_id').val() == '') return true;
+
+			$.ajax({
+				url: '/shifts/professionals/' + $('#professional_id').val() + '/medical_center/' + $('#medical_center_id').val() + '/days',
+				type: 'GET',
+				dataType: 'json',
+				headers: {
+					"Authorization": "Basic " + btoa("$api_username:$api_password")
+			  	},
+			  	success: function(data) {
+			    	$('input[name="day"]').datepicker('setDatesEnabled', data);
+					days.change();
+			  	},
+			  	error: function(jqXHR, textStatus, errorThrown) {
+			    	// Handle error
+			  	}
+			});
+		}
+
+		function onChangeDay(){
+			var day = $('input[name="day"]'),
+				professional_calendar_id = $('input[name="professional_calendar_id"]');
+
+			day.html('<option value="">Seleccionar</option');
+			professional_calendar_id.val('');
+			if($('#medical_center_id').val() == '' || $('#professional_id').val() == '' || $('#day').val() == '') return true;
+
+			$.ajax({
+				url: '/shifts/professionals/' + $('#professional_id').val() + '/medical_center/' + $('#medical_center_id').val() + '/days/' + $('#day').val() + '/times',
+				type: 'GET',
+				dataType: 'json',
+				headers: {
+					"Authorization": "Basic " + btoa("$api_username:$api_password")
+			  	},
+			  	success: function(data) {
+			    	$('input[name="professional_calendar_id"]').val(data.professional_calendar_id);
+					$.each(data.times, function(k, v){
+						$('#time').append('<option value="' + v.id + '">' + v.value + '</option>');
+					});
+			  	},
+			  	error: function(jqXHR, textStatus, errorThrown) {
+			    	// Handle error
+			  	}
+			});
+		}
+
+		$(document).ready(function(){
+			// Obtener la fecha de inicio seleccionada por el usuario
+			var fecha_inicio = new Date();
+
+			// Restar un día a la fecha de inicio
+			fecha_inicio.setDate(fecha_inicio.getDate() - 1); 
+
+			// Obtener la fecha de fin sumando un mes y restando un día
+			var fecha_fin = new Date(fecha_inicio.getFullYear(), fecha_inicio.getMonth() + 1, 0); 
+
+			$('input[name="day"]').datepicker({
+				language: 'es',
+				format: 'dd-mm-yyyy',
+				startDate: fecha_inicio,
+				endDate: fecha_fin,
+				orientation: 'bottom',
+				autoclose: true,
+			});
+		});
+	JS;
+$this->inlineScript()->captureEnd();

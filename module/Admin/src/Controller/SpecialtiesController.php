@@ -48,7 +48,7 @@ class SpecialtiesController extends AbstractActionController
     }
 
     public function addAction(){
-        $form = new \Admin\Form\Specialties($this->em);
+        $form = new \Admin\Form\Specialty($this->em);
         $request = $this->getRequest();
 
         $success = true;
@@ -58,8 +58,7 @@ class SpecialtiesController extends AbstractActionController
 
             if($form->isValid()){
 
-                $entity = new \Admin\Entity\Specialties();
-                $entity->initialize($post);
+                $entity = new \Admin\Entity\Specialty($post);
                 $this->em->persist($entity);
 
                 try {
@@ -107,10 +106,10 @@ class SpecialtiesController extends AbstractActionController
         $id = $this->params()->fromRoute('id', 0);
         if(!$id) return $this->redirect()->toRoute($this->route);
 
-        $entity = $this->em->find('Admin\Entity\Specialties', $id);
+        $entity = $this->em->find('Admin\Entity\Specialty', $id);
         if($entity == NULL) return $this->redirect()->toRoute($this->route);
 
-        $form = new \Admin\Form\Specialties($this->em);
+        $form = new \Admin\Form\Specialty($this->em);
         $form->bind($entity);
 
         $request = $this->getRequest();
@@ -160,7 +159,7 @@ class SpecialtiesController extends AbstractActionController
         $id = $this->params()->fromRoute('id', 0);
         if(!$id) return $this->redirect()->toRoute($this->route);
 
-        $entity = $this->em->find('Admin\Entity\Specialties', $id);
+        $entity = $this->em->find('Admin\Entity\Specialty', $id);
         if($entity == NULL) return $this->redirect()->toRoute($this->route);
 
         if($entity->getDocumentId() != NULL){
@@ -175,7 +174,7 @@ class SpecialtiesController extends AbstractActionController
     }
 
     private function fetchAll($as_array = false){
-        return $this->em->createQuery('SELECT i FROM Admin\Entity\Specialties i ORDER BY i.name ASC')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
+        return $this->em->createQuery('SELECT i FROM Admin\Entity\Specialty i ORDER BY i.name ASC')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
     }
 
 }
