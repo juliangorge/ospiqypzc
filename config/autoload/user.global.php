@@ -17,7 +17,7 @@ declare(strict_types=1);
 return [
     'name' => 'OSPIQyPZC',
     'analytics' => '',
-    'version' => '3.2.1',
+    'version' => '3.2.2',
     'facebookAppId' => '',
     'authModule' => [
         'userEntity' => 'Admin\Entity\User',
