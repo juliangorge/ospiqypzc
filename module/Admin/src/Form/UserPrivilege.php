@@ -3,7 +3,7 @@ namespace Admin\Form;
 
 use Laminas\Form\Form;
 
-class Privilege extends Form
+class UserPrivilege extends Form
 {
     public function __construct($em, $name = null)
     {

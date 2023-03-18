@@ -247,6 +247,50 @@ class UsersController extends AbstractActionController
         ]);
     }
 
+    public function privilegeAction()
+    {
+        $id = $this->params()->fromRoute('id', 0);
+        $form = new \Admin\Form\UserPrivilege($this->em);
+        $success = false;
+
+        if($id){
+            $entity = $this->em->find('Juliangorge\Users\Entity\UserPrivilege', $id);
+            if($entity == NULL) return $this->redirect()->toRoute($this->route, ['action' => 'privileges']);
+            $form->bind($entity);
+        }
+
+        if($this->getRequest()->isPost()){
+            $data = $this->getRequest()->getPost()->toArray();
+            $form->setData($data);
+
+            if($form->isValid()){
+                $data = $form->getData();
+                if(!$id){
+                    $data['module'] = NULL;
+                    $data['controller'] = NULL;
+                    $role = new \Juliangorge\Users\Entity\UserPrivilege($data);
+                    $this->em->persist($role);
+                }
+                $this->em->flush();
+                $success = true;
+            }else{
+                $this->layout()->addErrorMessage = $form->getMessages();
+            }
+        }
+
+        if($success){
+            $this->flashMessenger()->addSuccessMessage('Cambios aplicados');
+            return $this->redirect()->toRoute($this->route, ['action' => 'privileges']);
+        }
+
+        return new ViewModel([
+            'title' => 'Privilegio',
+            'form' => $form,
+            'route' => $this->route,
+            'id' => $id
+        ]);
+    }
+
     public function privilegesAction()
     {
         return new ViewModel([
