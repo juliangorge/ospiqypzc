@@ -61,9 +61,8 @@ class SpecialtyController extends AbstractRestfulController
     public function get($id = NULL)
     {
         $queryBuilder = $this->em->createQueryBuilder()
-            $qb->select('p.id', 'p.name')
-            ->from('Admin\Entity\Specialty', 'p')
-            ->where('p.is_active = true');
+            ->select('p.id', 'p.name')
+            ->from('Admin\Entity\Specialty', 'p');
 
         if ($id !== NULL) {
             $queryBuilder->andWhere('p.id = :id')

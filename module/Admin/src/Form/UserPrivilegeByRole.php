@@ -25,8 +25,8 @@ class UserPrivilegeByRole extends Form
                 ],
                 'object_manager' => $em,
                 'target_class' => 'Juliangorge\Users\Entity\UserPrivilege',
-                'property' => 'name',
-                'is_method' => false,
+                'is_method' => true,
+                'property' => 'Label',
                 'find_method' => [
                     'name'   => 'findBy',
                     'params' => [

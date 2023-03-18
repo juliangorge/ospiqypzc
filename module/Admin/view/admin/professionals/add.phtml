@@ -1,4 +1,7 @@
-<?php $this->headTitle($this->title); ?>
+<?php
+$this->headTitle($this->title);
+$this->headLink()->prependStylesheet('/vendor/select2/css/select2.min.css')
+?>
 
 <div class="row">
 	<div class="col-md-12">
@@ -27,17 +30,15 @@
 						</div>
 						<div class="col-md-6 mb-2"></div>
 						<div class="col-md-6 mb-2">
+							<?= $this->formRow($form->get('specialties')) ?>
+						</div>
+						<div class="col-md-6 mb-2">
 							<?= $this->formRow($form->get('registration')) ?>
 						</div>
 						<div class="col-md-6 mb-2">
 							<?= $this->formRow($form->get('college')) ?>
 						</div>
-						<div class="col-md-6 mb-2">
-							<?= $this->formRow($form->get('specialty_id')) ?>
-						</div>
-						<div class="col-md-6 mb-2">
-							<?= $this->formRow($form->get('type_of_medical_attention_id')) ?>
-						</div>
+						<div class="col-md-6 mb-2"></div>
 						<div class="col-md-6 mb-2">
 							<?= $this->formRow($form->get('cuit')) ?>
 						</div>
@@ -62,3 +63,21 @@
 
 	</div>
 </div>
+
+<?php 
+$this->inlineScript()
+  ->prependFile('//cdnjs.cloudflare.com/ajax/libs/select2/4.0.0/js/i18n/es.js')
+  ->prependFile('//cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js');
+
+$this->inlineScript()->captureStart();
+  	echo <<<JS
+	    $(document).ready(function(){
+	  		$('.form-select').select2({
+	  			placeholder: 'Seleccionar',
+	        	theme: 'bootstrap-5',
+	        	width: '100%',
+	      	});
+	  	});
+	JS;
+$this->inlineScript()->captureEnd();
+?>

@@ -76,7 +76,7 @@ class Professional extends Form
             'attributes' => [
                 'id' => 'specialties',
                 'required' => true,
-                'class' => 'select2 form-control select2-multiple',
+                'class' => 'select2 form-control form-select select2-multiple',
                 'multiple' => 'multiple'
             ],
             'options' => [
