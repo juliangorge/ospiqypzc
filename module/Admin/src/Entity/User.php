@@ -3,6 +3,7 @@ namespace Admin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Juliangorge\Users\Entity\UserSuperclassBase;
+use Laminas\Crypt\Password\Bcrypt;
 
 /**
 * @ORM\Entity
