@@ -38,21 +38,6 @@ class Specialty extends Form
         ]);
 
         $this->add([
-            'name' => 'allow_edoctor',
-            'type' => \Laminas\Form\Element\Checkbox::class,
-            'attributes' => [
-                'id' => 'allow_edoctor',
-                'class' => 'form-check-input'
-            ],
-            'options' => [
-                'label' => 'Telemedicina',
-                'label_attributes' => [
-                    'class' => 'col-sm-12 mb-1'
-                ],
-            ]
-        ]);
-
-        $this->add([
             'name' => 'attention_intervals',
             'type' => 'number',
             'attributes' => [
@@ -85,7 +70,6 @@ class Specialty extends Form
 
         $this->setValidationGroup([
             'name',
-            'allow_edoctor',
             'attention_intervals',
             'submit'
         ]);
