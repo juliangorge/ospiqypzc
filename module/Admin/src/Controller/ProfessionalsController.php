@@ -71,7 +71,6 @@ class ProfessionalsController extends AbstractActionController
                 }
 
                 if($success){                
-                    
                     /*$to_firebase = $entity->toFirebase();
                     $documentReference = $this->firestore->collection($this->collection)->add($to_firebase);
                     $entity->setDocumentId($documentReference->id());
@@ -82,9 +81,7 @@ class ProfessionalsController extends AbstractActionController
                         $this->layout()->errorMessage = $e->getMessage();
                         $success = false;   
                     }*/
-                    
                 }
-                
 
             }else{
                 $this->flashMessenger()->addErrorMessage($form->getMessages());

@@ -35,16 +35,6 @@ class AffiliatesClaimsController extends AbstractActionController
 
     public function indexAction()
     {
-        $reclamo = $this->firestore->collection($this->collection)->document('WVDg1c4vfRmK5PemVSRp');
-        $docRef = $reclamo->snapshot();
-        $claim = new \Admin\Entity\AffiliatesClaims();
-
-        $array = array_merge_recursive($docRef->data(), ['document_id' => 'WVDg1c4vfRmK5PemVSRp']);
-        $claim->fromFirebase($array);
-
-        $this->em->persist($claim);
-        $this->em->flush();
-
         $doctrineCollection = new ArrayCollection($this->fetchAll());
         $adapter = new CollectionAdapter($doctrineCollection);
         $paginator = new Paginator($adapter);
