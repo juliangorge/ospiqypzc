@@ -50,8 +50,7 @@ class MedicalCenterController extends AbstractRestfulController
     {
         $queryBuilder = $this->em->createQueryBuilder()
             ->select('p.id', 'p.name')
-            ->from('Admin\Entity\MedicalCenter', 'p')
-            ->where('p.is_active = true');
+            ->from('Admin\Entity\MedicalCenter', 'p');
 
         if ($id !== NULL) {
             $queryBuilder->andWhere('p.id = :id')
