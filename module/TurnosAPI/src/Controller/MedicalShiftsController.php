@@ -4,7 +4,7 @@ namespace TurnosAPI\Controller;
 use Laminas\Mvc\Controller\AbstractRestfulController;
 use Laminas\View\Model\JsonModel;
 
-class MedicalShiftController extends AbstractRestfulController
+class MedicalShiftsController extends AbstractRestfulController
 {
     protected $em;
     protected $sm;
@@ -16,31 +16,27 @@ class MedicalShiftController extends AbstractRestfulController
     }
 
     public function indexAction(){
-        $id = $this->params()->fromRoute('id', NULL);
-        $data = $this->getRequest()->getPost()->toArray();
+        $medical_shift_id = $this->params()->fromRoute('medical_shift_id', NULL);
 
-        if($this->getRequest()->isPost()){            
+        if($this->getRequest()->isPost()){
+            #$data = $this->getRequest()->getPost()->toArray();
+            $requestBody = $this->getRequest()->getContent();
+            $data = json_decode($requestBody, true);
             return $this->post($data);
-        }
-        else
-        if($this->getRequest()->isPut()){
-            return $this->put($data, $id);
-        }
-        else
-        if($this->getRequest()->isPatch()){
-            return $this->patch($data, $id);
-        }
-        else
-        if($this->getRequest()->isDelete()){
-            return $this->delete($id);
+        }elseif($this->getRequest()->isGet()){
+            return $this->get($medical_shift_id);
         }
 
-        return $this->get($id);
+        return $this->disallow();
     }
 
     public function getByProfessionalDniAction()
     {
-        $dni = $this->params()->fromRoute('dni');
+        if(!$this->getRequest()->isGet()){
+            return $this->disallow();
+        }
+
+        $professional_dni = $this->params()->fromRoute('professional_dni');
 
         return new JsonModel(
             $this->em->createQuery('
@@ -48,15 +44,20 @@ class MedicalShiftController extends AbstractRestfulController
                 m.id, m.shift_datetime, m.dni, m.status, m.date_created
                 FROM Admin\Entity\MedicalShift m
                 JOIN Admin\Entity\ProfessionalCalendar c WITH c.id = m.professional_calendar_id
-                JOIN Admin\Entity\Professional p WITH p.dni = :dni
+                JOIN Admin\Entity\Professional p WITH p.dni = :professional_dni
+                ORDER BY m.date_created DESC
             ')
-            ->setParameter('dni', $dni)
+            ->setParameter('professional_dni', $professional_dni)
             ->getResult()
         );
     }
 
     public function getByDniAction()
     {
+        if(!$this->getRequest()->isGet()){
+            return $this->disallow();
+        }
+
         $dni = $this->params()->fromRoute('dni');
 
         return new JsonModel(
@@ -67,28 +68,33 @@ class MedicalShiftController extends AbstractRestfulController
                 JOIN Admin\Entity\ProfessionalCalendar c WITH c.id = m.professional_calendar_id
                 JOIN Admin\Entity\Professional p WITH p.id = c.professional_id
                 WHERE m.dni = :dni
+                ORDER BY m.date_created DESC
             ')
             ->setParameter('dni', $dni)
             ->getResult()
         );
     }
 
-    public function get($id = NULL)
+    public function get($medical_shift_id = NULL)
     {
         $queryBuilder = $this->em->createQueryBuilder()
             ->select('p.id', 'p.user_id', 'p.dni', 'p.specialty_id', 'p.professional_calendar_id', 'p.shift_datetime', 'p.status', 'p.date_created')
-            ->from('Admin\Entity\MedicalShift', 'p')
-            ->where('p.id = true');
+            ->from('Admin\Entity\MedicalShift', 'p');
 
-        if ($id !== NULL) {
-            $queryBuilder->andWhere('p.id = :id')
-                ->setParameter('id', $id);
-            $result = $queryBuilder->getQuery()->getOneOrNullResult();
+        if ($medical_shift_id !== NULL) {
+            $queryBuilder->andWhere('p.id = :medical_shift_id')
+                ->setParameter('medical_shift_id', $medical_shift_id);
+
+            $queryBuilder->orderBy('p.date_created', 'DESC');
+            $results = $queryBuilder->getQuery()->getOneOrNullResult();
         } else {
-            $result = $queryBuilder->getQuery()->getResult();
+
+            $queryBuilder->orderBy('p.date_created', 'DESC');
+            $results = $queryBuilder->getQuery()->getResult();
         }
 
-        return new JsonModel($result);
+        if($results === NULL) return $this->notFound();
+        return new JsonModel($results);
     }
 
     public function post($data)
@@ -117,19 +123,10 @@ class MedicalShiftController extends AbstractRestfulController
         ]);
     }
 
-    public function put($data, $id)
-    {
-        return $this->disallow();
-    }
-
-    public function patch($data, $id)
-    {
-        return $this->disallow();
-    }
-
-    public function delete($id)
-    {
-        return $this->disallow();
+    public function notFound(){
+        $response = new Response();
+        $response->setStatusCode(Response::STATUS_CODE_404);
+        return $response;
     }
 
     private function disallow(){

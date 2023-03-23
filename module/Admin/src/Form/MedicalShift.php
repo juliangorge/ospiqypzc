@@ -273,7 +273,7 @@ class MedicalShift extends Form
                 [
                     'name' => 'Date',
                     'options' => [
-                        'format' => 'd-m-Y',
+                        'format' => 'Y-m-d',
                         'strict' => true
                     ]
                 ],

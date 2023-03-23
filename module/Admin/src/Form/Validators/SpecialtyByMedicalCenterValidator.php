@@ -40,7 +40,7 @@ class SpecialtyByMedicalCenterValidator extends AbstractValidator
         $em = $this->options['em'];
         $isValid = false;
 
-        $medical_center = $em->find('Admin\Entity\MedicalCenter', $value);
+        $medical_center = $em->find('Admin\Entity\MedicalCenter', $context['medical_center_id']);
         if($medical_center == NULL){
         	$isValid = false;
         	$this->error(self::INVALID_MEDICAL_CENTER);
