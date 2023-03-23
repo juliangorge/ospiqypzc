@@ -168,11 +168,6 @@ class MedicalShift extends Form
         ]);
 
         $this->add([
-            'name' => 'professional_calendar_id',
-            'type' => 'hidden'
-        ]);
-
-        $this->add([
             'name' => 'submit',
             'type' => 'submit',
             'attributes' => [
@@ -282,13 +277,6 @@ class MedicalShift extends Form
 
         $inputFilter->add([
             'name'  => 'time',
-            'required' => true,
-            'filters'  => [],
-            'validators' => [],
-        ]);
-
-        $inputFilter->add([
-            'name'  => 'professional_calendar_id',
             'required' => true,
             'filters'  => [],
             'validators' => [

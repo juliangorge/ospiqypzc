@@ -90,7 +90,7 @@ class MedicalCentersController extends AbstractRestfulController
 
         $results = $this->em->createQuery('
             SELECT
-            c.id as professional_calendar_id, DATE_FORMAT(c.starting_at, \'%Y-%m-%d\') as value
+            DATE_FORMAT(c.starting_at, \'%Y-%m-%d\') as value
             FROM Admin\Entity\ProfessionalCalendar c
             WHERE 
             c.professional_id = :professional_id AND c.medical_center_id = :medical_center_id AND
@@ -103,7 +103,7 @@ class MedicalCentersController extends AbstractRestfulController
         ])
         ->getResult();
 
-        return new JsonModel($results);
+        return new JsonModel(array_column($results, 'value'));
     }
 
     public function getTimesByProfessionalAction()
@@ -121,7 +121,7 @@ class MedicalCentersController extends AbstractRestfulController
 
         $results = $this->em->createQuery('
             SELECT
-            c.id as professional_calendar_id, c.shifts_offer
+            c.shifts_offer as values
             FROM Admin\Entity\ProfessionalCalendar c
             WHERE c.professional_id = :professional_id AND c.medical_center_id = :medical_center_id AND DATE(c.starting_at) = :starting_at
         ')
@@ -134,10 +134,7 @@ class MedicalCentersController extends AbstractRestfulController
 
         if($results == NULL) return $this->notFound();
 
-        return new JsonModel([
-            'professional_calendar_id' => $results['professional_calendar_id'],
-            'shifts_offer' => json_decode($results['shifts_offer'], true)
-        ]);
+        return new JsonModel(json_decode($results['values'], true));
     }
 
     private function notFound(){

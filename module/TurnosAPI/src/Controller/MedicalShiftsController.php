@@ -109,6 +109,9 @@ class MedicalShiftsController extends AbstractRestfulController
 
         if($form->isValid()){
             $data = $form->getData();
+
+            
+
             $shift = new \Admin\Entity\MedicalShift($data);
             $this->em->persist($shift);
             $this->em->flush();
