@@ -3,6 +3,7 @@ namespace TurnosAPI\Controller;
 
 use Laminas\Mvc\Controller\AbstractRestfulController;
 use Laminas\View\Model\JsonModel;
+use Laminas\Http\Response;
 
 class MedicalShiftsController extends AbstractRestfulController
 {
