@@ -125,13 +125,12 @@ $(document).ready(function () {
 				sortable: false,
 				className: 'dt-body-right',
 				render: function(data, type, row, meta){
-					/*return `
+					return `
 						<span data-bs-toggle="tooltip" data-bs-placement="top" title="Editar">
 							<a href="/admin/medical_shifts/edit/` + data + `" class="action-icon">
 								<i class="uil-pen"></i>
 							</a>
-						</span>*/
-					return `
+						</span>
 						<span data-bs-toggle="modal" data-bs-target="#anularModal">
 		                    <a data-bs-toggle="tooltip" data-bs-placement="top" title="Anular" class="action-icon cursor-pointer" onclick="setModal(` + data + `)">
 		                      <i class="mdi mdi-close"></i>

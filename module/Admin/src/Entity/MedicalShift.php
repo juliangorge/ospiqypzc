@@ -44,7 +44,7 @@ class MedicalShift extends MedicalShiftSupperclassBase
 		$this->status = 0;
 		$this->date_created = new \DateTime();
 		$this->professional_calendar_id = $array['professional_calendar_id'];
-		$this->shift_datetime = \DateTime::createFromFormat('d-m-Y H:i', ($array['day'] . ' ' . $array['time']));
+		$this->shift_datetime = \DateTime::createFromFormat('Y-m-d H:i', ($array['day'] . ' ' . $array['time']));
 	}
 
 	public function exchangeArray(array $array){
@@ -52,7 +52,7 @@ class MedicalShift extends MedicalShiftSupperclassBase
 		$this->dni = $array['dni'];
 		$this->specialty_id = $array['specialty_id'];
 		$this->professional_calendar_id = $array['professional_calendar_id'];
-		$this->shift_datetime = new \DateTime($array['shift_datetime']);
+		$this->shift_datetime = \DateTime::createFromFormat('Y-m-d H:i', ($array['day'] . ' ' . $array['time']));
 	}
 
 	public function getUserId(){ return $this->user_id; }

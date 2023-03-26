@@ -109,11 +109,26 @@ class MedicalShiftsController extends AbstractRestfulController
 
         if($form->isValid()){
             $data = $form->getData();
-
-            
+            $data['user_id'] = $this->identity()['id'];
+            $professional_calendar = $this->em->createQuery('
+                SELECT a
+                FROM Admin\Entity\ProfessionalCalendar a
+                WHERE
+                a.medical_center_id = :medical_center_id AND
+                a.professional_id = :professional_id AND
+                DATE(a.starting_at) = :starting_at
+            ')
+            ->setParameters([
+                'medical_center_id' => $data['medical_center_id'],
+                'professional_id' => $data['professional_id'],
+                'starting_at' => $data['day']
+            ])
+            ->getOneOrNullResult();
+            $data['professional_calendar_id'] = $professional_calendar->getId();
 
             $shift = new \Admin\Entity\MedicalShift($data);
             $this->em->persist($shift);
+            $professional_calendar->removeShiftOffer($data['time']);
             $this->em->flush();
             $success = true;
         }else{

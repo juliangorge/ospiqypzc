@@ -132,7 +132,7 @@ class MedicalCentersController extends AbstractRestfulController
         ])
         ->getOneOrNullResult();
 
-        if($results == NULL) return $this->notFound();
+        if($results == NULL) return new JsonModel();
 
         return new JsonModel(json_decode($results['values'], true));
     }

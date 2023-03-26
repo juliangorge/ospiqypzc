@@ -5,7 +5,6 @@ use Laminas\Validator\AbstractValidator;
 
 class ProfessionalCalendarValidator extends AbstractValidator 
 {
-
     // Available validator options.
     protected $options = [
         'em' => NULL
@@ -19,7 +18,7 @@ class ProfessionalCalendarValidator extends AbstractValidator
     	self::TIME_NOT_AVAILABLE => 'Horario no disponible'
     ];
     
-    public function __construct($options = NULL) 
+    public function __construct(&$options = NULL) 
     {
         // Set filter options (if provided).
         if(is_array($options)){            
@@ -27,7 +26,7 @@ class ProfessionalCalendarValidator extends AbstractValidator
                 $this->options['em'] = $options['em'];
             }
         }
-        
+
         // Call the parent class constructor
         parent::__construct($options);
     }
@@ -47,13 +46,12 @@ class ProfessionalCalendarValidator extends AbstractValidator
         	SELECT a
         	FROM Admin\Entity\ProfessionalCalendar a
 
-        	WHERE a.id = :id AND
+        	WHERE
         	a.medical_center_id = :medical_center_id AND
         	a.professional_id = :professional_id AND
         	DATE(a.starting_at) = :starting_at
         ')
         ->setParameters([
-        	'id' => $value,
         	'medical_center_id' => $context['medical_center_id'],
         	'professional_id' => $context['professional_id'],
         	'starting_at' => $day->format('Y-m-d')
@@ -61,13 +59,12 @@ class ProfessionalCalendarValidator extends AbstractValidator
         ])
         ->getOneOrNullResult();
 
-        $isValid = $professional_calendar != NULL;
+        $isValid = $professional_calendar != NULL && $professional_calendar->checkShift($context['time']) != NULL;
 
-        if($isValid){
-        	$isValid = $professional_calendar->checkShift($context['time']) != NULL;
+        if(!$isValid){
+            $this->error(self::TIME_NOT_AVAILABLE);
         }
 
-        $this->error(self::TIME_NOT_AVAILABLE);
         return $isValid;
     }
 }

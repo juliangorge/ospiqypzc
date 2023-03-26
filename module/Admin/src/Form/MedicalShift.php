@@ -15,14 +15,14 @@ class MedicalShift extends Form
 
     protected $em;
 
-    public function __construct($em)
+    public function __construct($em, $editForm = false)
     {
         parent::__construct('medical_shift');
         $this->em = $em;
 
         $this->addElements();
 
-        $this->addInputFilter();
+        $this->addInputFilter($editForm);
     }
 
     protected function addElements()
@@ -168,6 +168,11 @@ class MedicalShift extends Form
         ]);
 
         $this->add([
+            'name' => 'professional_calendar_id',
+            'type' => 'hidden'
+        ]);
+
+        $this->add([
             'name' => 'submit',
             'type' => 'submit',
             'attributes' => [
@@ -178,7 +183,7 @@ class MedicalShift extends Form
         ]);
     }
 
-    protected function addInputFilter() 
+    protected function addInputFilter($editForm) 
     {
         $em = $this->em;
         $inputFilter = $this->getInputFilter();
@@ -263,7 +268,17 @@ class MedicalShift extends Form
         $inputFilter->add([
             'name'  => 'day',
             'required' => true,
-            'filters'  => [],
+            'filters'  => [
+                [
+                    'name' => 'Callback',
+                    'options' => [
+                        'callback' => function ($value) {
+                            $date = \DateTime::createFromFormat('d-m-Y', $value);
+                            return $date ? $date->format('Y-m-d') : null;
+                        },
+                    ],
+                ],
+            ],
             'validators' => [
                 [
                     'name' => 'Date',
@@ -275,18 +290,20 @@ class MedicalShift extends Form
             ],
         ]);
 
-        $inputFilter->add([
-            'name'  => 'time',
-            'required' => true,
-            'filters'  => [],
-            'validators' => [
-                [
-                    'name' => ProfessionalCalendarValidator::class,
-                    'options' => [
-                        'em' => $this->em,
-                    ],
-                ]
-            ],
-        ]);
+        if(!$editForm){
+            $inputFilter->add([
+                'name'  => 'time',
+                'required' => true,
+                'filters'  => [],
+                'validators' => [
+                    [
+                        'name' => ProfessionalCalendarValidator::class,
+                        'options' => [
+                            'em' => $this->em
+                        ],
+                    ]
+                ],
+            ]);
+        }
     }
 }

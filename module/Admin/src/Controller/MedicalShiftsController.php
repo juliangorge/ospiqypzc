@@ -48,8 +48,25 @@ class MedicalShiftsController extends AbstractActionController
             if($form->isValid()){
                 $data = $form->getData();
                 $data['user_id'] = $this->identity()['id'];
+                $professional_calendar = $this->em->createQuery('
+                    SELECT a
+                    FROM Admin\Entity\ProfessionalCalendar a
+                    WHERE
+                    a.medical_center_id = :medical_center_id AND
+                    a.professional_id = :professional_id AND
+                    DATE(a.starting_at) = :starting_at
+                ')
+                ->setParameters([
+                    'medical_center_id' => $data['medical_center_id'],
+                    'professional_id' => $data['professional_id'],
+                    'starting_at' => $data['day']
+                ])
+                ->getOneOrNullResult();
+                $data['professional_calendar_id'] = $professional_calendar->getId();
+
                 $shift = new \Admin\Entity\MedicalShift($data);
                 $this->em->persist($shift);
+                $professional_calendar->removeShiftOffer($data['time']);
                 $this->em->flush();
                 $success = true;
             }else{
@@ -74,27 +91,46 @@ class MedicalShiftsController extends AbstractActionController
         $entity = $this->em->find('Admin\Entity\MedicalShift', $id);
         if($entity == NULL) return $this->redirect()->toRoute('admin/medical_shifts');
 
-        $request = $this->getRequest();
-        $form = new \Admin\Form\MedicalShift($this->em);
-        $form->bind($entity);
-
         $professional_calendar = $this->em->find('Admin\Entity\ProfessionalCalendar', $entity->getProfessionalCalendarId());
-        $form->get('medical_center_id')->setValue($professional_calendar->getMedicalCenterId());
 
-        //
+        $request = $this->getRequest();
+        $form = new \Admin\Form\MedicalShift($this->em, true);
+        $form->bind($entity);
 
         $formErrors = NULL;
         $success = false;
 
         if($request->isPost()){
             $data = $request->getPost()->toArray();
+            #echo '<pre>' , print_r($data) , '</pre>';
+            #die;
             $form->setData($data);
 
             if($form->isValid()){
                 $data = $form->getData();
-                #$data['user_id'] = $this->identity()['id'];
-                #$shift = new \Admin\Entity\MedicalShift($data);
-                #$this->em->persist($shift);
+
+                echo '<pre>' , print_r($data) , '</pre>';
+                die;
+                $data['user_id'] = $this->identity()['id'];
+                $professional_calendar = $this->em->createQuery('
+                    SELECT a
+                    FROM Admin\Entity\ProfessionalCalendar a
+                    WHERE
+                    a.medical_center_id = :medical_center_id AND
+                    a.professional_id = :professional_id AND
+                    DATE(a.starting_at) = :starting_at
+                ')
+                ->setParameters([
+                    'medical_center_id' => $data['medical_center_id'],
+                    'professional_id' => $data['professional_id'],
+                    'starting_at' => $data['day']
+                ])
+                ->getOneOrNullResult();
+                $data['professional_calendar_id'] = $professional_calendar->getId();
+
+                $shift->exchangeArray($data);
+                $this->em->persist($shift);
+                $professional_calendar->removeShiftOffer($data['time']);
                 $this->em->flush();
                 $success = true;
             }else{
@@ -108,7 +144,9 @@ class MedicalShiftsController extends AbstractActionController
         return new ViewModel([
             'form' => $form,
             'formErrors' => $formErrors,
-            'api_credentials' => $this->api_credentials
+            'api_credentials' => $this->api_credentials,
+            'entity' => $entity,
+            'professional_calendar' => $professional_calendar
         ]);
     }
 

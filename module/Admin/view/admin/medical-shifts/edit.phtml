@@ -26,9 +26,33 @@ $this->headLink()->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap
 				$form->prepare();
 
 				echo $this->form()->openTag($form);
+				?>
 
-				echo $this->formCollection($form);
+				<div class="row"> 
+					<div class="col-md-6 mb-2">
+						<?= $this->formRow($form->get('dni')); ?>
+					</div>
+					<div class="col mb-2"></div>
+					<div class="col-md-6 mb-2">
+						<?= $this->formRow($form->get('medical_center_id')); ?>
+					</div>
+					<div class="col-md-6 mb-2">
+						<?= $this->formRow($form->get('specialty_id')); ?>
+					</div>
+					<div class="col-md-6 mb-2">
+						<?= $this->formRow($form->get('professional_id')); ?>
+					</div>
+					<div class="col mb-2"></div>
+					<div class="col-md-6 mb-2">
+						<?= $this->formRow($form->get('day')); ?>
+					</div>
+					<div class="col-md-6 mb-2">
+						<?= $this->formRow($form->get('time')); ?>
+					</div>
+				</div>
 
+				<?php
+				echo $this->formSubmit($form->get('submit'));
 				echo $this->form()->closeTag($form);
 
 				?>
@@ -38,6 +62,12 @@ $this->headLink()->prependStylesheet('//cdnjs.cloudflare.com/ajax/libs/bootstrap
 </div>
 
 <?php
+$medical_center_id = $this->professional_calendar->getMedicalCenterId();
+$specialty_id = $this->entity->getSpecialtyId();
+$professional_id = $this->professional_calendar->getProfessionalId();
+$day = $this->entity->getShiftDateTime()->format('d-m-Y');
+$time = $this->entity->getShiftDateTime()->format('H:i');
+
 $api_username = $this->api_credentials['username'];
 $api_password = $this->api_credentials['password'];
 $this->inlineScript()
@@ -47,26 +77,35 @@ $this->inlineScript()
 $this->inlineScript()->captureStart();
 	echo <<<JS
 
+		//$(document).ready(function(){
+			$('#medical_center_id').val($medical_center_id);
+			onChangeMedicalCenterId();
+		//});
+
 		function onChangeMedicalCenterId(){
 			var specialties = $('#specialty_id');
 			specialties.html('<option value="">Seleccionar</option');
 
 			$.ajax({
-				url: '/shifts/medical_centers/' + $('#medical_center_id').val() + '/specialties',
+				url: '/shifts/v1/medical_centers/' + $('#medical_center_id').val() + '/specialties',
 				type: 'GET',
 				dataType: 'json',
 				headers: {
 					"Authorization": "Basic " + btoa("$api_username:$api_password")
-			  	},
-			  	success: function(data) {
-			    	$.each(data, function(k, v) {
-			      		specialties.append('<option value="' + v.id + '">' + v.name + '</option>');
-			    	});
-			    	specialties.change();
-			  	},
-			  	error: function(jqXHR, textStatus, errorThrown) {
-			    	// Handle error
-			  	}
+				},
+				success: function(data) {
+					$.each(data, function(k, v) {
+						specialties.append('<option value="' + v.id + '">' + v.name + '</option>');
+					});
+					specialties.change();
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					// Handle error
+				}
+			})
+			.done(() => {
+				specialties.val($specialty_id);
+				onChangeSpecialtyId();
 			});
 
 		}
@@ -77,21 +116,25 @@ $this->inlineScript()->captureStart();
 			if($('#specialty_id').val() == '') return true;
 
 			$.ajax({
-				url: '/shifts/specialties/' + $('#specialty_id').val() + '/professionals',
+				url: '/shifts/v1/medical_centers/' + $('#medical_center_id').val() + '/specialties/' + $('#specialty_id').val() + '/professionals',
 				type: 'GET',
 				dataType: 'json',
 				headers: {
 					"Authorization": "Basic " + btoa("$api_username:$api_password")
-			  	},
-			  	success: function(data) {
-			    	$.each(data, function(k, v){
+				},
+				success: function(data) {
+					$.each(data, function(k, v){
 						professionals.append('<option value="' + v.id + '">' + v.first_name + ' ' + v.last_name + '</option>');
 					});
-				   	professionals.change();
-			  	},
-			  	error: function(jqXHR, textStatus, errorThrown) {
-			    	// Handle error
-			  	}
+					professionals.change();
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					// Handle error
+				}
+			})
+			.done(() => {
+				professionals.val($professional_id);
+				onChangeProfessionalId();
 			});
 		}
 
@@ -101,50 +144,54 @@ $this->inlineScript()->captureStart();
 			if($('#specialty_id').val() == '' || $('#professional_id').val() == '') return true;
 
 			$.ajax({
-				url: '/shifts/professionals/' + $('#professional_id').val() + '/medical_center/' + $('#medical_center_id').val() + '/days',
+				url: '/shifts/v1/medical_centers/' + $('#medical_center_id').val() + '/professionals/' + $('#professional_id').val() + '/days',
 				type: 'GET',
 				dataType: 'json',
 				headers: {
 					"Authorization": "Basic " + btoa("$api_username:$api_password")
-			  	},
-			  	success: function(data) {
-			    	$('input[name="day"]').datepicker('setDatesEnabled', data);
-					days.change();
-			  	},
-			  	error: function(jqXHR, textStatus, errorThrown) {
-			    	// Handle error
-			  	}
+				},
+				success: function(validDates) {
+					$('input[name="day"]').datepicker('destroy');
+					generateDatepicker(validDates);
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					// Handle error
+				}
+			})
+			.done(() => {
+				days.val("$day");
+				onChangeDay();
 			});
 		}
 
 		function onChangeDay(){
-			var day = $('input[name="day"]'),
-				professional_calendar_id = $('input[name="professional_calendar_id"]');
+			var day = $('input[name="day"]');
 
 			day.html('<option value="">Seleccionar</option');
-			professional_calendar_id.val('');
 			if($('#medical_center_id').val() == '' || $('#professional_id').val() == '' || $('#day').val() == '') return true;
 
 			$.ajax({
-				url: '/shifts/professionals/' + $('#professional_id').val() + '/medical_center/' + $('#medical_center_id').val() + '/days/' + $('#day').val() + '/times',
+				url: '/shifts/v1/medical_centers/' + $('#medical_center_id').val() + '/professionals/' + $('#professional_id').val() + '/days/' + $('#day').val() + '/times',
 				type: 'GET',
 				dataType: 'json',
 				headers: {
 					"Authorization": "Basic " + btoa("$api_username:$api_password")
-			  	},
-			  	success: function(data) {
-			    	$('input[name="professional_calendar_id"]').val(data.professional_calendar_id);
-					$.each(data.times, function(k, v){
-						$('#time').append('<option value="' + v.id + '">' + v.value + '</option>');
+				},
+				success: function(data) {
+					$.each(data, function(k, v){
+						$('#time').append('<option value="' + v + '">' + v + '</option>');
 					});
-			  	},
-			  	error: function(jqXHR, textStatus, errorThrown) {
-			    	// Handle error
-			  	}
+				},
+				error: function(jqXHR, textStatus, errorThrown) {
+					// Handle error
+				}
+			})
+			.done(() => {
+				$('#time').append('<option value="$time" selected>$time</option>');
 			});
 		}
 
-		$(document).ready(function(){
+		function generateDatepicker(validDates){
 			// Obtener la fecha de inicio seleccionada por el usuario
 			var fecha_inicio = new Date();
 
@@ -161,7 +208,11 @@ $this->inlineScript()->captureStart();
 				endDate: fecha_fin,
 				orientation: 'bottom',
 				autoclose: true,
+				beforeShowDay: date => {
+					var dateString = moment(date).format('YYYY-MM-DD');
+		      		return validDates.includes(dateString);
+				}
 			});
-		});
+		}
 	JS;
 $this->inlineScript()->captureEnd();
