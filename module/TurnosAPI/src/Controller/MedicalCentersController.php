@@ -40,7 +40,7 @@ class MedicalCentersController extends AbstractRestfulController
             $results = $queryBuilder->getQuery()->getResult();
         }
 
-        if($result === NULL) return $this->notFound();
+        if($results === NULL) return $this->notFound();
         return new JsonModel($results);
     }
 
