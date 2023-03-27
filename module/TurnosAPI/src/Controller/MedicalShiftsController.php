@@ -149,6 +149,9 @@ class MedicalShiftsController extends AbstractRestfulController
 
         return $this->validForm([
             'id' => $entity->getId(),
+            'professional_id' => $entity->getProfessionalId(),
+            'specialty_id' => $entity->getSpecialtyId(),
+            'medical_center_id' => $entity->getMedicalCenterId(),
             'shift_datetime' => $entity->getShiftDateTime(),
             'status' => $entity->getStatus(),
             'date_created' => $entity->getDateCreated(),
