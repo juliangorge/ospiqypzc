@@ -62,7 +62,7 @@ class MedicalCentersController extends AbstractRestfulController
         ->setParameters($parameters)
         ->getSingleScalarResult();
 
-        if($specialty_id == NULL) return $this->notFound();
+        if($specialty_id == NULL) return new JsonModel();
 
         $results = $this->em->createQuery('
             SELECT p.id, p.first_name, p.last_name, p.dni, p.registration, p.college, p.cuit

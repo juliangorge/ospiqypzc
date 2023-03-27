@@ -98,19 +98,29 @@ class MedicalShiftsController extends AbstractRestfulController
         return new JsonModel($results);
     }
 
-    public function post($data)
+    public function post($data = [])
     {
         $form = new \Admin\Form\MedicalShift($this->em);
 
         $entity = NULL;
-        $formErrors = NULL;
+        $formErrors = [];
         $success = false;
+
+        if(isset($data['day'])){
+            $date = \DateTime::createFromFormat('Y-m-d', $data['day']);
+
+            if($date === false){
+                $date = \DateTime::createFromFormat('d-m-Y', $data['day']);    
+            }
+
+            $data['day'] = $date->format('d-m-Y');
+        }
 
         $form->setData($data);
 
         if($form->isValid()){
             $data = $form->getData();
-            $data['user_id'] = $this->identity()['id'];
+            $data['user_id'] = @$this->identity()['id'];
             $professional_calendar = $this->em->createQuery('
                 SELECT a
                 FROM Admin\Entity\ProfessionalCalendar a
@@ -127,19 +137,38 @@ class MedicalShiftsController extends AbstractRestfulController
             ->getOneOrNullResult();
             $data['professional_calendar_id'] = $professional_calendar->getId();
 
-            $shift = new \Admin\Entity\MedicalShift($data);
-            $this->em->persist($shift);
+            $entity = new \Admin\Entity\MedicalShift($data);
+            $this->em->persist($entity);
             $professional_calendar->removeShiftOffer($data['time']);
             $this->em->flush();
             $success = true;
         }else{
             $formErrors = $form->getMessages();
+            return $this->invalidForm($formErrors);   
         }
 
-        return new JsonModel([
-            'data' => $entity,
-            'errors' => $formErrors
+        return $this->validForm([
+            'id' => $entity->getId(),
+            'shift_datetime' => $entity->getShiftDateTime(),
+            'status' => $entity->getStatus(),
+            'date_created' => $entity->getDateCreated(),
         ]);
+    }
+
+    public function validForm($array){
+        $response = new Response();
+        $response->setStatusCode(Response::STATUS_CODE_201);
+        $response->setContent(json_encode($array));
+        $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+        return $response;
+    }
+
+    public function invalidForm($array){
+        $response = new Response();
+        $response->setStatusCode(Response::STATUS_CODE_400);
+        $response->setContent(json_encode($array));
+        $response->getHeaders()->addHeaderLine('Content-Type', 'application/json');
+        return $response;
     }
 
     public function notFound(){

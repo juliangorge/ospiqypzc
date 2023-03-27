@@ -70,21 +70,6 @@ return [
 		                    ],
 		                ],
 		            ],
-		            /*
-		            'medical_centers_professionals' => [
-		                'type' => 'Segment',
-		                'options' => [
-		                    'route' => '/medical_centers/:medical_center_id/professionals',
-		                    'constraints' => [
-		                        'medical_center_id' => '[0-9]+',
-		                    ],
-		                    'defaults' => [
-		                        'controller' => Controller\ProfessionalsController::class,
-		                        'action' => 'getByMedicalCenter',
-		                    ],
-		                ],
-		            ],
-		            */
 		            'medical_centers_professional_days' => [
 		                'type' => 'Segment',
 		                'options' => [

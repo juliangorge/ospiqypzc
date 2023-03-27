@@ -5,21 +5,20 @@ use Laminas\Validator\AbstractValidator;
 
 class MedicalShiftTimeValidator extends AbstractValidator 
 {
-
     // Available validator options.
     protected $options = [
         'em' => NULL
     ];
     
     // Validation failure message IDs.
-    const TIME_NOT_AVAILABLE = 'dayNotAvailable';
+    const TIME_NOT_AVAILABLE = 'timeNotAvailable';
 
     // Validation failure messages.
     protected $messageTemplates = [
     	self::TIME_NOT_AVAILABLE => 'Horario no disponible'
     ];
     
-    public function __construct($options = NULL) 
+    public function __construct(&$options = NULL) 
     {
         // Set filter options (if provided).
         if(is_array($options)){            
@@ -27,7 +26,7 @@ class MedicalShiftTimeValidator extends AbstractValidator
                 $this->options['em'] = $options['em'];
             }
         }
-        
+
         // Call the parent class constructor
         parent::__construct($options);
     }
@@ -38,35 +37,38 @@ class MedicalShiftTimeValidator extends AbstractValidator
         $em = $this->options['em'];
         $isValid = false;
 
-        $day = new \DateTime($context['day']);
+        $config = $em->getConfiguration();
+        $config->addCustomStringFunction('DATE','DoctrineExtensions\Query\Mysql\Date');
+        $config->addCustomStringFunction('JSON_CONTAINS','DoctrineExtensions\Query\Mysql\JsonContains');
 
-        $professional = $em->find('Admin\Entity\Professional', $context['professional_id']);
-        $calendar = $this->getProfessionalCalendar($professional, $day->format('Y-m-d'));
-        $isValid = $calendar->checkShift($context['time']);
+        $day = new \DateTime($context['day']);
+        $professional_calendar = $em->createQuery('
+        	SELECT a
+        	FROM Admin\Entity\ProfessionalCalendar a
+
+        	WHERE
+        	a.medical_center_id = :medical_center_id AND
+        	a.professional_id = :professional_id AND
+        	DATE(a.starting_at) = :starting_at
+        ')
+        ->setParameters([
+        	'medical_center_id' => $context['medical_center_id'],
+        	'professional_id' => $context['professional_id'],
+        	'starting_at' => $day->format('Y-m-d')
+
+        ])
+        ->getOneOrNullResult();
+
+        #$isValid = $professional_calendar != NULL && $professional_calendar->checkShift($context['time']) != NULL;
+        if($professional_calendar == NULL) return true;
+
+        $isValid = $professional_calendar->checkShift($context['time']) != NULL;
 
         if(!$isValid){
-        	$this->error(self::TIME_NOT_AVAILABLE);
+            $this->error(self::TIME_NOT_AVAILABLE);
         }
 
         return $isValid;
-    }
-
-    private function getProfessionalCalendar($professional, $date)
-    {
-        $em = $this->options['em'];
-        $config = $em->getConfiguration();
-        $config->addCustomStringFunction('DATE_FORMAT','DoctrineExtensions\Query\Mysql\DateFormat');
-
-        return $em->createQuery('
-            SELECT i FROM Admin\Entity\ProfessionalCalendar i
-            WHERE i.professional_id = :professional_id AND 
-            DATE_FORMAT(i.starting_at, \'%Y-%m-%d\') = :date_string
-            ')
-            ->setParameters([
-                'professional_id' => $professional->getId(),
-                'date_string' => $date
-            ])
-            ->getOneOrNullResult();
     }
 }
 

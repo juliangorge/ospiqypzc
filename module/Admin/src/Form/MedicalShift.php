@@ -8,7 +8,9 @@ use Admin\Form\Validators\MedicalCenterExistsValidator;
 use Admin\Form\Validators\AffiliateOrFamilyExistsValidator;
 use Admin\Form\Validators\SpecialtyByProfessionalValidator;
 use Admin\Form\Validators\SpecialtyByMedicalCenterValidator;
-use Admin\Form\Validators\ProfessionalCalendarValidator;
+
+use Admin\Form\Validators\MedicalShiftDayValidator;
+use Admin\Form\Validators\MedicalShiftTimeValidator;
 
 class MedicalShift extends Form
 {
@@ -287,6 +289,12 @@ class MedicalShift extends Form
                         'strict' => true
                     ]
                 ],
+                [
+                    'name' => MedicalShiftDayValidator::class,
+                    'options' => [
+                        'em' => $this->em
+                    ],
+                ]
             ],
         ]);
 
@@ -297,7 +305,7 @@ class MedicalShift extends Form
                 'filters'  => [],
                 'validators' => [
                     [
-                        'name' => ProfessionalCalendarValidator::class,
+                        'name' => MedicalShiftTimeValidator::class,
                         'options' => [
                             'em' => $this->em
                         ],
