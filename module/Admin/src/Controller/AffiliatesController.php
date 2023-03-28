@@ -15,7 +15,7 @@ class AffiliatesController extends AbstractActionController
 
     public function __construct($em, $sm){
         $this->em = $em;
-        $this->sm = $sm
+        $this->sm = $sm;
         $this->config = $sm->get('config');
 
         $this->route = 'admin/affiliates';
