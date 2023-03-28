@@ -8,15 +8,16 @@ use Laminas\View\Model\JsonModel;
 class MedicalShiftsController extends AbstractActionController 
 {
 
-    private $em;
-    private $config;
-    private $route;
-    private $serviceManager;
-    private $api_credentials;
+    protected $em;
+    protected $sm;
+    protected $config;
+    protected $route;
+    protected $api_credentials;
 
-    public function __construct($em, $config){
+    public function __construct($em, $sm){
         $this->em = $em;
-        $this->config = $config;
+        $this->sm = $sm;
+        $this->config = $sm->get('config');
         $this->route = 'admin/medical_shifts';
 
         $this->api_credentials = [

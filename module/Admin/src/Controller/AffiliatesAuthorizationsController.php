@@ -16,15 +16,17 @@ use Laminas\Paginator\Paginator;
 class AffiliatesAuthorizationsController extends AbstractActionController
 {
 
-    private $em;
-    private $config;
-    private $firestore;
-    private $colection;
-    private $route;
+    protected $em;
+    protected $sm;
+    protected $config;
+    protected $firestore;
+    protected $colection;
+    protected $route;
 
-    public function __construct($em, $config){
+    public function __construct($em, $sm){
         $this->em = $em;
-        $this->config = $config;
+        $this->sm = $sm
+        $this->config = $sm->get('config');
 
         $this->firestore = new FirestoreClient([
             'projectId' => $this->config['firestore_projectId'],

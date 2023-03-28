@@ -8,24 +8,17 @@ use Laminas\View\Model\JsonModel;
 class IndexController extends AbstractActionController 
 {
 
-    private $em;
-    private $config;
-    private $route;
-    private $serviceManager;
+    protected $em;
+    protected $sm;
+    protected $config;
+    protected $route;
 
-    public function __construct($em, $config){
+    public function __construct($em, $sm){
         $this->em = $em;
-        $this->config = $config;
+        $this->sm = $sm;
+        $this->config = $sm->get('config');
+
         $this->route = 'admin/dashboard';
-    }
-
-    public function setServiceManager($serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-    }
-
-    public function indexAction()
-    {
     }
 
     public function logsAction()
@@ -38,7 +31,7 @@ class IndexController extends AbstractActionController
     public function miCuentaAction()
     {
         $role = $this->em->find('Juliangorge\Users\Entity\UserRole', $this->identity()['role_id']);
-        $this->serviceManager->get('Juliangorge\Users\Service\AuthManager')->setRole($role);
+        $this->sm->get('Juliangorge\Users\Service\AuthManager')->setRole($role);
 
         return new ViewModel([
             'user' => $this->em->find($this->config['authModule']['userEntity'], $this->identity()['id'])
@@ -115,7 +108,7 @@ class IndexController extends AbstractActionController
 
             if($form->isValid()){
                 try {
-                    $userManager = $this->serviceManager->get($this->config['authModule']['userManager']);
+                    $userManager = $this->sm->get($this->config['authModule']['userManager']);
                     $userManager->changePassword($entity, $post, false);
                 }catch(\Throwable $e){
                     $this->flashMessenger()->addErrorMessage($e->getMessage());

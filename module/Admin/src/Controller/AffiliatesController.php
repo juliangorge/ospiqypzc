@@ -8,13 +8,16 @@ use Laminas\View\Model\JsonModel;
 class AffiliatesController extends AbstractActionController
 {
 
-    private $em;
-    private $config;
-    private $route;
+    protected $em;
+    protected $sm;
+    protected $config;
+    protected $route;
 
-    public function __construct($em, $config){
+    public function __construct($em, $sm){
         $this->em = $em;
-        $this->config = $config;
+        $this->sm = $sm
+        $this->config = $sm->get('config');
+
         $this->route = 'admin/affiliates';
     }
 

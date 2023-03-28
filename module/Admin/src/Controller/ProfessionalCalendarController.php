@@ -14,16 +14,17 @@ use Laminas\Paginator\Paginator;
 class ProfessionalCalendarController extends AbstractActionController
 {
 
-    private $em;
-    private $config;
-    private $firestore;
-    private $colection;
-    private $route;
-    private $serviceManager;
+    protected $em;
+    protected $sm;
+    protected $config;
+    protected $firestore;
+    protected $colection;
+    protected $route;
 
-    public function __construct($em, $config){
+    public function __construct($em, $sm){
         $this->em = $em;
-        $this->config = $config;
+        $this->sm = $sm;
+        $this->config = $sm->get('config');
 
         $this->firestore = new FirestoreClient([
             'projectId' => $this->config['firestore_projectId'],
@@ -32,13 +33,9 @@ class ProfessionalCalendarController extends AbstractActionController
 
         $this->collection = 'professional_calendar';
         $this->route = 'admin/professional_calendar';
-    }
 
-    public function setServiceManager($serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
-        if($this->serviceManager->get('medical_centers')->medical_center_id == NULL){
-            $this->serviceManager->get('medical_centers')->medical_center_id = 1;
+        if($this->sm->get('medical_centers')->medical_center_id == NULL){
+            $this->sm->get('medical_centers')->medical_center_id = 1;
         }
     }
 
@@ -47,7 +44,7 @@ class ProfessionalCalendarController extends AbstractActionController
         return new ViewModel([
             'title' => 'Agenda Profesional',
             'medical_centers' => $this->getMedicalCenters(),
-            'selected_medical_center' => $this->em->find('Admin\Entity\MedicalCenter', $this->serviceManager->get('medical_centers')->medical_center_id),
+            'selected_medical_center' => $this->em->find('Admin\Entity\MedicalCenter', $this->sm->get('medical_centers')->medical_center_id),
             'professionals' => $this->em->getRepository('Admin\Entity\Professional')->findBy([], ['last_name' => 'ASC']),
             'route' => $this->route
         ]);
@@ -158,7 +155,7 @@ class ProfessionalCalendarController extends AbstractActionController
 
         try{
             $data = $request->getPost()->toArray();
-            $this->serviceManager->get('medical_centers')->medical_center_id = $data['medical_center_id'];
+            $this->sm->get('medical_centers')->medical_center_id = $data['medical_center_id'];
         }
         catch(\Throwable $e){
             throw new \Exception($e->getMessage());

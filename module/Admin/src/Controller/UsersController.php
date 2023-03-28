@@ -14,22 +14,18 @@ use Interop\Container\ContainerInterface;
 class UsersController extends AbstractActionController
 {
 
-    private $em;
-    private $config;
-    private $route;
-    private $serviceManager;
+    protected $em;
+    protected $sm;
+    protected $config;
+    protected $route;
 
-    public function __construct($em, $config)
+    public function __construct($em, $sm)
     {
         $this->em = $em;
-        $this->config = $config;
+        $this->sm = $sm;
+        $this->config = $sm->get('config');
 
         $this->route = 'admin/users';
-    }
-
-    public function setServiceManager($serviceManager)
-    {
-        $this->serviceManager = $serviceManager;
     }
 
     public function indexAction()
@@ -60,7 +56,7 @@ class UsersController extends AbstractActionController
             if($form->isValid()){
 
                 try {
-                    $userManager = $this->serviceManager->get($this->config['authModule']['userManager']);
+                    $userManager = $this->sm->get($this->config['authModule']['userManager']);
                     $post['role_id'] = $this->em->find('Juliangorge\Users\Entity\UserRole', $post['role_id']);
                     $userManager->addUser($post);
 
@@ -109,7 +105,7 @@ class UsersController extends AbstractActionController
             if($form->isValid()){
 
                 try {
-                    $userManager = $this->serviceManager->get($this->config['authModule']['userManager']);
+                    $userManager = $this->sm->get($this->config['authModule']['userManager']);
                     $post['role_id'] = $this->em->find('Juliangorge\Users\Entity\UserRole', $post['role_id']);
                     $post['status'] = $entity->getStatus();
                     $userManager->updateUser($entity, $post);
@@ -320,7 +316,7 @@ class UsersController extends AbstractActionController
 
             if($form->isValid()){
                 try {
-                    $userManager = $this->serviceManager->get($this->config['authModule']['userManager']);
+                    $userManager = $this->sm->get($this->config['authModule']['userManager']);
                     $userManager->changePassword($entity, $post, false);
                 }catch(\Throwable $e){
                     $this->flashMessenger()->addErrorMessage($e->getMessage());

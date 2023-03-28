@@ -7,6 +7,7 @@ use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
 use Google\Cloud\Firestore\FirestoreClient;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineModule\Paginator\Adapter\Collection as CollectionAdapter;
 use Laminas\Paginator\Paginator;
@@ -14,15 +15,17 @@ use Laminas\Paginator\Paginator;
 class AffiliatesClaimsController extends AbstractActionController
 {
 
-    private $em;
-    private $config;
-    private $firestore;
-    private $colection;
-    private $route;
+    protected $em;
+    protected $sm;
+    protected $config;
+    protected $firestore;
+    protected $colection;
+    protected $route;
 
-    public function __construct($em, $config){
+    public function __construct($em, $sm){
         $this->em = $em;
-        $this->config = $config;
+        $this->sm = $sm
+        $this->config = $sm->get('config');
 
         $this->firestore = new FirestoreClient([
             'projectId' => $this->config['firestore_projectId'],
