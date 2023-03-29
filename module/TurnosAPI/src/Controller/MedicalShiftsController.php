@@ -42,10 +42,12 @@ class MedicalShiftsController extends AbstractRestfulController
         return new JsonModel(
             $this->em->createQuery('
                 SELECT 
-                m.id, m.shift_datetime, m.dni, m.status, m.date_created
+                m.id, m.shift_datetime, m.dni, m.status, m.date_created,
+                mc.name as medical_center_name
                 FROM Admin\Entity\MedicalShift m
                 JOIN Admin\Entity\ProfessionalCalendar c WITH c.id = m.professional_calendar_id
                 JOIN Admin\Entity\Professional p WITH p.dni = :professional_dni
+                JOIN Admin\Entity\MedicalCenter mc WITH mc.id = c.medical_center_id
                 ORDER BY m.date_created DESC
             ')
             ->setParameter('professional_dni', $professional_dni)
@@ -64,10 +66,14 @@ class MedicalShiftsController extends AbstractRestfulController
         return new JsonModel(
             $this->em->createQuery('
                 SELECT 
-                m.id, m.shift_datetime, m.dni, m.status, m.date_created, p.dni as professional_dni
+                m.id, m.shift_datetime, m.dni, m.status, m.date_created, p.dni as professional_dni,
+                s.name as specialty_name, CONCAT(p.first_name, \' \', p.last_name) as professional_name,
+                mc.name as medical_center_name
                 FROM Admin\Entity\MedicalShift m
                 JOIN Admin\Entity\ProfessionalCalendar c WITH c.id = m.professional_calendar_id
                 JOIN Admin\Entity\Professional p WITH p.id = c.professional_id
+                JOIN Admin\Entity\MedicalCenter mc WITH mc.id = c.medical_center_id
+                JOIN Admin\Entity\Specialty s WITH s.id = m.specialty_id
                 WHERE m.dni = :dni
                 ORDER BY m.date_created DESC
             ')
