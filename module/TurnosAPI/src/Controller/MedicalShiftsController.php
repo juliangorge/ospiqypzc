@@ -39,10 +39,13 @@ class MedicalShiftsController extends AbstractRestfulController
 
         $professional_dni = $this->params()->fromRoute('professional_dni');
 
+        $config = $this->em->getConfiguration();
+        $config->addCustomStringFunction('DATE_FORMAT','DoctrineExtensions\Query\Mysql\DateFormat');
+
         return new JsonModel(
             $this->em->createQuery('
                 SELECT 
-                m.id, m.shift_datetime, m.dni, m.status, m.date_created,
+                m.id, DATE_FORMAT(m.shift_datetime, \'%Y-%m-%d %H:%i\') as shift_datetime, m.dni, m.status, DATE_FORMAT(m.date_created, \'%Y-%m-%d %H:%i:%s\') as date_created,
                 mc.name as medical_center_name
                 FROM Admin\Entity\MedicalShift m
                 JOIN Admin\Entity\ProfessionalCalendar c WITH c.id = m.professional_calendar_id
@@ -63,10 +66,16 @@ class MedicalShiftsController extends AbstractRestfulController
 
         $dni = $this->params()->fromRoute('dni');
 
+        $config = $this->em->getConfiguration();
+        $config->addCustomStringFunction('DATE_FORMAT','DoctrineExtensions\Query\Mysql\DateFormat');
+
         return new JsonModel(
             $this->em->createQuery('
                 SELECT 
-                m.id, m.shift_datetime, m.dni, m.status, m.date_created, p.dni as professional_dni,
+                m.id, DATE_FORMAT(m.shift_datetime, \'%Y-%m-%d %H:%i\') as shift_datetime,
+                m.dni, m.status, 
+                DATE_FORMAT(m.date_created, \'%Y-%m-%d %H:%i:%s\') as date_created,
+                p.dni as professional_dni,
                 s.name as specialty_name, CONCAT(p.first_name, \' \', p.last_name) as professional_name,
                 mc.name as medical_center_name
                 FROM Admin\Entity\MedicalShift m
