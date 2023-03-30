@@ -24,7 +24,7 @@ class AffiliatesClaimsController extends AbstractActionController
 
     public function __construct($em, $sm){
         $this->em = $em;
-        $this->sm = $sm
+        $this->sm = $sm;
         $this->config = $sm->get('config');
 
         $this->firestore = new FirestoreClient([
