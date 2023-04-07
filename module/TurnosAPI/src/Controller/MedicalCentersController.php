@@ -50,14 +50,16 @@ class MedicalCentersController extends AbstractRestfulController
             return $this->disallow();
         }
 
-        $specialty_id = $this->params()->fromRoute('specialty_id');
-        $parameters = ['specialty_id' => $specialty_id];
+        $parameters = [
+            'medical_center_id' => $this->params()->fromRoute('medical_center_id'),
+            'specialty_id' => $this->params()->fromRoute('specialty_id'),
+        ];
 
         $specialty_id = $this->em->createQuery('
             SELECT s.id
             FROM Admin\Entity\MedicalCenter m
             JOIN m.specialties s
-            WHERE s.id = :specialty_id
+            WHERE m.id = :medical_center_id AND s.id = :specialty_id
         ')
         ->setParameters($parameters)
         ->getSingleScalarResult();
