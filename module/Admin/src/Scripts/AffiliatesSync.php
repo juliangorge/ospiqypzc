@@ -45,7 +45,7 @@ class AffiliatesSync extends Command
         if($has_errors){
             $this->mail->send($this->config['mail_errors'], 
                             'CRON: Error al actualizar', 
-                            '<pre>' , print_r($results['errors']) , '</pre>',
+                            implode($results['errors']),
                             false);
             return Command::FAILURE;
         }

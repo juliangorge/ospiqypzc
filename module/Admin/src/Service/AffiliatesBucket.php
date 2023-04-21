@@ -93,7 +93,9 @@ class AffiliatesBucket {
             'updates' => 0
         ];
 
-        try {
+
+
+        /*try {
             $this->actualizarAfiliadosEnFirebase($affiliates, $stats);
         }
         catch(\Throwable $e){
@@ -105,7 +107,7 @@ class AffiliatesBucket {
         }
         catch(\Throwable $e){
             $errors[] = $e->getMessage();
-        }
+        }*/
 
         $this->em->flush();
 
@@ -269,6 +271,8 @@ class AffiliatesBucket {
         if ($string == 'Buenos Aires') $id = 1;
         
         if ($string == 'Entre Rios') $id = 2;
+
+        if ($string == 'Capital Federal') $id = 3;
 
         if ($id == -1) throw new \Exception('Tipo de Region invalida. Revisar CSV.');
         
