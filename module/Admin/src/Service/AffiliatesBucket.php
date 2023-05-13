@@ -330,7 +330,7 @@ class AffiliatesBucket {
                         throw new \Exception('Error al crear registro para la APP (Firebase), DNI: ' . $affiliate->getDni());
                     }
 
-                    $stats['creates']++;
+                    $stats['created']++;
                 }
 
             }else{
