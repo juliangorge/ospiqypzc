@@ -14,7 +14,7 @@ class AffiliatesBucket {
 		$this->em = $em;
 		$this->config = $config;
 
-        #shell_exec('aws s3 cp s3://saas-padron-backup/10/export-afiliados-latest.csv ' . $this->config['exportAfiliadosFile']);
+        //shell_exec('aws s3 cp s3://saas-padron-backup/10/export-afiliados-latest.csv ' . $this->config['exportAfiliadosFile']);
 
 		$this->filename = $this->config['exportAfiliadosFile'];
 		$this->firestore = new FirestoreClient([
@@ -93,9 +93,7 @@ class AffiliatesBucket {
             'updates' => 0
         ];
 
-
-
-        /*try {
+        try {
             $this->actualizarAfiliadosEnFirebase($affiliates, $stats);
         }
         catch(\Throwable $e){
@@ -107,7 +105,7 @@ class AffiliatesBucket {
         }
         catch(\Throwable $e){
             $errors[] = $e->getMessage();
-        }*/
+        }
 
         $this->em->flush();
 
