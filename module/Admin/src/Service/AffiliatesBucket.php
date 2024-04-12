@@ -361,20 +361,26 @@ class AffiliatesBucket {
     }
 
     private function bajarAfiliadosEnFirebase(array $affiliates, &$stats){
-        // $factory = (new Factory)->withServiceAccount($this->config['firestore_keyFilePath']);
-        // $firebaseAuth = $factory->createAuth();
-        // $user = $firebaseAuth->getUserByEmail($affiliate->getEmail());
-        // if($user){
-        //     $user->deleteUser($user->uid);
-        // }
+        if(sizeof($affiliates)){
+            $factory = (new Factory)->withServiceAccount($this->config['firestore_keyFilePath']);
+            $firebaseAuth = $factory->createAuth();
+        }
 
         foreach($affiliates as $affiliate){
             if($affiliate->getDocumentId()){
                 try {
                     $docRef = $this->firestore->collection('affiliates_data')->document($affiliate->getDocumentId());
                     $docRef->delete();
+                    
+                    if($affiliate->getEmail() != NULL){
+                        $user = $firebaseAuth->getUserByEmail($affiliate->getEmail());
+                        if($user){
+                            $firebaseAuth->deleteUser($user->uid);
+                        }
+                    }
 
                     $affiliate->setDocumentId(NULL);
+
                     $stats['removed']++;
                 }
                 catch(\Throwable $e){
