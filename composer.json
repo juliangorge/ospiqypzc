@@ -40,6 +40,7 @@
         "juliangorge/medical-shifts": "dev-main",
         "juliangorge/notifications": "dev-main",
         "juliangorge/users": "dev-main",
+        "kreait/firebase-php": "^6.9",
         "laminas-api-tools/api-tools": "^1.6.0",
         "laminas-api-tools/api-tools-content-negotiation": "^1.6.0",
         "laminas-api-tools/api-tools-documentation": "^1.3",
