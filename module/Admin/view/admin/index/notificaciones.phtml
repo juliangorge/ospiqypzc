@@ -16,7 +16,6 @@ $this->headLink()
 						<thead>
 							<th><small>Fecha</small></th>
 							<th width="70%"><small>Mensaje</small></th>
-							<th></th>
 						</thead>
 					</table>
             	</div>
@@ -51,12 +50,6 @@ $(document).ready(function () {
 			{ data: {text: 'text', url: 'url'},
 				render: function(data, type, row, meta){
 					return '<a href="' + data.url + '" target="_blank">' + data.text + '</a>';
-				}
-			},
-			{ data: 'id',
-    			sortable: false,
-				render: function(data, type, row, meta){
-					return '<a class="btn btn-danger btn-sm" href="/notificaciones/delete/' + data + '"><small><i class="uil uil-trash-alt"></i></small></a>';
 				}
 			},
         ],

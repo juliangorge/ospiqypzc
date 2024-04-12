@@ -2,6 +2,7 @@
 namespace Admin\Service;
 
 use Google\Cloud\Firestore\FirestoreClient;
+use Aws\S3\S3Client;
 
 class AffiliatesBucket {
 
@@ -14,9 +15,23 @@ class AffiliatesBucket {
 		$this->em = $em;
 		$this->config = $config;
 
-        //shell_exec('aws s3 cp s3://saas-padron-backup/10/export-afiliados-latest.csv ' . $this->config['exportAfiliadosFile']);
+        $s3Client = new S3Client([
+            'version' => 'latest',
+            'region' => 'us-east-1',
+            'credentials' => [
+                'key' => $this->config['awsBucketKey'],
+                'secret' => $this->config['awsBucketSecret'],
+            ],
+        ]);
 
-		$this->filename = $this->config['exportAfiliadosFile'];
+        $this->filename = $this->config['exportAfiliadosFile'];
+
+        $s3Client->getObject([
+            'Bucket' => 'saas-padron-backup',
+            'Key'    => '10/export-afiliados-latest.csv',
+            'SaveAs' => $this->filename
+        ]);
+		
 		$this->firestore = new FirestoreClient([
             'projectId' => $this->config['firestore_projectId'],
             'keyFilePath' => $this->config['firestore_keyFilePath']

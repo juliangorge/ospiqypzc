@@ -112,11 +112,13 @@ class IndexController extends AbstractActionController
 
         $plugin = $this->plugin(\Admin\Plugin\AppPlugin::class);
         $filterData = $plugin->buildForDataTables($data);
+        $filterData['parameters']['user_id'] = $this->identity()['id'];
 
         $data = $this->em->createQuery('
             SELECT ' . $filterData['columns'] . '
             FROM Juliangorge\Notifications\Entity\PanelNotification i
-            ' . ($filterData['filter_by'] != '' ? 'WHERE '. $filterData['filter_by'] : '') . '
+            WHERE i.user_id = :user_id
+            ' . ($filterData['filter_by'] != '' ? ' AND '. $filterData['filter_by'] : '') . '
             ' . ($filterData['order_by'] != '' ? 'ORDER BY ' . $filterData['order_by'] : '') . '
         ')
         ->setParameters($filterData['parameters'])
@@ -124,8 +126,8 @@ class IndexController extends AbstractActionController
         ->setMaxResults($filterData['length'])->getResult();
 
         return new JsonModel([
-            'recordsTotal' => $filterData['length'],
-            'recordsFiltered' => $this->em->createQuery('SELECT COUNT(i.id) FROM Juliangorge\Notifications\Entity\PanelNotification i')->getSingleScalarResult(),
+            'recordsTotal' => $this->em->createQuery('SELECT COUNT(i.id) FROM Juliangorge\Notifications\Entity\PanelNotification i')->getSingleScalarResult(),
+            'recordsFiltered' => sizeof($data),
             'data' => $data
         ]);
     }

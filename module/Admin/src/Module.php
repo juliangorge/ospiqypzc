@@ -2,9 +2,6 @@
 namespace Admin;
 
 use Laminas\Mvc\MvcEvent;
-use Laminas\Session\SessionManager;
-use Laminas\Mvc\Controller\AbstractActionController;
-
 use Laminas\Mvc\I18n\Translator;
 use Laminas\I18n\Translator\Translator as I18nTranslator;
 use Laminas\Validator\AbstractValidator;
@@ -20,9 +17,7 @@ class Module
     public function onBootstrap(MvcEvent $event)
     {
         $application = $event->getApplication();
-        $config = $application->getConfig();
         $serviceManager = $application->getServiceManager();
-        $sessionManager = $serviceManager->get(SessionManager::class);
 
         $eventManager = $application->getEventManager();
         $eventManager->attach('dispatch', [$this, 'dispatch'], 2);
@@ -36,7 +31,6 @@ class Module
     {
         $application = $event->getApplication();
         $sm = $application->getServiceManager();
-        $sharedManager = $application->getEventManager()->getSharedManager();
 
         $appPlugin = $sm->get('ControllerPluginManager')->get('Admin\Plugin\AppPlugin');
         $viewModel = $event->getViewModel();

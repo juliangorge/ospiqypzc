@@ -9,7 +9,7 @@ $this->headLink()
 	<div class="col-md-12">
 		<div class="page-title-box">
 			<div class="page-title-right d-block">
-				<a href="/admin/users" class="btn btn-secondary btn-sm">Ver Usuarios</a>
+				<a href="/<?= $this->route ?>" class="btn btn-secondary btn-sm">Ver Usuarios</a>
 				<a href="/<?= $this->route ?>/roles" class="btn btn-secondary btn-sm">Ver Roles</a>
 				<a href="/<?= $this->route ?>/privilege" class="btn btn-primary btn-sm"><i class="mdi mdi-pencil"></i> Nuevo</a>
 			</div>
@@ -35,6 +35,7 @@ $this->headLink()
 </div>
 
 <?php
+$route = $this->route;
 $data = json_encode($this->data);
 $this->inlineScript()
 	->prependFile('/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js')
@@ -59,9 +60,9 @@ $(document).ready(function () {
         		className: 'dt-body-right',
 				render: function(data, type, row, meta){
 					return `
-						<a class="btn btn-primary btn-sm" href="/admin/users/privilege/` + data + `"><i class="mdi mdi-pencil"></i></a>
+						<a class="btn btn-primary btn-sm" href="/$route/privilege/` + data + `"><i class="mdi mdi-pencil"></i></a>
 					`;
-					//<a class="btn btn-danger btn-sm" href="/admin/users/delete-privilege/` + data + `"><i class="mdi mdi-delete"></i></a>
+					//<a class="btn btn-danger btn-sm" href="/$route/delete-privilege/` + data + `"><i class="mdi mdi-delete"></i></a>
 				}
 			},
         ],

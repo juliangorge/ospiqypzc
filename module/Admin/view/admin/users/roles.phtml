@@ -31,6 +31,7 @@ $this->headLink()
 </div>
 
 <?php
+$route = $this->route;
 $data = json_encode($this->data);
 $this->inlineScript()
 	->prependFile('/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js')
@@ -53,10 +54,10 @@ $(document).ready(function () {
         		className: 'dt-body-right',
 				render: function(data, type, row, meta){
 					return `
-						<a class="btn btn-secondary btn-sm" href="/admin/users/privileges-by-role/` + data + `"><i class="mdi mdi-pencil"></i> Privilegios</a>
-						<a class="btn btn-primary btn-sm" href="/admin/users/role/` + data + `"><i class="mdi mdi-pencil"></i></a>
+						<a class="btn btn-secondary btn-sm" href="/$route/privileges-by-role/` + data + `"><i class="mdi mdi-pencil"></i> Privilegios</a>
+						<a class="btn btn-primary btn-sm" href="/$route/role/` + data + `"><i class="mdi mdi-pencil"></i></a>
 					`;
-					//<a class="btn btn-danger btn-sm" href="/admin/dashboard/eliminar-privilegio/` + data + `"><i class="mdi mdi-delete"></i></a>
+					//<a class="btn btn-danger btn-sm" href="/$route/eliminar-privilegio/` + data + `"><i class="mdi mdi-delete"></i></a>
 				}
 			},
         ],
