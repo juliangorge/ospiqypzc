@@ -2,10 +2,8 @@
 namespace Admin\Service;
 
 use Google\Cloud\Firestore\FirestoreClient;
-use Aws\S3\S3Client;
-
 use Kreait\Firebase\Factory;
-
+use Aws\S3\S3Client;
 
 class AffiliatesBucket {
 
@@ -79,27 +77,26 @@ class AffiliatesBucket {
 
             if(!$linea) continue;
             if($linea[0] == NULL) continue;
-            if($linea[7] != '42155196') continue;
 
-            #if($ruta > 0){
+            if($ruta > 0){
 
                 $data_linea = $this->inicializarLinea($linea);
 
-                // if ($data_linea['activo'] == 'Si'){
-                //     try {
-                //         if ($data_linea['parentesco_codigo'] == 0) {
-                //             $data = $this->procesarLineaAfiliado($data_linea);
-                //             $affiliate = $this->cargarAfiliado($data);
-                //             if($affiliate != NULL) $affiliates[] = $affiliate;
-                //         } else {
-                //             $data = $this->procesarLineaFamiliar($data_linea);
-                //             $family = $this->cargarFamiliar($data);
-                //             if($family != NULL) $families[] = $family;
-                //         }
-                //     }catch(\Throwable $e){
-                //         $errors[] = 'Línea ' . $ruta . ' (' . $data_linea['id'] . '): ' . $e->getMessage();
-                //     }
-                // }else{
+                if ($data_linea['activo'] == 'Si'){
+                    try {
+                        if ($data_linea['parentesco_codigo'] == 0) {
+                            $data = $this->procesarLineaAfiliado($data_linea);
+                            $affiliate = $this->cargarAfiliado($data);
+                            if($affiliate != NULL) $affiliates[] = $affiliate;
+                        } else {
+                            $data = $this->procesarLineaFamiliar($data_linea);
+                            $family = $this->cargarFamiliar($data);
+                            if($family != NULL) $families[] = $family;
+                        }
+                    }catch(\Throwable $e){
+                        $errors[] = 'Línea ' . $ruta . ' (' . $data_linea['id'] . '): ' . $e->getMessage();
+                    }
+                }else{
                     try {
                         if ($data_linea['parentesco_codigo'] == 0) {
                             $data = $this->procesarLineaAfiliado($data_linea);
@@ -119,8 +116,8 @@ class AffiliatesBucket {
                     }catch(\Throwable $e){
                         $errors[] = 'Línea ' . $ruta . ' (' . $data_linea['id'] . '): ' . $e->getMessage();
                     }
-                //}
-            #}
+                }
+            }
 
             $ruta++;
         }
@@ -220,8 +217,8 @@ class AffiliatesBucket {
     }
 
     private function setNullIfIsEmpty($string){
-    	if($string == '') return NULL;
-    	return $string;
+        if($string == '') return NULL;
+        return $string;
     }
 
     private function procesarLineaAfiliado(array $array) : array {
@@ -366,7 +363,6 @@ class AffiliatesBucket {
     private function bajarAfiliadosEnFirebase(array $affiliates, &$stats){
         // $factory = (new Factory)->withServiceAccount($this->config['firestore_keyFilePath']);
         // $firebaseAuth = $factory->createAuth();
-                    
         // $user = $firebaseAuth->getUserByEmail($affiliate->getEmail());
         // if($user){
         //     $user->deleteUser($user->uid);
@@ -587,5 +583,4 @@ class AffiliatesBucket {
 
         return $affiliate_number->getAffiliateNumber();
     }
-
 }
