@@ -9,12 +9,12 @@
 		<div class="card">
             <div class="card-body">
             	<h5 class="mt-0 mb-2">
-	            	<?php 
-	        		if($this->item['authorization']->getAuthorizationDate() == NULL){
+	            	<?php
+					if($this->item['authorization']->getAuthorizationDate() == NULL){
 						echo '<span class="badge bg-info">Pendiente</span>';
 					}
 					else{
-						switch($this->item['status']){
+						switch($this->item['authorization']->getStatus()){
 							case 0:
 								echo '<span class="badge bg-warning">No autorizado</span>';
 								break;
