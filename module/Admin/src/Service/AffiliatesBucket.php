@@ -373,12 +373,18 @@ class AffiliatesBucket {
             if($affiliate->getDocumentId()){
                 try {
                     $docRef = $this->firestore->collection('affiliates_data')->document($affiliate->getDocumentId());
-                    $docRef->delete();
-                    
+                    $snapshot = $docRef->snapshot();
+                    if($snapshot->exists()){
+                        $docRef->delete();
+                    }
+
                     if($affiliate->getEmail() != NULL){
-                        $user = $firebaseAuth->getUserByEmail($affiliate->getEmail());
-                        if($user){
-                            $firebaseAuth->deleteUser($user->uid);
+                        try {
+                            $user = $firebaseAuth->getUserByEmail($affiliate->getEmail());
+                            if($user){
+                                $firebaseAuth->deleteUser($user->uid);
+                            }
+                        }catch(\Throwable $e){
                         }
                     }
 
@@ -466,7 +472,10 @@ class AffiliatesBucket {
             if($family->getDocumentId()){
                 try {
                     $docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
-                    $docRef->delete();
+                    $snapshot = $docRef->snapshot();
+                    if($snapshot->exists()){
+                        $docRef->delete();
+                    }
                     $family->setDocumentId(NULL);
                     $stats['removed']++;
                 }
