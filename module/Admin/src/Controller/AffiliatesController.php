@@ -5,6 +5,8 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
+use function GuzzleHttp\debug_resource;
+
 class AffiliatesController extends AbstractActionController
 {
 
@@ -43,23 +45,39 @@ class AffiliatesController extends AbstractActionController
         return $this->em->createQuery('SELECT i FROM Admin\Entity\Affiliates i ORDER BY i.id DESC')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
     }
 
-    public function getAction(){
-        if(!$this->getRequest()->isPost()){
-            header('HTTP/1.0 404 Not Found');
-            exit;
-        }
-
+    public function getAction()
+    {
+        if(!$this->getRequest()->isPost()) return $this->appPlugin()->return403();
         $data = $this->getRequest()->getPost()->toArray();
+        
+        $filterData = $this->appPlugin()->buildForDataTables($data);
+        $filterData['columns'] = str_replace('i.full_name', 'CONCAT(i.first_name, \' \', i.last_name) as full_name', $filterData['columns']);
+        $filterData['filter_by'] = str_replace('i.full_name', 'i.first_name', $filterData['filter_by']);
+        $filterData['order_by'] = str_replace('i.full_name', 'i.first_name', $filterData['order_by']);
 
-        $filter = $this->appPlugin()->buildForDataTables($data);
+        $data = $this->em->createQuery('
+            SELECT ' . $filterData['columns'] . '
+            FROM Admin\Entity\Affiliates i 
+            WHERE 
+            i.is_active = 1 
+            ' . ($filterData['filter_by'] == '' ? '' : 'AND ' . $filterData['filter_by']) . '
+            ORDER BY ' . $filterData['order_by'] . '
+        ')
+        ->setParameters($filterData['parameters'])
+        ->setFirstResult($filterData['start'])
+        ->setMaxResults($filterData['length'])->getResult();
 
-        $filter['columns'] = str_replace('i.full_name', 'CONCAT(i.first_name, \' \', i.last_name) as full_name', $filter['columns']);
-        $filter['filter_by'] = str_replace('i.full_name', 'i.first_name', $filter['filter_by']);
-        $filter['order_by'] = str_replace('i.full_name', 'i.first_name', $filter['order_by']);
+        $recordsFiltered = $this->em->createQuery('
+            SELECT COUNT(i.id) 
+            FROM Admin\Entity\Affiliates i
+            WHERE i.is_active = 1
+        ')->getSingleScalarResult();
 
-        return new JsonModel(
-            $this->appPlugin()->filterForDataTables('Admin\Entity\Affiliates', $filter)
-        );
+        return new JsonModel([
+            'recordsTotal' => $filterData['length'],
+            'recordsFiltered' => $recordsFiltered,
+            'data' => $data
+        ]);
     }
 
 }
