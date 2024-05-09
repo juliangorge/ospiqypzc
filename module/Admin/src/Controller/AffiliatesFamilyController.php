@@ -68,16 +68,24 @@ class AffiliatesFamilyController extends AbstractActionController
             SELECT ' . $filterData['columns'] . '
             FROM Admin\Entity\AffiliatesFamily i
             JOIN Admin\Entity\Affiliates a WITH a.dni = i.affiliate_dni
-            ' . ($filterData['filter_by'] != '' ? 'WHERE '. $filterData['filter_by'] : '') . '
+            WHERE 
+            i.is_active = 1 
+            ' . ($filterData['filter_by'] == '' ? '' : 'AND ' . $filterData['filter_by']) . '
             ORDER BY ' . $filterData['order_by'] . '
         ')
         ->setParameters($filterData['parameters'])
         ->setFirstResult($filterData['start'])
         ->setMaxResults($filterData['length'])->getResult();
 
+        $recordsFiltered = $this->em->createQuery('
+            SELECT COUNT(i.id) 
+            FROM Admin\Entity\Affiliates i
+            WHERE i.is_active = 1
+        ')->getSingleScalarResult();
+
         return new JsonModel([
             'recordsTotal' => $filterData['length'],
-            'recordsFiltered' => $this->em->createQuery('SELECT COUNT(i.id) FROM Admin\Entity\AffiliatesFamily i')->getSingleScalarResult(),
+            'recordsFiltered' => $recordsFiltered,
             'data' => $data
         ]);
     }
