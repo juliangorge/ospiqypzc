@@ -223,17 +223,18 @@ class AffiliatesBucket {
 
     private function procesarLineaAfiliado(array $array) : array {
         $nombre_apellido = $this->procesarNombreApellido($array);
+        $dni = strval((int)$array['numero_documento']);
 
         return [
             'first_name' => trim($nombre_apellido['first_name']),
             'last_name' => trim($nombre_apellido['last_name']),
-            'dni' => strval((int)$array['numero_documento']),
+            'dni' => $dni,
             'email' => $this->setNullIfIsEmpty($array['email']),
             'birthday' => $array['fecha_nacimiento'],
             'location' => $array['localidad'],
             'phone_number' => $this->setNullIfIsEmpty($array['telefono_celular']),
             'credential_number' => $array['numero_afiliado'],
-            'affiliate_type' => $this->procesarTipoAfiliado($array['gerenciador_plan']),
+            'affiliate_type' => $this->procesarTipoAfiliado($array['gerenciador_plan'], $dni),
             'region_id' => $this->procesarRegion($array['provincia']),
             'is_active' => $array['activo'] == 'Si'
         ];
@@ -286,7 +287,7 @@ class AffiliatesBucket {
 
     // PRE: Recibe string
     // POST: Devuelve id tipo afiliado
-    private function procesarTipoAfiliado(string $string) : int {
+    private function procesarTipoAfiliado(string $string, string $dni) : int {
 
         $id = -1;
 
@@ -296,7 +297,9 @@ class AffiliatesBucket {
 
         if ($string == 'MONO') $id = 2;
 
-        if ($id == -1) throw new \Exception('Tipo de Afiliado invalido. Revisar CSV.');
+        if ($string == '') $id = 4;
+
+        if ($id == -1) throw new \Exception('Afiliado ' . $dni . ' con tipo inválido: "' . $string . '". Revisar CSV.');
 
         return $id;
     }
