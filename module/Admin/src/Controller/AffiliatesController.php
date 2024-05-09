@@ -41,10 +41,6 @@ class AffiliatesController extends AbstractActionController
         ]);
     }*/
 
-    private function fetchAll($as_array = false){
-        return $this->em->createQuery('SELECT i FROM Admin\Entity\Affiliates i ORDER BY i.id DESC')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
-    }
-
     public function getAction()
     {
         if(!$this->getRequest()->isPost()) return $this->appPlugin()->return403();
@@ -58,9 +54,8 @@ class AffiliatesController extends AbstractActionController
         $data = $this->em->createQuery('
             SELECT ' . $filterData['columns'] . '
             FROM Admin\Entity\Affiliates i 
-            WHERE 
-            i.is_active = 1 
-            ' . ($filterData['filter_by'] == '' ? '' : 'AND ' . $filterData['filter_by']) . '
+            WHERE i.is_active = 1 
+            ' . ($filterData['filter_by'] != '' ? ' AND ('. $filterData['filter_by'] . ')' : '') . '
             ORDER BY ' . $filterData['order_by'] . '
         ')
         ->setParameters($filterData['parameters'])

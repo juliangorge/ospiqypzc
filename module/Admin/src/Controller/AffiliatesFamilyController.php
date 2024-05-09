@@ -68,9 +68,8 @@ class AffiliatesFamilyController extends AbstractActionController
             SELECT ' . $filterData['columns'] . '
             FROM Admin\Entity\AffiliatesFamily i
             JOIN Admin\Entity\Affiliates a WITH a.dni = i.affiliate_dni
-            WHERE 
-            i.is_active = 1 
-            ' . ($filterData['filter_by'] == '' ? '' : 'AND ' . $filterData['filter_by']) . '
+            WHERE i.is_active = 1 
+            ' . ($filterData['filter_by'] != '' ? ' AND ('. $filterData['filter_by'] . ')' : '') . '
             ORDER BY ' . $filterData['order_by'] . '
         ')
         ->setParameters($filterData['parameters'])
@@ -79,7 +78,7 @@ class AffiliatesFamilyController extends AbstractActionController
 
         $recordsFiltered = $this->em->createQuery('
             SELECT COUNT(i.id) 
-            FROM Admin\Entity\Affiliates i
+            FROM Admin\Entity\AffiliatesFamily i
             WHERE i.is_active = 1
         ')->getSingleScalarResult();
 

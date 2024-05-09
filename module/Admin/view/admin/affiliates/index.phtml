@@ -15,11 +15,11 @@ $this->headLink()
 			<div class="card-body table-responsive">
 				<table id="datatable" class="table dt-responsive nowrap w-100">
 					<thead>
-	                	<th><small>Nombre completo</small></th>
-	                  	<th><small>DNI</small></th>
-	                  	<th><small>Email</small></th>
-	                  	<th><small>Teléfono</small></th>
-	                  	<th><small>Ciudad</small></th>
+						<th><small>Nombre completo</small></th>
+						<th><small>DNI</small></th>
+						<th><small>Email</small></th>
+						<th><small>Teléfono</small></th>
+						<th><small>Ciudad</small></th>
 					</thead>
 				</table>
 			</div>
@@ -40,7 +40,7 @@ echo <<<JS
 $(document).ready(function () {
     "use strict";
     $("#datatable").DataTable({
-    	ajax: {
+		ajax: {
 			url: '/$this->route/get',
 			type: 'POST',
         },
@@ -57,7 +57,7 @@ $(document).ready(function () {
         searching: true,
         keys: true,
         language: { 
-        	url: "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Spanish.json"
+			url: "/js/Spanish.json"
         },
         drawCallback: function () {
             $(".dataTables_paginate > .pagination").addClass("mt-2");
