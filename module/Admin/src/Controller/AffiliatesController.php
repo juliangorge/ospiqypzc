@@ -5,8 +5,6 @@ use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
-use function GuzzleHttp\debug_resource;
-
 class AffiliatesController extends AbstractActionController
 {
 

@@ -1,7 +1,6 @@
 <?php
 namespace Admin\Controller;
 
-use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
@@ -26,16 +25,6 @@ class AffiliatesFamilyController extends AbstractActionController
             'title' => 'Familiares de Afiliados',
             'route' => $this->route
         ]);
-    }
-
-    private function fetchAll(){
-        return $this->em->createQuery('
-            SELECT 
-            CONCAT(i.first_name, \' \', i.last_name) as full_name, i.dni, i.email, i.affiliate_dni, i.phone_number,
-            CONCAT(a.first_name, \' \', a.last_name) as affiliate_full_name
-            FROM Admin\Entity\AffiliatesFamily i 
-            INNER JOIN Admin\Entity\Affiliates a WITH a.dni = i.affiliate_dni
-            ORDER BY a.last_name DESC')->getResult();
     }
 
     public function getAction(){

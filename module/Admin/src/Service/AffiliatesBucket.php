@@ -522,7 +522,7 @@ class AffiliatesBucket {
                 'is_active' => $entity->getIsActive()
             ];
 
-            if($entity_tmp == $array) return NULL;
+            //if($entity_tmp == $array) return NULL;
 
             $entity->fromImport($array);
 
@@ -550,12 +550,14 @@ class AffiliatesBucket {
             $entity->fromImport($array);
             $this->em->persist($entity);
 
-            /*try {
+            /*
+            try {
                 $this->em->flush();
             }
             catch(\Throwable $e){
                 throw new \Exception('Error al crear registro familiar DNI: ' . $array['dni']);
-            }*/
+            }
+            */
 
         }else{
             // Actualizo campo a campo para no pegarle a firebase siempre
@@ -573,7 +575,7 @@ class AffiliatesBucket {
                 'region_id' => $entity->getRegionId(),
             ];
 
-            if($entity_tmp == $array) return;
+            //if($entity_tmp == $array) return;
 
             $entity->fromImport($array);
 

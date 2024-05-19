@@ -87,7 +87,6 @@ class AffiliatesFamily
         $this->affiliate_dni = $array['affiliate_dni'];
         $this->credential_number = $array['credential_number'];
         $this->type_of_family_member_id = $array['type_of_family_member_id'];
-        $this->type_of_family_member = $array['type_of_family_member'];
         $this->phone_number = $array['phone_number'];
         $this->birthday = new \DateTime($array['birthday']);
         $this->region_id = $array['region_id'];
