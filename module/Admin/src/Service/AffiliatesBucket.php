@@ -72,48 +72,56 @@ class AffiliatesBucket {
         $remove_affiliates = [];
         $remove_families = [];
 
-        while(!feof($archivo)){
-            $linea = fgetcsv($archivo, 1000, ';','|','~');
+        // Leer la primera línea que contiene los encabezados
+        $headers = fgetcsv($archivo, 1000, ';');
 
-            if(!$linea) continue;
-            if($linea[0] == NULL) continue;
+        while (!feof($archivo)) {
+            $linea = fgetcsv($archivo, 1000, ';');
 
-            if($ruta > 0){
+            if (!$linea) continue;
+            if ($linea[0] == NULL) continue;
 
-                $data_linea = $this->inicializarLinea($linea);
+            if ($ruta >= 0) {
+                // Combinar encabezados con los datos para crear un array asociativo
+                $data_linea = array_combine($headers, $linea);
+                $data_linea = $this->inicializarLinea($data_linea);
 
-                if ($data_linea['activo'] == 'Si'){
+                if ($data_linea['activo'] == 'Si') {
                     try {
                         if ($data_linea['parentesco_codigo'] == 0) {
                             $data = $this->procesarLineaAfiliado($data_linea);
                             $affiliate = $this->cargarAfiliado($data);
-                            if($affiliate != NULL) $affiliates[] = $affiliate;
+                            if ($affiliate != NULL) $affiliates[] = $affiliate;
                         } else {
                             $data = $this->procesarLineaFamiliar($data_linea);
                             $family = $this->cargarFamiliar($data);
-                            if($family != NULL) $families[] = $family;
+                            if ($family != NULL) $families[] = $family;
                         }
-                    }catch(\Throwable $e){
+                    } catch (\Throwable $e) {
                         $errors[] = 'Línea ' . $ruta . ' (' . $data_linea['id'] . '): ' . $e->getMessage();
                     }
-                }else{
+                } else {
                     try {
                         if ($data_linea['parentesco_codigo'] == 0) {
                             $data = $this->procesarLineaAfiliado($data_linea);
                             $affiliate = $this->em->getRepository(\Admin\Entity\Affiliates::class)->findOneBy(['dni' => $data['dni']]);
-                            if($affiliate != NULL){
+                            if ($affiliate != NULL) {
                                 $affiliate->setIsActive(false);
-                                $remove_affiliates[] = $affiliate;
+                                if($affiliate->getDocumentId()){
+                                    $remove_affiliates[] = $affiliate;
+                                }
                             }
                         } else {
                             $data = $this->procesarLineaFamiliar($data_linea);
                             $family = $this->em->getRepository(\Admin\Entity\AffiliatesFamily::class)->findOneBy(['dni' => $data['dni']]);
-                            if($family != NULL){
+                            if ($family != NULL) {
                                 $family->setIsActive(false);
-                                $remove_families[] = $family;
+                                if($family->getDocumentId()){
+                                    $remove_families[] = $family;
+                                }
                             }
                         }
-                    }catch(\Throwable $e){
+                    } catch (\Throwable $e) {
                         $errors[] = 'Línea ' . $ruta . ' (' . $data_linea['id'] . '): ' . $e->getMessage();
                     }
                 }
@@ -169,51 +177,48 @@ class AffiliatesBucket {
         if(!sizeof($linea)) return [];
 
         return [
-            'id' => $this->encodeToUtf8($linea[0]),
-            'cuil' => $this->encodeToUtf8($linea[1]),
-            'cuil_titular' => $this->encodeToUtf8($linea[2]),
-            'parentesco_codigo' => $this->encodeToUtf8($linea[3]),
-            'parentesco_nombre' => $this->encodeToUtf8($linea[4]),
-            'tipo_documento_codigo' => $this->encodeToUtf8($linea[5]),
-            'tipo_documento_nombre' => $this->encodeToUtf8($linea[6]),
-            'numero_documento' => $this->encodeToUtf8($linea[7]),
-            'nombre' => $this->encodeToUtf8($linea[8]),
-            'apellido' => $this->encodeToUtf8($linea[9]),
-            'fecha_nacimiento' => $this->encodeToUtf8($linea[10]),
-            'tipo_beneficiario_codigo' => $this->encodeToUtf8($linea[11]),
-            'tipo_beneficiario_nombre' => $this->encodeToUtf8($linea[12]),
-            'situacion_revista_codigo' => $this->encodeToUtf8($linea[13]),
-            'situacion_revista_nombre' => $this->encodeToUtf8($linea[14]),
-            'estado_civil_codigo' => $this->encodeToUtf8($linea[15]),
-            'estado_civil_nombre' => $this->encodeToUtf8($linea[16]),
-            'incapacitado_tipo_nombre' => $this->encodeToUtf8($linea[17]),
-            'nacionalidad_codigo' => $this->encodeToUtf8($linea[18]),
-            'nacionalidad_nombre' => $this->encodeToUtf8($linea[19]),
-            'provincia' => $this->encodeToUtf8($linea[20]),
-            'localidad' => $this->encodeToUtf8($linea[21]),
-            'codigo_postal' => $this->encodeToUtf8($linea[22]),
-            'calle' => $this->encodeToUtf8($linea[23]),
-            'numero' => $this->encodeToUtf8($linea[24]),
-            'piso' => $this->encodeToUtf8($linea[25]),
-            'departamento' => $this->encodeToUtf8($linea[26]),
-            'telefono_celular' => $this->encodeToUtf8($linea[27]),
-            'ult_movimiento_alta' => '',
-            'telefono_laboral' => $this->encodeToUtf8($linea[29]),
-            'telefono_particular' => $this->encodeToUtf8($linea[30]),
-            'email' => $this->encodeToUtf8($linea[31]),
-            'sexo' => $this->encodeToUtf8($linea[32]),
-            'numero_afiliado' => $this->encodeToUtf8($linea[33]),
-            'gerenciador_codigo' => $this->encodeToUtf8($linea[34]),
-            'gerenciador_nombre' => $this->encodeToUtf8($linea[35]),
-            'gerenciador_plan' => $this->encodeToUtf8($linea[36]),
-            'ultima_fecha_alta' => $this->encodeToUtf8($linea[37]),
-            'ultima_fecha_baja' => $this->encodeToUtf8($linea[38]),
-            'vencimiento_certificado_estudio' => $this->encodeToUtf8($linea[39]),
-            'activo' => $this->encodeToUtf8($linea[40]),
-            'ultimo_tipo_movimiento' => $this->encodeToUtf8($linea[41]),
-            'tags' => $this->encodeToUtf8($linea[42]),
-            'cuit_empleador' => $this->encodeToUtf8($linea[43]),
-            'razon_social' => $this->encodeToUtf8($linea[44])
+            'id' => $this->encodeToUtf8($linea['Id']),
+            'cuil' => $this->encodeToUtf8($linea['CUIL']),
+            'cuil_titular' => $this->encodeToUtf8($linea['CUILTitular']),
+            'parentesco_codigo' => $this->encodeToUtf8($linea['ParentescoCodigo']),
+            'parentesco_nombre' => $this->encodeToUtf8($linea['ParentescoNombre']),
+            'tipo_documento_codigo' => $this->encodeToUtf8($linea['TipoDocumentoCodigo']),
+            'tipo_documento_nombre' => $this->encodeToUtf8($linea['TipoDocumentoNombre']),
+            'numero_documento' => $this->encodeToUtf8($linea['NroDocumento']),
+            'nombre' => $this->encodeToUtf8($linea['Nombre']),
+            'apellido' => $this->encodeToUtf8($linea['Apellido']),
+            'fecha_nacimiento' => $this->encodeToUtf8($linea['FecNacimiento']),
+            'tipo_beneficiario_codigo' => $this->encodeToUtf8($linea['TipoBeneficiarioCodigo']),
+            'tipo_beneficiario_nombre' => $this->encodeToUtf8($linea['TipoBeneficiarioNombre']),
+            'situacion_revista_codigo' => $this->encodeToUtf8($linea['SitRevistaCodigo']),
+            'situacion_revista_nombre' => $this->encodeToUtf8($linea['SitRevistaNombre']),
+            'estado_civil_codigo' => $this->encodeToUtf8($linea['EstadoCivilCodigo']),
+            'estado_civil_nombre' => $this->encodeToUtf8($linea['EstadoCivilNombre']),
+            'incapacitado_tipo_nombre' => $this->encodeToUtf8($linea['IncapacitadoTipoCodigo']),
+            'nacionalidad_codigo' => $this->encodeToUtf8($linea['NacionalidadCodigo']),
+            'nacionalidad_nombre' => $this->encodeToUtf8($linea['NacionalidadNombre']),
+            'provincia' => $this->encodeToUtf8($linea['Provincia']),
+            'localidad' => $this->encodeToUtf8($linea['Localidad']),
+            'codigo_postal' => $this->encodeToUtf8($linea['CodigoPostal']),
+            'calle' => $this->encodeToUtf8($linea['Calle']),
+            'numero' => $this->encodeToUtf8($linea['Numero']),
+            'piso' => $this->encodeToUtf8($linea['Piso']),
+            'departamento' => $this->encodeToUtf8($linea['Departamento']),
+            'telefono_celular' => $this->encodeToUtf8($linea['TelCel']),
+            'telefono_laboral' => $this->encodeToUtf8($linea['TelLaboral']),
+            'telefono_particular' => $this->encodeToUtf8($linea['TelParticular']),
+            'email' => $this->encodeToUtf8($linea['Email']),
+            'sexo' => $this->encodeToUtf8($linea['Sexo']),
+            'numero_afiliado' => $this->encodeToUtf8($linea['NroAfiliado']),
+            'gerenciador_codigo' => $this->encodeToUtf8($linea['GerenciadorCodigo']),
+            'gerenciador_nombre' => $this->encodeToUtf8($linea['GerenciadorNombre']),
+            'gerenciador_plan' => $this->encodeToUtf8($linea['GerenciadorPlan']),
+            'ultima_fecha_alta' => $this->encodeToUtf8($linea['UltFechaAlta']),
+            'ultima_fecha_baja' => $this->encodeToUtf8($linea['UltFechaBaja']),
+            'vencimiento_certificado_estudio' => $this->encodeToUtf8($linea['Venc. Cert. Estudio']),
+            'activo' => $this->encodeToUtf8($linea['Activo']),
+            'cuit_empleador' => $this->encodeToUtf8($linea['CUITEmpleador']),
+            'razon_social' => $this->encodeToUtf8($linea['RazonSocial'])
         ];
     }
 
@@ -402,24 +407,15 @@ class AffiliatesBucket {
 
     private function actualizarFamiliaresEnFirebase(array $families, &$stats){
         foreach($families as $family){
-
-            //if($family->getIsActive()){
-
+            try {
                 if($family->getDocumentId()){
+                    $docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
                     
-                    try {
-                        // Update
-                        $docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
-                        
-                        $to_firebase = $family->toFirebase();
-                        $to_firebase['affiliate_number'] = $this->obtenerCredencialFamiliar($to_firebase);
-                        $to_firebase['type_of_family_member'] = $this->obtenerMiembroFamiliar($to_firebase);
-                        unset($to_firebase['type_of_family_member_id']);
-                        $docRef->set($to_firebase, ['merge' => true]);    
-                    }
-                    catch(\Throwable $e){
-                        throw new \Exception('Error al actualizar registro para la APP (Firebase), DNI: ' . $family->getDni());
-                    }
+                    $to_firebase = $family->toFirebase();
+                    $to_firebase['affiliate_number'] = $this->obtenerCredencialFamiliar($to_firebase);
+                    $to_firebase['type_of_family_member'] = $this->obtenerMiembroFamiliar($to_firebase);
+                    unset($to_firebase['type_of_family_member_id']);
+                    $docRef->set($to_firebase, ['merge' => true]);    
 
                     $stats['updates']++;
 
@@ -443,15 +439,10 @@ class AffiliatesBucket {
 
                     $stats['created']++;
                 }
-
-            //}else{
-
-                //$docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
-                //$docRef->set(['is_active' => false], ['merge' => true]);
-                //$stats['updates']++;
-
-            //}
-
+            }
+            catch(\Throwable $e){
+                throw new \Exception('Error al actualizar registro para la APP (Firebase), DNI: ' . $family->getDni());
+            }
         }
 
         /*
@@ -465,7 +456,6 @@ class AffiliatesBucket {
             }
         }
         */
-
     }
 
     private function bajarFamiliaresEnFirebase(array $families, &$stats){
