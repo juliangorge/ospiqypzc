@@ -1,20 +1,23 @@
 <?php
+
 namespace Admin\Service;
 
 use Google\Cloud\Firestore\FirestoreClient;
 use Kreait\Firebase\Factory;
 use Aws\S3\S3Client;
 
-class AffiliatesBucket {
+class AffiliatesBucket
+{
 
-	protected $em;
-	protected $config;
+    protected $em;
+    protected $config;
     protected $filename;
     protected $firestore;
 
-	public function __construct($em, $config){
-		$this->em = $em;
-		$this->config = $config;
+    public function __construct($em, $config)
+    {
+        $this->em = $em;
+        $this->config = $config;
         $this->filename = $this->config['exportAfiliadosFile'];
 
         $s3Client = new S3Client([
@@ -31,14 +34,14 @@ class AffiliatesBucket {
             'Key'    => '10/export-afiliados-latest.csv',
             'SaveAs' => $this->filename
         ]);
-		
-		$this->firestore = new FirestoreClient([
+
+        $this->firestore = new FirestoreClient([
             'projectId' => $this->config['firestore_projectId'],
             'keyFilePath' => $this->config['firestore_keyFilePath']
         ]);
-	}
+    }
 
-	/*
+    /*
     Todos los affiliates y affiliates_family serán desactivados y activados en la recursión del archivo csv
     Luego se actualizarán los afiliados activos en firebase y se eliminaran los documentos de los afiliados desactivos.
     
@@ -49,9 +52,9 @@ class AffiliatesBucket {
         Si un afiliado/familiar fue inactivado y nuevamente activado, se debe pisar el anterior registro para respetar la clave única de DNI.
 
     */
-	public function import()
-	{
-		ini_set('max_execution_time', '30000');
+    public function import()
+    {
+        ini_set('max_execution_time', '30000');
         set_time_limit(30000);
         ini_set('memory_limit', '-1');
 
@@ -59,7 +62,7 @@ class AffiliatesBucket {
 
         try {
             $archivo = fopen($this->filename, 'r');
-        }catch(\Throwable $e){
+        } catch (\Throwable $e) {
             throw new \Exception('No se pudo leer el archivo: ' . $e->getMessage());
         }
 
@@ -107,7 +110,7 @@ class AffiliatesBucket {
                             $affiliate = $this->em->getRepository(\Admin\Entity\Affiliates::class)->findOneBy(['dni' => $data['dni']]);
                             if ($affiliate != NULL) {
                                 $affiliate->setIsActive(false);
-                                if($affiliate->getDocumentId()){
+                                if ($affiliate->getDocumentId()) {
                                     $remove_affiliates[] = $affiliate;
                                 }
                             }
@@ -116,7 +119,7 @@ class AffiliatesBucket {
                             $family = $this->em->getRepository(\Admin\Entity\AffiliatesFamily::class)->findOneBy(['dni' => $data['dni']]);
                             if ($family != NULL) {
                                 $family->setIsActive(false);
-                                if($family->getDocumentId()){
+                                if ($family->getDocumentId()) {
                                     $remove_families[] = $family;
                                 }
                             }
@@ -142,39 +145,40 @@ class AffiliatesBucket {
         try {
             $this->actualizarAfiliadosEnFirebase($affiliates, $stats);
             $this->bajarAfiliadosEnFirebase($remove_affiliates, $stats);
-        }
-        catch(\Throwable $e){
+        } catch (\Throwable $e) {
             $errors[] = $e->getMessage();
         }
 
         try {
             $this->actualizarFamiliaresEnFirebase($families, $stats);
             $this->bajarFamiliaresEnFirebase($remove_families, $stats);
-        }
-        catch(\Throwable $e){
+        } catch (\Throwable $e) {
             $errors[] = $e->getMessage();
         }
 
         $this->em->flush();
 
         return [
-            'stats' => $stats, 
+            'stats' => $stats,
             'errors' => $errors
         ];
-	}
+    }
 
-	public function encodeToUtf8($string) {
+    public function encodeToUtf8($string)
+    {
         return mb_convert_encoding($string, "UTF-8", mb_detect_encoding($string, "UTF-8, ISO-8859-1, ISO-8859-15", true));
     }
 
-    public function encodeToIso($string) {
+    public function encodeToIso($string)
+    {
         return mb_convert_encoding($string, "ISO-8859-1", mb_detect_encoding($string, "UTF-8, ISO-8859-1, ISO-8859-15", true));
     }
 
     // PRE:
     // POST: Construye array con los datos seleccionados de la linea
-    private function inicializarLinea(array $linea = []) : array {
-        if(!sizeof($linea)) return [];
+    private function inicializarLinea(array $linea = []): array
+    {
+        if (!sizeof($linea)) return [];
 
         return [
             'id' => $this->encodeToUtf8($linea['Id']),
@@ -222,12 +226,14 @@ class AffiliatesBucket {
         ];
     }
 
-    private function setNullIfIsEmpty($string){
-        if($string == '') return NULL;
+    private function setNullIfIsEmpty($string)
+    {
+        if ($string == '') return NULL;
         return $string;
     }
 
-    private function procesarLineaAfiliado(array $array) : array {
+    private function procesarLineaAfiliado(array $array): array
+    {
         $nombre_apellido = $this->procesarNombreApellido($array);
         $dni = strval((int)$array['numero_documento']);
 
@@ -246,7 +252,8 @@ class AffiliatesBucket {
         ];
     }
 
-    private function procesarLineaFamiliar(array $array) : array {
+    private function procesarLineaFamiliar(array $array): array
+    {
         $nombre_apellido = $this->procesarNombreApellido($array);
 
         return [
@@ -265,7 +272,8 @@ class AffiliatesBucket {
 
     // PRE: Recibe array [nombre, apellido]
     // POST: Devuelve array [nombre, apellido] con el formato correcto
-    private function procesarNombreApellido(array $array) : array {
+    private function procesarNombreApellido(array $array): array
+    {
         /* 
         Nombre y apellido se cargan con dos formatos en el mismo csv:
             1. Dos campos, nombre y apellido, separados por comas.
@@ -275,17 +283,15 @@ class AffiliatesBucket {
             $data = explode(', ', $array['apellido']);
 
             $procesado = [
-                'first_name' => $this->encodeToUtf8(ucwords(mb_strtolower($data[1]))), 
+                'first_name' => $this->encodeToUtf8(ucwords(mb_strtolower($data[1]))),
                 'last_name' => $this->encodeToUtf8(ucwords(mb_strtolower($data[0]))),
             ];
-
         } else {
 
             $procesado = [
                 'first_name' => $this->encodeToUtf8(ucwords(mb_strtolower($array['nombre']))),
                 'last_name' => $this->encodeToUtf8(ucwords(mb_strtolower($array['apellido']))),
             ];
-
         }
 
         return $procesado;
@@ -293,7 +299,8 @@ class AffiliatesBucket {
 
     // PRE: Recibe string
     // POST: Devuelve id tipo afiliado
-    private function procesarTipoAfiliado(string $string, string $dni) : int {
+    private function procesarTipoAfiliado(string $string, string $dni): int
+    {
 
         $id = -1;
 
@@ -312,29 +319,32 @@ class AffiliatesBucket {
 
     // PRE: Recibe string
     // POST: Devuelve id region
-    private function procesarRegion(string $string) : int {
+    private function procesarRegion(string $string): int
+    {
         $id = -1;
-        
+
         if ($string == 'Buenos Aires') $id = 1;
-        
+
         if ($string == 'Entre Rios') $id = 2;
 
         if ($string == 'Capital Federal') $id = 3;
 
         if ($id == -1) throw new \Exception('Tipo de Region invalida. Revisar CSV.');
-        
+
         return $id;
     }
 
     // PRE: Recibe codigo
     // POST: Devuelve id tipo familiar
-    private function procesarTipoFamiliar($codigo) : int {
+    private function procesarTipoFamiliar($codigo): int
+    {
         $id = -1;
-        
+
         if ($codigo == 1) $id = 1;
         if ($codigo == 2) $id = 3;
         if ($codigo == 3) $id = 2;
         if ($codigo == 4) $id = 4;
+        if ($codigo == 5) $id = 9;
         if ($codigo == 8) $id = 5;
         if ($codigo == 9) $id = 6;
 
@@ -343,16 +353,17 @@ class AffiliatesBucket {
         return $id;
     }
 
-    private function actualizarAfiliadosEnFirebase(array $affiliates, &$stats){
-        foreach($affiliates as $affiliate){
-            if($affiliate->getIsActive()){
+    private function actualizarAfiliadosEnFirebase(array $affiliates, &$stats)
+    {
+        foreach ($affiliates as $affiliate) {
+            if ($affiliate->getIsActive()) {
                 try {
-                    if($affiliate->getDocumentId()){
+                    if ($affiliate->getDocumentId()) {
                         $docRef = $this->firestore->collection('affiliates_data')->document($affiliate->getDocumentId());
                         $docRef->set($affiliate->toFirebase(), ['merge' => true]);
 
                         $stats['updates']++;
-                    }else{
+                    } else {
                         $to_firebase = $affiliate->toFirebase(true);
                         $this->firestore->collection('affiliates_dni')->add($affiliate->toAffiliateDni());
                         $documentReference = $this->firestore->collection('affiliates_data')->add($to_firebase);
@@ -361,65 +372,64 @@ class AffiliatesBucket {
 
                         $stats['created']++;
                     }
-                }
-                catch(\Throwable $e){
+                } catch (\Throwable $e) {
                     throw new \Exception('Error al actualizar registro para la APP (Firebase), DNI: ' . $affiliate->getDni());
                 }
             }
         }
     }
 
-    private function bajarAfiliadosEnFirebase(array $affiliates, &$stats){
-        if(sizeof($affiliates)){
+    private function bajarAfiliadosEnFirebase(array $affiliates, &$stats)
+    {
+        if (sizeof($affiliates)) {
             $factory = (new Factory)->withServiceAccount($this->config['firestore_keyFilePath']);
             $firebaseAuth = $factory->createAuth();
         }
 
-        foreach($affiliates as $affiliate){
-            if($affiliate->getDocumentId()){
+        foreach ($affiliates as $affiliate) {
+            if ($affiliate->getDocumentId()) {
                 try {
                     $docRef = $this->firestore->collection('affiliates_data')->document($affiliate->getDocumentId());
                     $snapshot = $docRef->snapshot();
-                    if($snapshot->exists()){
+                    if ($snapshot->exists()) {
                         $docRef->delete();
                     }
 
-                    if($affiliate->getEmail() != NULL){
+                    if ($affiliate->getEmail() != NULL) {
                         try {
                             $user = $firebaseAuth->getUserByEmail($affiliate->getEmail());
-                            if($user){
+                            if ($user) {
                                 $firebaseAuth->deleteUser($user->uid);
                             }
-                        }catch(\Throwable $e){
+                        } catch (\Throwable $e) {
                         }
                     }
 
                     $affiliate->setDocumentId(NULL);
 
                     $stats['removed']++;
-                }
-                catch(\Throwable $e){
+                } catch (\Throwable $e) {
                     throw new \Exception('Error al bajar registro para la APP (Firebase), DNI: ' . $affiliate->getDni());
                 }
             }
         }
     }
 
-    private function actualizarFamiliaresEnFirebase(array $families, &$stats){
-        foreach($families as $family){
+    private function actualizarFamiliaresEnFirebase(array $families, &$stats)
+    {
+        foreach ($families as $family) {
             try {
-                if($family->getDocumentId()){
+                if ($family->getDocumentId()) {
                     $docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
-                    
+
                     $to_firebase = $family->toFirebase();
                     $to_firebase['affiliate_number'] = $this->obtenerCredencialFamiliar($to_firebase);
                     $to_firebase['type_of_family_member'] = $this->obtenerMiembroFamiliar($to_firebase);
                     unset($to_firebase['type_of_family_member_id']);
-                    $docRef->set($to_firebase, ['merge' => true]);    
+                    $docRef->set($to_firebase, ['merge' => true]);
 
                     $stats['updates']++;
-
-                }else{
+                } else {
 
                     // Create
                     $to_firebase = $family->toFirebase(true);
@@ -432,15 +442,13 @@ class AffiliatesBucket {
 
                     try {
                         $this->em->flush();
-                    }
-                    catch(\Throwable $e){
+                    } catch (\Throwable $e) {
                         throw new \Exception('Error al crear registro para la APP (Firebase), DNI: ' . $family->getDni());
                     }
 
                     $stats['created']++;
                 }
-            }
-            catch(\Throwable $e){
+            } catch (\Throwable $e) {
                 throw new \Exception('Error al actualizar registro para la APP (Firebase), DNI: ' . $family->getDni());
             }
         }
@@ -458,32 +466,33 @@ class AffiliatesBucket {
         */
     }
 
-    private function bajarFamiliaresEnFirebase(array $families, &$stats){
-        foreach($families as $family){
-            if($family->getDocumentId()){
+    private function bajarFamiliaresEnFirebase(array $families, &$stats)
+    {
+        foreach ($families as $family) {
+            if ($family->getDocumentId()) {
                 try {
                     $docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
                     $snapshot = $docRef->snapshot();
-                    if($snapshot->exists()){
+                    if ($snapshot->exists()) {
                         $docRef->delete();
                     }
                     $family->setDocumentId(NULL);
                     $stats['removed']++;
-                }
-                catch(\Throwable $e){
+                } catch (\Throwable $e) {
                     throw new \Exception('Error al actualizar registro para la APP (Firebase), DNI: ' . $family->getDni());
                 }
             }
         }
     }
 
-    private function cargarAfiliado(array $array){
+    private function cargarAfiliado(array $array)
+    {
         // Verifico si existe un afiliado con el numero de documento
         // Si existe actualizo
         // Si no, lo creo.
         $entity = $this->em->getRepository('Admin\Entity\Affiliates')->findOneBy(['dni' => $array['dni']]);
 
-        if($entity == NULL){
+        if ($entity == NULL) {
             // Creacion
             $entity = new \Admin\Entity\Affiliates();
             $entity->fromImport($array);
@@ -495,8 +504,7 @@ class AffiliatesBucket {
             catch(\Throwable $e){
                 throw new \Exception('Error al crear registro titular DNI: ' . $array['dni']);
             }*/
-
-        }else{
+        } else {
 
             // Actualizo campo a campo para no pegarle a firebase siempre
             $entity_tmp = [
@@ -519,8 +527,7 @@ class AffiliatesBucket {
 
             try {
                 $this->em->flush();
-            }
-            catch(\Throwable $e){
+            } catch (\Throwable $e) {
                 throw new \Exception('Error al actualizar registro titular DNI: ' . $array['dni'] . '; ' . $e->getMessage());
             }
         }
@@ -528,14 +535,15 @@ class AffiliatesBucket {
         return $entity;
     }
 
-    private function cargarFamiliar(array $array){
+    private function cargarFamiliar(array $array)
+    {
         // Verifico si existe un familiar con el numero de documento
         // Si existe actualizo
         // Si no, lo creo.
 
         $entity = $this->em->getRepository('Admin\Entity\AffiliatesFamily')->findOneBy(['dni' => $array['dni']]);
 
-        if($entity == NULL){
+        if ($entity == NULL) {
             // Creo
             $entity = new \Admin\Entity\AffiliatesFamily();
             $entity->fromImport($array);
@@ -549,8 +557,7 @@ class AffiliatesBucket {
                 throw new \Exception('Error al crear registro familiar DNI: ' . $array['dni']);
             }
             */
-
-        }else{
+        } else {
             // Actualizo campo a campo para no pegarle a firebase siempre
 
             $entity_tmp = [
@@ -572,8 +579,7 @@ class AffiliatesBucket {
 
             try {
                 $this->em->flush();
-            }
-            catch(\Throwable $e){
+            } catch (\Throwable $e) {
                 throw new \Exception('Error al actualizar registro familiar DNI: ' . $array['dni']);
             }
         }
@@ -581,16 +587,18 @@ class AffiliatesBucket {
         return $entity;
     }
 
-    private function obtenerMiembroFamiliar(array $array){
+    private function obtenerMiembroFamiliar(array $array)
+    {
         $family_member = $this->em->find('Admin\Entity\TypeOfFamilyMember', $array['type_of_family_member_id']);
-        if($family_member == NULL) throw new \Exception('Error al cargar Tipo de Miembro Familiar registro DNI: ' . $array['dni']);
+        if ($family_member == NULL) throw new \Exception('Error al cargar Tipo de Miembro Familiar registro DNI: ' . $array['dni']);
 
         return $family_member->getName();
     }
 
-    private function obtenerCredencialFamiliar(array $array){
+    private function obtenerCredencialFamiliar(array $array)
+    {
         $affiliate_number = $this->em->getRepository('Admin\Entity\Affiliates')->findOneBy(['dni' => $array['affiliate_dni']]);
-        if($affiliate_number == NULL) throw new \Exception('Error al cargar Credencial Familiar registro DNI: ' . $array['dni']);
+        if ($affiliate_number == NULL) throw new \Exception('Error al cargar Credencial Familiar registro DNI: ' . $array['dni']);
 
         return $affiliate_number->getAffiliateNumber();
     }
