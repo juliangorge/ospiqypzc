@@ -7,12 +7,11 @@ namespace Admin\Scripts;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Google\Cloud\Firestore\FirestoreClient;
 
 class AffiliatesSync extends Command
 {
-    
+
     protected $em;
     protected $config;
     protected $mail;
@@ -32,21 +31,23 @@ class AffiliatesSync extends Command
         parent::__construct();
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $start = microtime(true);
 
         $bucket = new \Admin\Service\AffiliatesBucket($this->em, $this->config);
         $results = $bucket->import();
-        
+
         $output->writeln('Tiempo en ejecución: ' . round(microtime(true) - $start, 2) . ' segundos');
 
         $has_errors = (sizeof($results['errors']) > 0);
-        if($has_errors){
-            $this->mail->send($this->config['mail_errors'], 
-                            'CRON: Error al actualizar', 
-                            implode($results['errors']),
-                            false);
+        if ($has_errors) {
+            $this->mail->send(
+                $this->config['mail_errors'],
+                'CRON: Error al actualizar',
+                implode($results['errors']),
+                false
+            );
             return Command::FAILURE;
         }
 
@@ -54,5 +55,4 @@ class AffiliatesSync extends Command
 
         return Command::SUCCESS;
     }
-
 }
