@@ -179,6 +179,7 @@ class Affiliates
         if ($new_affiliate) {
             $array['is_data_validated'] = false;
             $array['token'] = '';
+            $array['photo_url'] = '';
         }
 
         return $array;
