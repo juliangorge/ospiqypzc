@@ -139,13 +139,12 @@ class AffiliatesFamily
 
     public function toFirebase()
     {
-        return [
+        $array = [
             'name' => $this->getFullName(),
             'dni' => strval($this->dni),
             'email' => ($this->email == NULL ? '' : $this->email),
             'birthday' => $this->birthday->format('d/m/Y'),
             'phone_number' => ($this->phone_number == NULL ? '' : $this->phone_number),
-            // 'photo_url' => ($this->photo_url == NULL ? '' : $this->photo_url),
             'type_of_family_member_id' => $this->type_of_family_member_id,
             'affiliate_dni' => $this->affiliate_dni,
             'credential_number' => $this->credential_number,
@@ -153,6 +152,11 @@ class AffiliatesFamily
             // Sólo en OSPIQYPZC
             'region_id' => $this->getRegionName(),
         ];
+
+        if ($this->photo_url != NULL) {
+            $array['photo_url'] = $this->photo_url;
+        }
+        return $array;
     }
 
     public function getId()

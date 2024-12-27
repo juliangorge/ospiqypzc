@@ -166,7 +166,6 @@ class Affiliates
             'birthday' => $this->birthday->format('d/m/Y'),
             'location' => ($this->location == NULL ? '' : $this->location),
             'phone_number' => ($this->phone_number == NULL ? '' : $this->phone_number),
-            // 'photo_url' => ($this->photo_url == NULL ? '' : $this->photo_url),
             'active_user' => boolval($this->is_active),
             'affiliate_number' => $this->affiliate_number,
 
@@ -180,6 +179,10 @@ class Affiliates
             $array['is_data_validated'] = false;
             $array['token'] = '';
             $array['photo_url'] = '';
+        } else {
+            if ($this->photo_url != NULL) {
+                $array['photo_url'] = $this->photo_url;
+            }
         }
 
         return $array;
