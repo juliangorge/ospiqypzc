@@ -42,7 +42,7 @@ class Affiliates
     /** @ORM\Column(name="phone_number", type="string", nullable=true) */
     protected $phone_number;
 
-    /** @ORM\Column(name="photo_url", type="string", nullable=true) */
+    /** @ORM\Column(name="photo_url", type="text", nullable=true) */
     protected $photo_url;
 
     /** @ORM\Column(name="is_active", type="boolean", nullable=false) */

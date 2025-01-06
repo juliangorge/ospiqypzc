@@ -47,7 +47,7 @@ class AffiliatesFamily
     /** @ORM\Column(name="birthday", type="date", nullable=false) */
     protected $birthday;
 
-    /** @ORM\Column(name="photo_url", type="string", nullable=true) */
+    /** @ORM\Column(name="photo_url", type="text", nullable=true) */
     protected $photo_url;
 
     /** @ORM\Column(name="document_id", type="string", unique=true, nullable=true) */
