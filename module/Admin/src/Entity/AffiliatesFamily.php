@@ -137,7 +137,7 @@ class AffiliatesFamily
         $this->region_id = $array['region_id'];
     }
 
-    public function toFirebase()
+    public function toFirebase($new_affiliate = false)
     {
         $array = [
             'name' => $this->getFullName(),
@@ -153,8 +153,12 @@ class AffiliatesFamily
             'region_id' => $this->getRegionName(),
         ];
 
-        if ($this->photo_url != NULL) {
-            $array['photo_url'] = $this->photo_url;
+        if ($new_affiliate) {
+            $array['photo_url'] = '';
+        } else {
+            if ($this->photo_url != NULL) {
+                $array['photo_url'] = $this->photo_url;
+            }
         }
         return $array;
     }
