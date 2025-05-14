@@ -182,6 +182,8 @@ class Affiliates
         } else {
             if ($this->photo_url != NULL) {
                 $array['photo_url'] = $this->photo_url;
+            } else {
+                $array['photo_url'] = '';
             }
         }
 
