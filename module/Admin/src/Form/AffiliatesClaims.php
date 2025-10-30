@@ -1,9 +1,10 @@
 <?php
+
 namespace Admin\Form;
 
 use Laminas\Form\Form;
 
-class AffiliatesClaims extends Form
+class Claims extends Form
 {
     public function __construct($em, $name = null, $readonly = false)
     {
@@ -115,7 +116,7 @@ class AffiliatesClaims extends Form
             ]
         ]);
 
-        
+
         $this->add([
             'name' => 'details_answer',
             'type' => 'textarea',

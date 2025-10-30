@@ -1,4 +1,5 @@
 <?php
+
 namespace Admin\Controller;
 
 use Laminas\Mvc\MvcEvent;
@@ -12,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use DoctrineModule\Paginator\Adapter\Collection as CollectionAdapter;
 use Laminas\Paginator\Paginator;
 
-class AffiliatesClaimsController extends AbstractActionController
+class ClaimsController extends AbstractActionController
 {
 
     protected $em;
@@ -22,7 +23,8 @@ class AffiliatesClaimsController extends AbstractActionController
     protected $colection;
     protected $route;
 
-    public function __construct($em, $sm){
+    public function __construct($em, $sm)
+    {
         $this->em = $em;
         $this->sm = $sm;
         $this->config = $sm->get('config');
@@ -54,43 +56,42 @@ class AffiliatesClaimsController extends AbstractActionController
     public function editAction()
     {
         $id = $this->params()->fromRoute('id', 0);
-        if(!$id) return $this->redirect()->toRoute($this->route);
+        if (!$id) return $this->redirect()->toRoute($this->route);
 
-        $entity = $this->em->find('Admin\Entity\AffiliatesClaims', $id);
-        if($entity == NULL) return $this->redirect()->toRoute($this->route);
+        $entity = $this->em->find('Admin\Entity\Claims', $id);
+        if ($entity == NULL) return $this->redirect()->toRoute($this->route);
 
         $readonly = $entity->getDateAnswer() == NULL;
-        $form = new \Admin\Form\AffiliatesClaims($this->em, NULL, !$readonly);
+        $form = new \Admin\Form\Claims($this->em, NULL, !$readonly);
         $form->bind($entity);
 
         $affiliate = $this->em->getRepository('Admin\Entity\Affiliates')->findOneBy(['dni' => $entity->getDni()]);
-        if($affiliate == NULL){
+        if ($affiliate == NULL) {
             $affiliate = $this->em->getRepository('Admin\Entity\AffiliatesFamily')->findOneBy(['dni' => $entity->getDni()]);
-            if($affiliate == NULL) return $this->redirect()->toRoute($this->route);
+            if ($affiliate == NULL) return $this->redirect()->toRoute($this->route);
         }
 
         $form->get('affiliate_fullname')->setValue($affiliate->getFullName());
 
         $request = $this->getRequest();
         $success = true;
-        if($request->isPost()){
+        if ($request->isPost()) {
             $post = array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray());
 
-            if($form->isValid()){
+            if ($form->isValid()) {
                 try {
                     $entity->exchangeArray($post);
                     $this->em->flush();
-                }catch(\Throwable $e){
+                } catch (\Throwable $e) {
                     $this->flashMessenger()->addErrorMessage($e->getMessage());
                     $success = false;
                 }
-
-            }else{
+            } else {
                 $this->flashMessenger()->addErrorMessage($form->getMessages());
                 $success = false;
             }
 
-            if($success){
+            if ($success) {
                 $to_firebase = $entity->toFirebase();
 
                 $user = $this->em->find($this->config['authModule']['userEntity'], $entity->getUserId());
@@ -112,9 +113,10 @@ class AffiliatesClaimsController extends AbstractActionController
         ]);
     }
 
-    public function viewAction(){
+    public function viewAction()
+    {
         $id = $this->params()->fromRoute('id', 0);
-        if(!$id) return $this->redirect()->toRoute($this->route);
+        if (!$id) return $this->redirect()->toRoute($this->route);
 
         $entity = $this->em->createQuery('
             SELECT
@@ -131,23 +133,24 @@ class AffiliatesClaimsController extends AbstractActionController
             i.document_id,
             CONCAT(a.first_name, \' \', a.last_name) as full_name,
             CONCAT(u.first_name, \' \', u.last_name) as administrative_name
-            FROM Admin\Entity\AffiliatesClaims i 
+            FROM Admin\Entity\Claims i 
             INNER JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
             LEFT JOIN ' . $this->config['authModule']['userEntity'] . ' u WITH u.id = i.user_id
             WHERE i.id = :id
         ')->setParameters(['id' => $id])
-        ->getOneOrNullResult();
+            ->getOneOrNullResult();
 
-        if($entity == NULL) return $this->redirect()->toRoute($this->route);
+        if ($entity == NULL) return $this->redirect()->toRoute($this->route);
 
         return new ViewModel([
             'title' => 'Reclamo',
             'item' => $entity,
             'route' => $this->route
-        ]);   
+        ]);
     }
 
-    private function fetchAll($as_array = false){
+    private function fetchAll($as_array = false)
+    {
         return $this->em->createQuery('
             SELECT
             i.id,
@@ -162,10 +165,9 @@ class AffiliatesClaimsController extends AbstractActionController
             i.dni,
             i.document_id,
             CONCAT(a.first_name, \' \', a.last_name) as full_name
-            FROM Admin\Entity\AffiliatesClaims i 
+            FROM Admin\Entity\Claims i 
             INNER JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
             ORDER BY i.id DESC
         ')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
     }
-
 }

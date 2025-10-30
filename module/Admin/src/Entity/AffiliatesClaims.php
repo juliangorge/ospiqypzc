@@ -1,22 +1,23 @@
 <?php
+
 namespace Admin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
-* @ORM\Entity
-* @ORM\Table(name="affiliates_claims", indexes={
-    * @ORM\Index(name="dni", columns={"dni"}),
-    * @ORM\Index(name="user_id", columns={"user_id"})
-* })
-*/
-class AffiliatesClaims
+ * @ORM\Entity
+ * @ORM\Table(name="affiliates_claims", indexes={
+ * @ORM\Index(name="dni", columns={"dni"}),
+ * @ORM\Index(name="user_id", columns={"user_id"})
+ * })
+ */
+class Claims
 {
     /**
-    * @ORM\Id
-    * @ORM\Column(name="id", type="integer")
-    * @ORM\GeneratedValue(strategy="AUTO")
-    */
+     * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /** @ORM\Column(name="claim_id", type="string", nullable=false) */
@@ -28,10 +29,10 @@ class AffiliatesClaims
     /** @ORM\Column(name="details", type="text", nullable=false) */
     protected $details;
 
-    /** @ORM\Column(name="details_answer", type="text", nullable=true) */    
+    /** @ORM\Column(name="details_answer", type="text", nullable=true) */
     protected $details_answer;
 
-    /** @ORM\Column(name="date_answer", type="datetime", nullable=true) */    
+    /** @ORM\Column(name="date_answer", type="datetime", nullable=true) */
     protected $date_answer;
 
     /** @ORM\Column(name="date_created", type="datetime", nullable=false, options={"default": "CURRENT_TIMESTAMP"}) */
@@ -40,7 +41,7 @@ class AffiliatesClaims
     /** @ORM\Column(name="status", type="integer", nullable=false, options={"default": 0}) */
     protected $status;
 
-    /** @ORM\Column(name="user_id", type="integer", nullable=true) */    
+    /** @ORM\Column(name="user_id", type="integer", nullable=true) */
     protected $user_id;
 
     /** @ORM\Column(name="dni", type="string", length=10, unique=false, nullable=false) */
@@ -49,7 +50,8 @@ class AffiliatesClaims
     /** @ORM\Column(name="document_id", type="string", unique=true, nullable=true) */
     protected $document_id;
 
-    public function getArrayCopy(){
+    public function getArrayCopy()
+    {
         return [
             'id' => $this->id,
             'claim_id' => $this->claim_id,
@@ -65,7 +67,8 @@ class AffiliatesClaims
         ];
     }
 
-    public function initialize(array $array){
+    public function initialize(array $array)
+    {
         $this->claim_id = $array['claim_id'];
         $this->title = $array['title'];
         $this->details = $array['details'];
@@ -77,14 +80,16 @@ class AffiliatesClaims
         $this->dni = $array['dni'];
     }
 
-    public function exchangeArray(array $array){
+    public function exchangeArray(array $array)
+    {
         $this->details_answer = $array['details_answer'];
         $this->date_answer = new \DateTime();
         $this->status = 1;
         $this->user_id = $array['user_id'];
     }
 
-    public function fromFirebase(array $array){
+    public function fromFirebase(array $array)
+    {
         $this->claim_id = $array['id'];
         $this->title = $array['title'];
         $this->details = $array['detail'];
@@ -97,33 +102,97 @@ class AffiliatesClaims
         $this->document_id = $array['document_id'];
     }
 
-    public function toFirebase(){
+    public function toFirebase()
+    {
         return [
             'response' => $this->details_answer,
             'response_date' => $this->date_answer->format('d/m/Y'),
         ];
     }
 
-    public function getId(){ return $this->id; }
-    public function getClaimId(){ return $this->claim_id; }
-    public function getTitle(){ return $this->title; }
-    public function getDetails(){ return $this->details; }
-    public function getDetailsAnswer(){ return $this->details_answer; }
-    public function getDateAnswer(){ return $this->date_answer; }
-    public function getDateCreated(){ return $this->date_created; }
-    public function getStatus(){ return $this->status; }
-    public function getDni(){ return $this->dni; }
-    public function getUserId(){ return $this->user_id; }
-    public function getDocumentId(){ return $this->document_id; }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function getClaimId()
+    {
+        return $this->claim_id;
+    }
+    public function getTitle()
+    {
+        return $this->title;
+    }
+    public function getDetails()
+    {
+        return $this->details;
+    }
+    public function getDetailsAnswer()
+    {
+        return $this->details_answer;
+    }
+    public function getDateAnswer()
+    {
+        return $this->date_answer;
+    }
+    public function getDateCreated()
+    {
+        return $this->date_created;
+    }
+    public function getStatus()
+    {
+        return $this->status;
+    }
+    public function getDni()
+    {
+        return $this->dni;
+    }
+    public function getUserId()
+    {
+        return $this->user_id;
+    }
+    public function getDocumentId()
+    {
+        return $this->document_id;
+    }
 
-    public function setClaimId($v){ $this->claim_id = $v; }
-    public function setTitle($v){ $this->title = $v; }
-    public function setDetails($v){ $this->details = $v; }
-    public function setDetailsAnswer($v){ $this->details_answer = $v; }
-    public function setDateAnswer($v){ $this->date_answer = $v; }
-    public function setDateCreated($v){ $this->date_created = $v; }
-    public function setStatus($v){ $this->status = $v; }
-    public function setDni($v){ $this->dni = $v; }
-    public function setUserId($v){ $this->user_id = $v; }
-    public function setDocumentId($v){ $this->document_id = $v; }
+    public function setClaimId($v)
+    {
+        $this->claim_id = $v;
+    }
+    public function setTitle($v)
+    {
+        $this->title = $v;
+    }
+    public function setDetails($v)
+    {
+        $this->details = $v;
+    }
+    public function setDetailsAnswer($v)
+    {
+        $this->details_answer = $v;
+    }
+    public function setDateAnswer($v)
+    {
+        $this->date_answer = $v;
+    }
+    public function setDateCreated($v)
+    {
+        $this->date_created = $v;
+    }
+    public function setStatus($v)
+    {
+        $this->status = $v;
+    }
+    public function setDni($v)
+    {
+        $this->dni = $v;
+    }
+    public function setUserId($v)
+    {
+        $this->user_id = $v;
+    }
+    public function setDocumentId($v)
+    {
+        $this->document_id = $v;
+    }
 }

@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 $menu_default = [
     [
@@ -49,7 +49,7 @@ $menu_app = [
         'route'      => 'admin/affiliates_claims',
         'action'     => 'index',
         'icon'       => 'mdi mdi-book-cancel',
-        'resource'   => 'Admin\Controller\AffiliatesClaimsController',
+        'resource'   => 'Admin\Controller\ClaimsController',
     ],
     [
         'label'      => 'Autorizaciones',
@@ -101,9 +101,9 @@ $administrador = array_merge($menu_default, $menu_noticias, $menu_afiliados, $me
         'resource'   => 'Admin\Controller\UsersController',
     ]
 ]);
-   
+
 return [
-	'navigation' => [
+    'navigation' => [
         'guest' => $menu_default,
         'medico_auditor' => $medico_auditor,
         'administrativo' => $administrativo,

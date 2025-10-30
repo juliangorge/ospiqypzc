@@ -92,6 +92,24 @@ return [
                     ],
                 ],
             ],
+            'api.rest.authorizations' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api/v2/authorizations[/:authorization_id]',
+                    'defaults' => [
+                        'controller' => 'API\\V1\\Rest\\Authorizations\\Controller',
+                    ],
+                ],
+            ],
+            'api.rest.claims' => [
+                'type' => 'Segment',
+                'options' => [
+                    'route' => '/api/v2/claims[/:claim_id]',
+                    'defaults' => [
+                        'controller' => 'API\\V1\\Rest\\Claims\\Controller',
+                    ],
+                ],
+            ],
         ],
     ],
     'controllers' => [
@@ -111,6 +129,8 @@ return [
             9 => 'api.rest.medical-records',
             10 => 'api.rest.affiliates',
             11 => 'api.rest.relatives',
+            12 => 'api.rest.authorizations',
+            13 => 'api.rest.claims',
         ],
     ],
     'api-tools-rest' => [
@@ -310,6 +330,26 @@ return [
             'collection_class' => \API\V1\Rest\Relatives\RelativesCollection::class,
             'service_name' => 'relatives',
         ],
+        'API\\V1\\Rest\\Claims\\Controller' => [
+            'listener' => \API\V1\Rest\Claims\ClaimsResource::class,
+            'route_name' => 'api.rest.claims',
+            'route_identifier_name' => 'claims_id',
+            'collection_name' => 'claims',
+            'entity_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_http_methods' => [
+                0 => 'GET',
+                1 => 'POST',
+            ],
+            'collection_query_whitelist' => [],
+            'page_size' => 25,
+            'page_size_param' => null,
+            'entity_class' => \API\V1\Rest\Claims\ClaimsEntity::class,
+            'collection_class' => \API\V1\Rest\Claims\ClaimsCollection::class,
+            'service_name' => 'claims',
+        ],
     ],
     'api-tools-content-negotiation' => [
         'controllers' => [
@@ -323,6 +363,7 @@ return [
             'API\\V1\\Rest\\MedicalRecords\\Controller' => 'Json',
             'API\\V1\\Rest\\Affiliates\\Controller' => 'Json',
             'API\\V1\\Rest\\Relatives\\Controller' => 'Json',
+            'API\\V1\\Rest\\Claims\\Controller' => 'Json',
         ],
         'accept_whitelist' => [
             'API\\V1\\Rest\\Authorizations\\Controller' => [
@@ -355,6 +396,9 @@ return [
             'API\\V1\\Rest\\Relatives\\Controller' => [
                 0 => 'application/json',
             ],
+            'API\\V1\\Rest\\Claims\\Controller' => [
+                0 => 'application/json',
+            ],
         ],
         'content_type_whitelist' => [
             'API\\V1\\Rest\\Authorizations\\Controller' => [
@@ -385,6 +429,9 @@ return [
                 0 => 'application/json',
             ],
             'API\\V1\\Rest\\Relatives\\Controller' => [
+                0 => 'application/json',
+            ],
+            'API\\V1\\Rest\\Claims\\Controller' => [
                 0 => 'application/json',
             ],
         ],
@@ -511,6 +558,18 @@ return [
                 'route_identifier_name' => 'dni',
                 'is_collection' => true,
             ],
+            \API\V1\Rest\Claims\ClaimsEntity::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.claims',
+                'route_identifier_name' => 'claim_id',
+                'hydrator' => \Laminas\Hydrator\ArraySerializableHydrator::class,
+            ],
+            \API\V1\Rest\Claims\ClaimsCollection::class => [
+                'entity_identifier_name' => 'id',
+                'route_name' => 'api.rest.claims',
+                'route_identifier_name' => 'claim_id',
+                'is_collection' => true,
+            ],
         ],
     ],
     'api-tools' => [
@@ -595,6 +654,14 @@ return [
                 'entity_identifier_name' => 'dni',
                 'table_service' => 'API\\V1\\Rest\\Relatives\\RelativesResource\\Table',
             ],
+            \API\V1\Rest\Claims\ClaimsResource::class => [
+                'adapter_name' => 'dbadapter',
+                'table_name' => 'claims',
+                'hydrator_name' => \Laminas\Hydrator\ArraySerializableHydrator::class,
+                'controller_service_name' => 'API\\V1\\Rest\\Claims\\Controller',
+                'entity_identifier_name' => 'id',
+                'table_service' => 'API\\V1\\Rest\\Claims\\ClaimsResource\\Table',
+            ],
         ],
     ],
     'api-tools-content-validation' => [
@@ -627,6 +694,9 @@ return [
         ],
         'API\\V1\\Rest\\Relatives\\Controller' => [
             'input_filter' => 'API\\V1\\Rest\\Relatives\\Validator',
+        ],
+        'API\\V1\\Rest\\Claims\\Controller' => [
+            'input_filter' => 'API\\V1\\Rest\\Claims\\Validator',
         ],
     ],
     'input_filter_specs' => [
@@ -1799,6 +1869,144 @@ return [
                 ],
             ],
         ],
+        'API\\V1\\Rest\\Claims\\Validator' => [
+            0 => [
+                'name' => 'claim_id',
+                'required' => true,
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                    ],
+                ],
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\StringLength::class,
+                        'options' => [
+                            'min' => 1,
+                            'max' => '255',
+                        ],
+                    ],
+                ],
+            ],
+            1 => [
+                'name' => 'date_answer',
+                'required' => false,
+                'filters' => [],
+                'validators' => [],
+            ],
+            2 => [
+                'name' => 'details',
+                'required' => true,
+                'filters' => [],
+                'validators' => [],
+            ],
+            3 => [
+                'name' => 'details_answer',
+                'required' => false,
+                'filters' => [],
+                'validators' => [],
+            ],
+            4 => [
+                'name' => 'dni',
+                'required' => true,
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                    ],
+                ],
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\StringLength::class,
+                        'options' => [
+                            'min' => 1,
+                            'max' => '10',
+                        ],
+                    ],
+                ],
+            ],
+            5 => [
+                'name' => 'document_id',
+                'required' => false,
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                    ],
+                ],
+                'validators' => [
+                    0 => [
+                        'name' => 'Laminas\\ApiTools\\ContentValidation\\Validator\\DbNoRecordExists',
+                        'options' => [
+                            'adapter' => 'dbadapter',
+                            'table' => 'affiliates_claims',
+                            'field' => 'document_id',
+                        ],
+                    ],
+                    1 => [
+                        'name' => \Laminas\Validator\StringLength::class,
+                        'options' => [
+                            'min' => 1,
+                            'max' => '255',
+                        ],
+                    ],
+                ],
+            ],
+            6 => [
+                'name' => 'status',
+                'required' => false,
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\Digits::class,
+                    ],
+                ],
+                'validators' => [],
+            ],
+            7 => [
+                'name' => 'title',
+                'required' => true,
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StringTrim::class,
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                    ],
+                ],
+                'validators' => [
+                    0 => [
+                        'name' => \Laminas\Validator\StringLength::class,
+                        'options' => [
+                            'min' => 1,
+                            'max' => '65535',
+                        ],
+                    ],
+                ],
+            ],
+            8 => [
+                'name' => 'user_id',
+                'required' => false,
+                'filters' => [
+                    0 => [
+                        'name' => \Laminas\Filter\StripTags::class,
+                    ],
+                    1 => [
+                        'name' => \Laminas\Filter\Digits::class,
+                    ],
+                ],
+                'validators' => [],
+            ],
+        ],
     ],
     'service_manager' => [
         'factories' => [
@@ -1812,6 +2020,8 @@ return [
             'API\\V1\\Rest\\Complaints\\ComplaintsTableGateway' => 'API\\V1\\Rest\\Complaints\\ComplaintsTableGatewayFactory',
             \API\V1\Rest\Refunds\RefundsResource::class => \API\V1\Rest\Refunds\RefundsResourceFactory::class,
             \API\V1\Rest\Refunds\RefundsTableGateway::class => \API\V1\Rest\Refunds\RefundsTableGatewayFactory::class,
+            \API\V1\Rest\Claims\ClaimsResource::class => \API\V1\Rest\Claims\ClaimsResourceFactory::class,
+            \API\V1\Rest\Claims\ClaimsTableGateway::class => \API\V1\Rest\Claims\ClaimsTableGatewayFactory::class,
         ],
     ],
     'api-tools-mvc-auth' => [
@@ -1973,6 +2183,22 @@ return [
                     'POST' => false,
                     'PUT' => false,
                     'PATCH' => true,
+                    'DELETE' => false,
+                ],
+            ],
+            'API\\V1\\Rest\\Claims\\Controller' => [
+                'collection' => [
+                    'GET' => true,
+                    'POST' => true,
+                    'PUT' => false,
+                    'PATCH' => false,
+                    'DELETE' => false,
+                ],
+                'entity' => [
+                    'GET' => true,
+                    'POST' => true,
+                    'PUT' => false,
+                    'PATCH' => false,
                     'DELETE' => false,
                 ],
             ],

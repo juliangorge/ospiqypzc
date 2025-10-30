@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 declare(strict_types=1);
 
@@ -20,7 +20,7 @@ return [
                     ],
                 ],
                 'may_terminate' => true,
-                'child_routes'=> [
+                'child_routes' => [
                     'dashboard' => [
                         'type' => Segment::class,
                         'options' => [
@@ -96,7 +96,7 @@ return [
                         'options' => [
                             'route' => '/affiliates_claims[/:action[/:id]]',
                             'defaults' => [
-                                'controller'    => Controller\AffiliatesClaimsController::class,
+                                'controller'    => Controller\ClaimsController::class,
                                 'action'        => 'index',
                             ],
                         ],
@@ -154,7 +154,7 @@ return [
             Controller\AffiliatesController::class    => Controller\Factory\ControllerFactory::class,
             Controller\AffiliatesFamilyController::class    => Controller\Factory\ControllerFactory::class,
             Controller\AffiliatesAuthorizationsController::class    => Controller\Factory\ControllerFactory::class,
-            Controller\AffiliatesClaimsController::class    => Controller\Factory\ControllerFactory::class,
+            Controller\ClaimsController::class    => Controller\Factory\ControllerFactory::class,
             Controller\MedicalShiftsController::class    => Controller\Factory\ControllerFactory::class,
             Controller\ProfessionalCalendarController::class    => Controller\Factory\ControllerFactory::class,
             Controller\ProfessionalsController::class    => Controller\Factory\ControllerFactory::class,
@@ -182,7 +182,7 @@ return [
             __NAMESPACE__ . '_driver' => [
                 'class' => \Doctrine\ORM\Mapping\Driver\AnnotationDriver::class,
                 'cache' => 'array',
-                'paths' => [ __DIR__ . '/../src/Entity']
+                'paths' => [__DIR__ . '/../src/Entity']
             ],
             'orm_default' => [
                 'drivers' => [
@@ -207,7 +207,7 @@ return [
         'template_map' => [
             'layout/admin'           => __DIR__ . '/../view/layout/admin.phtml',
             'admin/error'            => __DIR__ . '/../view/layout/error.phtml',
-            'admin/index/index'		 => __DIR__ . '/../view/admin/index/index.phtml',
+            'admin/index/index'         => __DIR__ . '/../view/admin/index/index.phtml',
             'admin/index/cambiar-contrase-ña' => __DIR__ . '/../view/admin/users/change-password.phtml',
             'error/404'              => __DIR__ . '/../view/error/404.phtml',
             'error/index'            => __DIR__ . '/../view/error/index.phtml',

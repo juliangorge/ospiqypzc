@@ -1,10 +1,12 @@
 <?php
 
-namespace API\V1\Rest\Authorizations;
+namespace API\V1\Rest\Claims;
 
 use Laminas\ApiTools\DbConnectedResource;
+use Laminas\Db\TableGateway\TableGatewayInterface as TableGateway;
+use Laminas\Paginator\Adapter\DbTableGateway as TableGatewayPaginator;
 
-class AuthorizationsResource extends DbConnectedResource
+class ClaimsResource extends DbConnectedResource
 {
 
     /**
@@ -16,14 +18,7 @@ class AuthorizationsResource extends DbConnectedResource
     public function create($data)
     {
         $data = $this->retrieveData($data);
-
-        // Utilizo default value de MySQL
-        unset($data['date_created']);
-        unset($data['is_approved']);
-        unset($data['user_id']);
-        unset($data['authorization_date']);
-
-        $data['status'] = 0; // V1
+        $data['status'] = 0;
 
         $this->table->insert($data);
         $id = $this->table->getLastInsertValue();
