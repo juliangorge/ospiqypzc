@@ -71,22 +71,22 @@ return [
                             ],
                         ],
                     ],
-                    'affiliates_family' => [
+                    'relatives' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/affiliates_family[/:action[/:id]]',
+                            'route' => '/relatives[/:action[/:id]]',
                             'defaults' => [
-                                'controller'    => Controller\AffiliatesFamilyController::class,
+                                'controller'    => Controller\RelativesController::class,
                                 'action'        => 'index',
                             ],
                         ],
                     ],
-                    'affiliates_authorizations' => [
+                    'authorizations' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/affiliates_authorizations[/:action[/:id]]',
+                            'route' => '/authorizations[/:action[/:id]]',
                             'defaults' => [
-                                'controller'    => Controller\AffiliatesAuthorizationsController::class,
+                                'controller'    => Controller\AuthorizationsController::class,
                                 'action'        => 'index',
                             ],
                         ],
@@ -152,8 +152,8 @@ return [
             Controller\UnionNewsController::class     => Controller\Factory\ControllerFactory::class,
             Controller\UsersController::class    => Controller\Factory\ControllerFactory::class,
             Controller\AffiliatesController::class    => Controller\Factory\ControllerFactory::class,
-            Controller\AffiliatesFamilyController::class    => Controller\Factory\ControllerFactory::class,
-            Controller\AffiliatesAuthorizationsController::class    => Controller\Factory\ControllerFactory::class,
+            Controller\RelativesController::class    => Controller\Factory\ControllerFactory::class,
+            Controller\AuthorizationsController::class    => Controller\Factory\ControllerFactory::class,
             Controller\ClaimsController::class    => Controller\Factory\ControllerFactory::class,
             Controller\MedicalShiftsController::class    => Controller\Factory\ControllerFactory::class,
             Controller\ProfessionalCalendarController::class    => Controller\Factory\ControllerFactory::class,

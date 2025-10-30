@@ -2,10 +2,8 @@
 
 namespace Admin\Controller;
 
-use Laminas\Mvc\MvcEvent;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
-use Laminas\View\Model\JsonModel;
 
 use Google\Cloud\Firestore\FirestoreClient;
 
@@ -20,7 +18,7 @@ class ClaimsController extends AbstractActionController
     protected $sm;
     protected $config;
     protected $firestore;
-    protected $colection;
+    protected $collection;
     protected $route;
 
     public function __construct($em, $sm)
@@ -34,8 +32,8 @@ class ClaimsController extends AbstractActionController
             'keyFilePath' => $this->config['firestore_keyFilePath']
         ]);
 
-        $this->collection = 'affiliates_claims';
-        $this->route = 'admin/affiliates_claims';
+        $this->collection = 'claims';
+        $this->route = 'admin/claims';
     }
 
     public function indexAction()
@@ -67,7 +65,7 @@ class ClaimsController extends AbstractActionController
 
         $affiliate = $this->em->getRepository('Admin\Entity\Affiliates')->findOneBy(['dni' => $entity->getDni()]);
         if ($affiliate == NULL) {
-            $affiliate = $this->em->getRepository('Admin\Entity\AffiliatesFamily')->findOneBy(['dni' => $entity->getDni()]);
+            $affiliate = $this->em->getRepository('Admin\Entity\Relatives')->findOneBy(['dni' => $entity->getDni()]);
             if ($affiliate == NULL) return $this->redirect()->toRoute($this->route);
         }
 

@@ -1,11 +1,12 @@
 <?php
+
 namespace Admin\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
-class MedicalShiftsController extends AbstractActionController 
+class MedicalShiftsController extends AbstractActionController
 {
 
     protected $em;
@@ -14,7 +15,8 @@ class MedicalShiftsController extends AbstractActionController
     protected $route;
     protected $api_credentials;
 
-    public function __construct($em, $sm){
+    public function __construct($em, $sm)
+    {
         $this->em = $em;
         $this->sm = $sm;
         $this->config = $sm->get('config');
@@ -42,11 +44,11 @@ class MedicalShiftsController extends AbstractActionController
         $formErrors = NULL;
         $success = false;
 
-        if($request->isPost()){
+        if ($request->isPost()) {
             $data = $request->getPost()->toArray();
             $form->setData($data);
 
-            if($form->isValid()){
+            if ($form->isValid()) {
                 $data = $form->getData();
                 $data['user_id'] = $this->identity()['id'];
                 $professional_calendar = $this->em->createQuery('
@@ -57,12 +59,12 @@ class MedicalShiftsController extends AbstractActionController
                     a.professional_id = :professional_id AND
                     DATE(a.starting_at) = :starting_at
                 ')
-                ->setParameters([
-                    'medical_center_id' => $data['medical_center_id'],
-                    'professional_id' => $data['professional_id'],
-                    'starting_at' => $data['day']
-                ])
-                ->getOneOrNullResult();
+                    ->setParameters([
+                        'medical_center_id' => $data['medical_center_id'],
+                        'professional_id' => $data['professional_id'],
+                        'starting_at' => $data['day']
+                    ])
+                    ->getOneOrNullResult();
                 $data['professional_calendar_id'] = $professional_calendar->getId();
 
                 $shift = new \Admin\Entity\MedicalShift($data);
@@ -70,12 +72,12 @@ class MedicalShiftsController extends AbstractActionController
                 $professional_calendar->removeShiftOffer($data['time']);
                 $this->em->flush();
                 $success = true;
-            }else{
+            } else {
                 $formErrors = $form->getMessages();
                 $this->layout()->addErrorMessage = $form->getMessages();
             }
 
-            if($success) return $this->redirect()->toRoute('admin/medical_shifts');
+            if ($success) return $this->redirect()->toRoute('admin/medical_shifts');
         }
 
         return new ViewModel([
@@ -90,7 +92,7 @@ class MedicalShiftsController extends AbstractActionController
         $id = $this->params()->fromRoute('id', 0);
 
         $entity = $this->em->find('Admin\Entity\MedicalShift', $id);
-        if($entity == NULL) return $this->redirect()->toRoute('admin/medical_shifts');
+        if ($entity == NULL) return $this->redirect()->toRoute('admin/medical_shifts');
 
         $professional_calendar = $this->em->find('Admin\Entity\ProfessionalCalendar', $entity->getProfessionalCalendarId());
 
@@ -101,16 +103,16 @@ class MedicalShiftsController extends AbstractActionController
         $formErrors = NULL;
         $success = false;
 
-        if($request->isPost()){
+        if ($request->isPost()) {
             $data = $request->getPost()->toArray();
             #echo '<pre>' , print_r($data) , '</pre>';
             #die;
             $form->setData($data);
 
-            if($form->isValid()){
+            if ($form->isValid()) {
                 $data = $form->getData();
 
-                echo '<pre>' , print_r($data) , '</pre>';
+                echo '<pre>', print_r($data), '</pre>';
                 die;
                 $data['user_id'] = $this->identity()['id'];
                 $professional_calendar = $this->em->createQuery('
@@ -121,12 +123,12 @@ class MedicalShiftsController extends AbstractActionController
                     a.professional_id = :professional_id AND
                     DATE(a.starting_at) = :starting_at
                 ')
-                ->setParameters([
-                    'medical_center_id' => $data['medical_center_id'],
-                    'professional_id' => $data['professional_id'],
-                    'starting_at' => $data['day']
-                ])
-                ->getOneOrNullResult();
+                    ->setParameters([
+                        'medical_center_id' => $data['medical_center_id'],
+                        'professional_id' => $data['professional_id'],
+                        'starting_at' => $data['day']
+                    ])
+                    ->getOneOrNullResult();
                 $data['professional_calendar_id'] = $professional_calendar->getId();
 
                 $shift->exchangeArray($data);
@@ -134,12 +136,12 @@ class MedicalShiftsController extends AbstractActionController
                 $professional_calendar->removeShiftOffer($data['time']);
                 $this->em->flush();
                 $success = true;
-            }else{
+            } else {
                 $formErrors = $form->getMessages();
                 $this->layout()->addErrorMessage = $form->getMessages();
             }
 
-            if($success) return $this->redirect()->toRoute('admin/medical_shifts');
+            if ($success) return $this->redirect()->toRoute('admin/medical_shifts');
         }
 
         return new ViewModel([
@@ -151,9 +153,10 @@ class MedicalShiftsController extends AbstractActionController
         ]);
     }
 
-    public function getAction(){
+    public function getAction()
+    {
         $request = $this->getRequest();
-        if(!$request->isPost()){
+        if (!$request->isPost()) {
             header('HTTP/1.0 401');
             exit;
         }
@@ -163,12 +166,13 @@ class MedicalShiftsController extends AbstractActionController
         $filter = $this->appPlugin()->buildForDataTables($data);
 
         $config = $this->em->getConfiguration();
-        $config->addCustomStringFunction('DATE_FORMAT','DoctrineExtensions\Query\Mysql\DateFormat');
+        $config->addCustomStringFunction('DATE_FORMAT', 'DoctrineExtensions\Query\Mysql\DateFormat');
 
         $old_alias = [
-            'i.specialty_name', 'i.shift_datetime', 
-            'i.professional_first_name', 
-            'i.professional_last_name', 
+            'i.specialty_name',
+            'i.shift_datetime',
+            'i.professional_first_name',
+            'i.professional_last_name',
             'i.affiliate_first_name',
             'i.affiliate_last_name',
             'i.family_first_name',
@@ -178,7 +182,8 @@ class MedicalShiftsController extends AbstractActionController
         ];
 
         $new_alias = [
-            'z.name', 's.shift_datetime', 
+            'z.name',
+            's.shift_datetime',
             'p.first_name',
             'p.last_name',
             'a.first_name',
@@ -209,14 +214,14 @@ class MedicalShiftsController extends AbstractActionController
             JOIN Admin\Entity\MedicalCenter m WITH m.id = c.medical_center_id
 
             LEFT JOIN Admin\Entity\Affiliates a WITH a.dni = s.dni
-            LEFT JOIN Admin\Entity\AffiliatesFamily f WITH f.dni = s.dni
+            LEFT JOIN Admin\Entity\Relatives f WITH f.dni = s.dni
 
-            ' . ($filter['filter_by'] != '' ? 'WHERE '. $filter['filter_by'] : '') . '
+            ' . ($filter['filter_by'] != '' ? 'WHERE ' . $filter['filter_by'] : '') . '
             ' . ($filter['order_by'] != '' ? 'ORDER BY ' . $filter['order_by'] : '') . '
         ')
-        ->setParameters($filter['parameters'])
-        ->setFirstResult($filter['start'])
-        ->setMaxResults($filter['length'])->getResult();
+            ->setParameters($filter['parameters'])
+            ->setFirstResult($filter['start'])
+            ->setMaxResults($filter['length'])->getResult();
 
         return new JsonModel([
             'recordsTotal' => $filter['length'],
@@ -229,18 +234,17 @@ class MedicalShiftsController extends AbstractActionController
     {
         $request = $this->getRequest();
 
-        if($request->isPost()){
+        if ($request->isPost()) {
             $data = $request->getPost()->toArray();
-            
+
             $entity = $this->em->find('Admin\Entity\MedicalShift', $data['medical_shift_id']);
-            if($entity == NULL){
+            if ($entity == NULL) {
                 $this->flashMessenger()->addErrorMessage('Turno inexistente');
                 return $this->redirect()->toRoute('admin/medical_shifts');
             }
 
             $entity->setStatus(1);
             $this->em->flush();
-            
         }
 
         $this->flashMessenger()->addSuccessMessage('Turno anulado con éxito');

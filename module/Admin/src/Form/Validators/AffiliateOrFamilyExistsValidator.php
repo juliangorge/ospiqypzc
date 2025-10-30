@@ -1,16 +1,17 @@
 <?php
+
 namespace Admin\Form\Validators;
 
 use Laminas\Validator\AbstractValidator;
 
-class AffiliateOrFamilyExistsValidator extends AbstractValidator 
+class AffiliateOrFamilyExistsValidator extends AbstractValidator
 {
 
     // Available validator options.
     protected $options = [
         'em' => NULL
     ];
-    
+
     // Validation failure message IDs.
     const DNI_NOT_FOUND = 'DNINotFound';
 
@@ -18,20 +19,20 @@ class AffiliateOrFamilyExistsValidator extends AbstractValidator
     protected $messageTemplates = [
         self::DNI_NOT_FOUND  => 'DNI no encontrado'
     ];
-    
-    public function __construct($options = NULL) 
+
+    public function __construct($options = NULL)
     {
         // Set filter options (if provided).
-        if(is_array($options)){            
-            if(isset($options['em'])){
+        if (is_array($options)) {
+            if (isset($options['em'])) {
                 $this->options['em'] = $options['em'];
             }
         }
-        
+
         // Call the parent class constructor
         parent::__construct($options);
     }
-        
+
     public function isValid($value, $context = NULL)
     {
         $em = $this->options['em'];
@@ -40,16 +41,15 @@ class AffiliateOrFamilyExistsValidator extends AbstractValidator
         $affiliate = $em->getRepository('Admin\Entity\Affiliates')->findOneBy(['dni' => $value]);
         $foundValue = ($affiliate != NULL);
 
-        if(!$foundValue){
-            $family = $em->getRepository('Admin\Entity\AffiliatesFamily')->findOneBy(['dni' => $value]);
+        if (!$foundValue) {
+            $family = $em->getRepository('Admin\Entity\Relatives')->findOneBy(['dni' => $value]);
             $foundValue = ($family != NULL);
         }
 
-        if(!$foundValue){
+        if (!$foundValue) {
             $this->error(self::DNI_NOT_FOUND);
         }
 
         return $foundValue;
     }
 }
-

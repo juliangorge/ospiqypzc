@@ -6,12 +6,12 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="affiliates_family", indexes={
+ * @ORM\Table(name="relatives", indexes={
  * @ORM\Index(name="affiliate_dni", columns={"affiliate_dni"}),
  * @ORM\Index(name="type_of_family_member_id", columns={"type_of_family_member_id"})
  * })
  */
-class AffiliatesFamily
+class Relatives
 {
     /**
      * @ORM\Id

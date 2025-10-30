@@ -36,27 +36,27 @@ $menu_afiliados = [
     ],
     [
         'label'      => 'Familiares',
-        'route'      => 'admin/affiliates_family',
+        'route'      => 'admin/relatives',
         'action'     => 'index',
         'icon'       => 'mdi mdi-human-male-female-child',
-        'resource'   => 'Admin\Controller\AffiliatesFamilyController',
+        'resource'   => 'Admin\Controller\RelativesController',
     ],
 ];
 
 $menu_app = [
     [
         'label'      => 'Reclamos',
-        'route'      => 'admin/affiliates_claims',
+        'route'      => 'admin/claims',
         'action'     => 'index',
         'icon'       => 'mdi mdi-book-cancel',
         'resource'   => 'Admin\Controller\ClaimsController',
     ],
     [
         'label'      => 'Autorizaciones',
-        'route'      => 'admin/affiliates_authorizations',
+        'route'      => 'admin/authorizations',
         'action'     => 'index',
         'icon'       => 'mdi mdi-book-check',
-        'resource'   => 'Admin\Controller\AffiliatesAuthorizationsController',
+        'resource'   => 'Admin\Controller\AuthorizationsController',
     ],
     [
         'label'      => 'Turnos Médicos',

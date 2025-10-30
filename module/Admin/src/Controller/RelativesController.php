@@ -1,11 +1,12 @@
 <?php
+
 namespace Admin\Controller;
 
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
 
-class AffiliatesFamilyController extends AbstractActionController
+class RelativesController extends AbstractActionController
 {
 
     protected $em;
@@ -13,10 +14,11 @@ class AffiliatesFamilyController extends AbstractActionController
     protected $config;
     protected $route;
 
-    public function __construct($em, $sm){
+    public function __construct($em, $sm)
+    {
         $this->em = $em;
         $this->sm = $sm;
-        $this->route = 'admin/affiliates_family';
+        $this->route = 'admin/relatives';
     }
 
     public function indexAction()
@@ -27,12 +29,13 @@ class AffiliatesFamilyController extends AbstractActionController
         ]);
     }
 
-    public function getAction(){
-        if(!$this->getRequest()->isPost()){
+    public function getAction()
+    {
+        if (!$this->getRequest()->isPost()) {
             header('HTTP/1.0 404 Not Found');
             exit;
         }
-        
+
         $data = $this->getRequest()->getPost()->toArray();
 
         $plugin = $this->plugin(\Admin\Plugin\AppPlugin::class);
@@ -42,32 +45,32 @@ class AffiliatesFamilyController extends AbstractActionController
             [
                 'i.full_name',
                 'i.affiliate_full_name'
-            ], 
+            ],
             [
                 'CONCAT(i.first_name, \' \', i.last_name) as full_name',
                 'CONCAT(a.first_name, \' \', a.last_name) as affiliate_full_name',
-            ], 
+            ],
             $filterData['columns']
         );
 
-        $filterData['filter_by'] = str_replace(['i.full_name','i.affiliate_full_name'], ['i.first_name','a.first_name'], $filterData['filter_by']);
-        $filterData['order_by'] = str_replace(['i.full_name','i.affiliate_full_name'], ['i.first_name','a.first_name'], $filterData['order_by']);
+        $filterData['filter_by'] = str_replace(['i.full_name', 'i.affiliate_full_name'], ['i.first_name', 'a.first_name'], $filterData['filter_by']);
+        $filterData['order_by'] = str_replace(['i.full_name', 'i.affiliate_full_name'], ['i.first_name', 'a.first_name'], $filterData['order_by']);
 
         $data = $this->em->createQuery('
             SELECT ' . $filterData['columns'] . '
-            FROM Admin\Entity\AffiliatesFamily i
+            FROM Admin\Entity\Relatives i
             JOIN Admin\Entity\Affiliates a WITH a.dni = i.affiliate_dni
             WHERE i.is_active = 1 
-            ' . ($filterData['filter_by'] != '' ? ' AND ('. $filterData['filter_by'] . ')' : '') . '
+            ' . ($filterData['filter_by'] != '' ? ' AND (' . $filterData['filter_by'] . ')' : '') . '
             ORDER BY ' . $filterData['order_by'] . '
         ')
-        ->setParameters($filterData['parameters'])
-        ->setFirstResult($filterData['start'])
-        ->setMaxResults($filterData['length'])->getResult();
+            ->setParameters($filterData['parameters'])
+            ->setFirstResult($filterData['start'])
+            ->setMaxResults($filterData['length'])->getResult();
 
         $recordsFiltered = $this->em->createQuery('
             SELECT COUNT(i.id) 
-            FROM Admin\Entity\AffiliatesFamily i
+            FROM Admin\Entity\Relatives i
             WHERE i.is_active = 1
         ')->getSingleScalarResult();
 
@@ -77,5 +80,4 @@ class AffiliatesFamilyController extends AbstractActionController
             'data' => $data
         ]);
     }
-
 }

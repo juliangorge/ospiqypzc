@@ -4,32 +4,11 @@ namespace Admin\Form;
 
 use Laminas\Form\Form;
 
-class Claims extends Form
+class Authorizations extends Form
 {
     public function __construct($em, $name = null, $readonly = false)
     {
-        parent::__construct('affiliates-claims');
-
-        $this->add([
-            'name' => 'claim_id',
-            'attributes' => [
-                'id' => 'claim_id',
-                'required' => true,
-                'class' => 'form-control',
-                'maxlength' => 100,
-                'placeholder' => 'Reclamo',
-                'readonly' => 'readonly'
-            ],
-            'options' => [
-                'label' => 'Reclamo',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
-                'label_attributes' => [
-                    'class' => 'col-form-label'
-                ]
-            ]
-        ]);
+        parent::__construct('authorizations');
 
         $this->add([
             'name' => 'affiliate_fullname',
@@ -38,11 +17,11 @@ class Claims extends Form
                 'required' => true,
                 'class' => 'form-control',
                 'maxlength' => 100,
-                'placeholder' => 'Afiliado',
+                'placeholder' => 'Afiliado/Familiar',
                 'readonly' => 'readonly'
             ],
             'options' => [
-                'label' => 'Afiliado',
+                'label' => 'Afiliado/Familiar',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -53,17 +32,17 @@ class Claims extends Form
         ]);
 
         $this->add([
-            'name' => 'title',
+            'name' => 'type_of_authorization',
             'attributes' => [
-                'id' => 'title',
+                'id' => 'type_of_authorization',
                 'required' => true,
                 'class' => 'form-control',
                 'maxlength' => 100,
-                'placeholder' => 'Título',
+                'placeholder' => 'Tipo de Autorización',
                 'readonly' => 'readonly'
             ],
             'options' => [
-                'label' => 'Título',
+                'label' => 'Tipo de Autorización',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -74,18 +53,17 @@ class Claims extends Form
         ]);
 
         $this->add([
-            'name' => 'dni',
-            'type' => 'number',
+            'name' => 'administrative_name',
             'attributes' => [
-                'id' => 'dni',
+                'id' => 'administrative_name',
                 'required' => true,
                 'class' => 'form-control',
-                'maxlength' => 10,
-                'placeholder' => 'DNI',
+                'maxlength' => 100,
+                'placeholder' => 'Responsable',
                 'readonly' => 'readonly'
             ],
             'options' => [
-                'label' => 'DNI',
+                'label' => 'Responsable',
                 'label_options' => [
                     'disable_html_escape' => true,
                 ],
@@ -96,45 +74,23 @@ class Claims extends Form
         ]);
 
         $this->add([
-            'name' => 'details',
-            'type' => 'textarea',
+            'name' => 'status',
+            'type' => 'radio',
             'attributes' => [
-                'id' => 'details',
+                #'id' => 'status',
                 'required' => true,
-                'class' => 'form-control',
-                'placeholder' => 'Detalles',
-                'readonly' => 'readonly'
+                'class' => 'form-check-input'
             ],
             'options' => [
-                'label' => 'Detalles',
-                'label_options' => [
-                    'disable_html_escape' => true,
-                ],
+                'label' => 'Autorización',
                 'label_attributes' => [
-                    'class' => 'col-form-label'
-                ]
-            ]
-        ]);
-
-
-        $this->add([
-            'name' => 'details_answer',
-            'type' => 'textarea',
-            'attributes' => [
-                'id' => 'details_answer',
-                'required' => true,
-                'class' => 'form-control',
-                'placeholder' => 'Respuesta',
-                'readonly' => $readonly
-            ],
-            'options' => [
-                'label' => 'Respuesta <small>(requerido)</small>',
-                'label_options' => [
-                    'disable_html_escape' => true,
+                    'class' => 'col-sm-12 mb-1'
                 ],
-                'label_attributes' => [
-                    'class' => 'col-form-label'
-                ]
+                'value_options' => [
+                    '0' => 'NO Autorizar',
+                    '1' => 'Autorizar',
+                    '2' => 'Comunicarse con Obra Social'
+                ],
             ]
         ]);
 
@@ -154,12 +110,10 @@ class Claims extends Form
         ]);
 
         $this->setValidationGroup([
-            'claim_id',
             'affiliate_fullname',
-            'title',
-            'dni',
-            'details',
-            'details_answer',
+            'type_of_authorization',
+            'administrative_name',
+            'status',
             'user_id',
             'submit'
         ]);

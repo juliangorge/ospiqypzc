@@ -116,7 +116,7 @@ class AffiliatesBucket
                             }
                         } else {
                             $data = $this->procesarLineaFamiliar($data_linea);
-                            $family = $this->em->getRepository(\Admin\Entity\AffiliatesFamily::class)->findOneBy(['dni' => $data['dni']]);
+                            $family = $this->em->getRepository(\Admin\Entity\Relatives::class)->findOneBy(['dni' => $data['dni']]);
                             if ($family != NULL) {
                                 $family->setIsActive(false);
                                 if ($family->getDocumentId()) {
@@ -541,11 +541,11 @@ class AffiliatesBucket
         // Si existe actualizo
         // Si no, lo creo.
 
-        $entity = $this->em->getRepository('Admin\Entity\AffiliatesFamily')->findOneBy(['dni' => $array['dni']]);
+        $entity = $this->em->getRepository('Admin\Entity\Relatives')->findOneBy(['dni' => $array['dni']]);
 
         if ($entity == NULL) {
             // Creo
-            $entity = new \Admin\Entity\AffiliatesFamily();
+            $entity = new \Admin\Entity\Relatives();
             $entity->fromImport($array);
             $this->em->persist($entity);
 

@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="affiliates_claims", indexes={
+ * @ORM\Table(name="claims", indexes={
  * @ORM\Index(name="dni", columns={"dni"}),
  * @ORM\Index(name="user_id", columns={"user_id"})
  * })

@@ -1,22 +1,23 @@
 <?php
+
 namespace Admin\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
 /**
-* @ORM\Entity
-* @ORM\Table(name="affiliates_authorizations", indexes={
-    * @ORM\Index(name="dni", columns={"dni"}),
-    * @ORM\Index(name="user_id", columns={"user_id"})
-* })
-*/
-class AffiliatesAuthorizations
+ * @ORM\Entity
+ * @ORM\Table(name="authorizations", indexes={
+ * @ORM\Index(name="dni", columns={"dni"}),
+ * @ORM\Index(name="user_id", columns={"user_id"})
+ * })
+ */
+class Authorizations
 {
     /**
-    * @ORM\Id
-    * @ORM\Column(name="id", type="integer")
-    * @ORM\GeneratedValue(strategy="AUTO")
-    */
+     * @ORM\Id
+     * @ORM\Column(name="id", type="integer")
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     protected $id;
 
     /** @ORM\Column(name="authorization_id", type="integer", unique=true, nullable=false) */
@@ -49,7 +50,8 @@ class AffiliatesAuthorizations
     /** @ORM\Column(name="document_id", type="string", unique=true, nullable=true) */
     protected $document_id;
 
-    public function getArrayCopy(){
+    public function getArrayCopy()
+    {
         return [
             'id' => $this->id,
             'authorization_id' => $this->authorization_id,
@@ -65,7 +67,8 @@ class AffiliatesAuthorizations
         ];
     }
 
-    public function initialize(array $array){
+    public function initialize(array $array)
+    {
         $this->authorization_id = $array['authorization_id'];
         $this->dni = $array['dni'];
         $this->user_id = $array['user_id'];
@@ -76,13 +79,15 @@ class AffiliatesAuthorizations
         $this->medical_order_image_url = $array['medical_order_image_url'];
     }
 
-    public function exchangeArray(array $array){
+    public function exchangeArray(array $array)
+    {
         $this->user_id = $array['user_id'];
         $this->authorization_date = new \DateTime();
         $this->status = $array['status'];
     }
 
-    public function fromFirebase(array $array){
+    public function fromFirebase(array $array)
+    {
         $this->authorization_id = $array['id'];
         $this->dni = $array['affiliate_dni'];
         $this->user_id = 1; //$array['user_id'];
@@ -105,38 +110,74 @@ class AffiliatesAuthorizations
         $this->document_id = $array['document_id'];
     }
 
-    public function toFirebase(){
+    public function toFirebase()
+    {
         return [
             'authorization_date' => $this->authorization_date == NULL ? '' : $this->authorization_date->format('d/m/Y'),
             'status' => $this->getStatusText(),
         ];
     }
 
-    public function getId(){ return $this->id; }
-    public function getAuthorizationId(){ return $this->authorization_id; }
-    public function getDni(){ return $this->dni; }
-    public function getUserID(){ return $this->user_id; }
-    public function getAuthorizationDate(){ return $this->authorization_date; }
-    public function getDateCreated(){ return $this->date_created; }
-    public function getStatus(){ return $this->status; }
-    public function getTypeOfAuthorization(){ return $this->type_of_authorization; }
-    public function getMedicalOrderImageUrl(){ return $this->medical_order_image_url; }
-    public function getComplementaryStudiesImageUrl(){ return $this->complementary_studies_image_url; }
-    public function getDocumentId(){ return $this->document_id; }
+    public function getId()
+    {
+        return $this->id;
+    }
+    public function getAuthorizationId()
+    {
+        return $this->authorization_id;
+    }
+    public function getDni()
+    {
+        return $this->dni;
+    }
+    public function getUserID()
+    {
+        return $this->user_id;
+    }
+    public function getAuthorizationDate()
+    {
+        return $this->authorization_date;
+    }
+    public function getDateCreated()
+    {
+        return $this->date_created;
+    }
+    public function getStatus()
+    {
+        return $this->status;
+    }
+    public function getTypeOfAuthorization()
+    {
+        return $this->type_of_authorization;
+    }
+    public function getMedicalOrderImageUrl()
+    {
+        return $this->medical_order_image_url;
+    }
+    public function getComplementaryStudiesImageUrl()
+    {
+        return $this->complementary_studies_image_url;
+    }
+    public function getDocumentId()
+    {
+        return $this->document_id;
+    }
 
-    public function getAttachedImageFile($attachedUrl){
-        if($attachedUrl == NULL) return NULL;
+    public function getAttachedImageFile($attachedUrl)
+    {
+        if ($attachedUrl == NULL) return NULL;
         $url = urldecode(strtok($attachedUrl, '?'));
 
         $split = explode('ospiqyp-oridhean.appspot.com/o/', $url);
         return $split[1];
     }
 
-    public function getStatusText(){
-        if($this->authorization_date == NULL) return 'Pendiente';
+    public function getStatusText()
+    {
+        if ($this->authorization_date == NULL) return 'Pendiente';
 
         $string = '';
-        switch($this->status){
+        switch ($this->status) {
             case 0:
                 $string = 'No Autorizado';
                 break;
@@ -151,14 +192,44 @@ class AffiliatesAuthorizations
         return $string;
     }
 
-    public function setDni($v){ $this->dni = $v; }
-    public function setAuthorizationId($v){ $this->authorization_id = $v; }
-    public function setUserId($v){ $this->user_id = $v; }
-    public function setAuthorizationDate($v){ $this->authorization_date = $v; }
-    public function setDateCreated($v){ $this->date_created = $v; }
-    public function setStatus($v){ $this->status = $v; }
-    public function setTypeOfAuthorization($v){ $this->type_of_authorization = $v; }
-    public function setMedicalOrderImageUrl($v){ $this->medical_order_image_url = $v; }
-    public function setComplementaryStudiesImageUrl($v){ $this->complementary_studies_image_url = $v; }
-    public function setDocumentId($v){ $this->document_id = $v; }
+    public function setDni($v)
+    {
+        $this->dni = $v;
+    }
+    public function setAuthorizationId($v)
+    {
+        $this->authorization_id = $v;
+    }
+    public function setUserId($v)
+    {
+        $this->user_id = $v;
+    }
+    public function setAuthorizationDate($v)
+    {
+        $this->authorization_date = $v;
+    }
+    public function setDateCreated($v)
+    {
+        $this->date_created = $v;
+    }
+    public function setStatus($v)
+    {
+        $this->status = $v;
+    }
+    public function setTypeOfAuthorization($v)
+    {
+        $this->type_of_authorization = $v;
+    }
+    public function setMedicalOrderImageUrl($v)
+    {
+        $this->medical_order_image_url = $v;
+    }
+    public function setComplementaryStudiesImageUrl($v)
+    {
+        $this->complementary_studies_image_url = $v;
+    }
+    public function setDocumentId($v)
+    {
+        $this->document_id = $v;
+    }
 }
