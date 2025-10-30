@@ -1,16 +1,17 @@
 <?php
-namespace API\V1\Rest\AffiliatesAuthorizations;
+
+namespace API\V1\Rest\Affiliates;
 
 use Psr\Container\ContainerInterface;
 use Laminas\Db\ResultSet\HydratingResultSet;
 use Laminas\Hydrator\ArraySerializable;
 
-class AffiliatesAuthorizationsTableGatewayFactory
+class AffiliatesTableGatewayFactory
 {
     public function __invoke(ContainerInterface $container)
     {
-        return new AffiliatesAuthorizationsTableGateway(
-            'affiliates_authorizations',
+        return new AffiliatesTableGateway(
+            'affiliates',
             $container->get('dbadapter'),
             null,
             $this->getResultSetPrototype($container)
@@ -21,6 +22,6 @@ class AffiliatesAuthorizationsTableGatewayFactory
     {
         $hydrators = $container->get('HydratorManager');
         $hydrator = $hydrators->get(ArraySerializable::class);
-        return new HydratingResultSet($hydrator, new AffiliatesAuthorizationsEntity());
+        return new HydratingResultSet($hydrator, new AffiliatesEntity());
     }
 }
