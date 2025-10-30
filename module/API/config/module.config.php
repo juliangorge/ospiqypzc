@@ -1946,7 +1946,7 @@ return [
                         'name' => 'Laminas\\ApiTools\\ContentValidation\\Validator\\DbNoRecordExists',
                         'options' => [
                             'adapter' => 'dbadapter',
-                            'table' => 'affiliates_claims',
+                            'table' => 'claims',
                             'field' => 'document_id',
                         ],
                     ],

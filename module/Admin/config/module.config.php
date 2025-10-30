@@ -91,10 +91,10 @@ return [
                             ],
                         ],
                     ],
-                    'affiliates_claims' => [
+                    'claims' => [
                         'type' => Segment::class,
                         'options' => [
-                            'route' => '/affiliates_claims[/:action[/:id]]',
+                            'route' => '/claims[/:action[/:id]]',
                             'defaults' => [
                                 'controller'    => Controller\ClaimsController::class,
                                 'action'        => 'index',

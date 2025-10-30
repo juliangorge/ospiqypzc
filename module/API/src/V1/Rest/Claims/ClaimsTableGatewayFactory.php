@@ -11,7 +11,7 @@ class ClaimsTableGatewayFactory
     public function __invoke(ContainerInterface $container)
     {
         return new ClaimsTableGateway(
-            'affiliates_claims',
+            'claims',
             $container->get('dbadapter'),
             null,
             $this->getResultSetPrototype($container)
