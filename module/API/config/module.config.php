@@ -322,7 +322,7 @@ return [
                 1 => 'PATCH',
             ],
             'collection_query_whitelist' => [
-                0 => 'main_affiliate_dni',
+                0 => 'affiliate_dni',
             ],
             'page_size' => 25,
             'page_size_param' => null,
