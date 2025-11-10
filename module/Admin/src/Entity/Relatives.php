@@ -156,7 +156,7 @@ class Relatives
         if ($new_relative) {
             $array['photo_url'] = '';
         } else {
-            if ($this->photo_url != NULL) {
+            if ($this->photo_url != NULL && $this->photo_url != '') {
                 $array['photo_url'] = $this->photo_url;
             } else {
                 $array['photo_url'] = '';
