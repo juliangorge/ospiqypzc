@@ -78,6 +78,11 @@ class AffiliatesBucket
         // Leer la primera línea que contiene los encabezados
         $headers = fgetcsv($archivo, 1000, ';');
 
+        // Remover BOM (Byte Order Mark) UTF-8 del primer encabezado si existe
+        if (!empty($headers[0])) {
+            $headers[0] = preg_replace('/^\xEF\xBB\xBF/', '', $headers[0]);
+        }
+
         while (!feof($archivo)) {
             $linea = fgetcsv($archivo, 1000, ';');
 
@@ -87,6 +92,14 @@ class AffiliatesBucket
             if ($ruta >= 0) {
                 // Combinar encabezados con los datos para crear un array asociativo
                 $data_linea = array_combine($headers, $linea);
+
+                // Si array_combine falla (arrays de diferente tamaño), saltar esta línea
+                if ($data_linea === false) {
+                    $errors[] = 'Línea ' . $ruta . ': Número de columnas no coincide con los encabezados (headers: ' . count($headers) . ', datos: ' . count($linea) . ')';
+                    $ruta++;
+                    continue;
+                }
+
                 $data_linea = $this->inicializarLinea($data_linea);
 
                 if ($data_linea['activo'] == 'Si') {
@@ -255,18 +268,21 @@ class AffiliatesBucket
     private function procesarLineaFamiliar(array $array): array
     {
         $nombre_apellido = $this->procesarNombreApellido($array);
+        $dni = strval((int)$array['numero_documento']);
 
         return [
             'first_name' => $nombre_apellido['first_name'],
             'last_name' => $nombre_apellido['last_name'],
-            'dni' => strval((int)$array['numero_documento']),
+            'dni' => $dni,
             'email' => $this->setNullIfIsEmpty($array['email']),
             'credential_number' => $array['numero_afiliado'],
             'affiliate_dni' => strval((int)(substr($array['cuil_titular'], -9, 8))),
             'type_of_family_member_id' => $this->procesarTipoFamiliar($array['parentesco_codigo']),
             'phone_number' => $array['telefono_celular'],
             'birthday' => $array['fecha_nacimiento'],
+            'affiliate_type' => $this->procesarTipoAfiliado($array['gerenciador_plan'], $dni),
             'region_id' => $this->procesarRegion($array['provincia']),
+            'is_active' => $array['activo'] == 'Si'
         ];
     }
 
@@ -505,24 +521,6 @@ class AffiliatesBucket
                 throw new \Exception('Error al crear registro titular DNI: ' . $array['dni']);
             }*/
         } else {
-
-            // Actualizo campo a campo para no pegarle a firebase siempre
-            $entity_tmp = [
-                'first_name' => $entity->getFirstName(),
-                'last_name' => $entity->getLastName(),
-                'dni' => $entity->getDni(),
-                'email' => $entity->getEmail(),
-                'birthday' => $entity->getBirthday()->format('d/m/Y'),
-                'location' => $entity->getLocation(),
-                'phone_number' => $entity->getPhoneNumber(),
-                'credential_number' => $entity->getCredentialNumber(),
-                'affiliate_type' => $entity->getAffiliateType(),
-                'region_id' => $entity->getRegionId(),
-                'is_active' => $entity->getIsActive()
-            ];
-
-            //if($entity_tmp == $array) return NULL;
-
             $entity->fromImport($array);
 
             try {
@@ -558,24 +556,6 @@ class AffiliatesBucket
             }
             */
         } else {
-            // Actualizo campo a campo para no pegarle a firebase siempre
-
-            $entity_tmp = [
-                'first_name' => $entity->getFirstName(),
-                'last_name' => $entity->getLastName(),
-                'dni' => $entity->getDni(),
-                'email' => $entity->getEmail(),
-                'credential_number' => $entity->getCredentialNumber(),
-                'affiliate_dni' => $entity->getAffiliateDni(),
-                'type_of_family_member_id' => $entity->getTypeOfFamilyMemberId(),
-                'phone_number' => $entity->getPhoneNumber(),
-                'birthday' => $entity->getBirthday()->format('d/m/Y'),
-                'affiliate_type' => $entity->getAffiliateType(),
-                'region_id' => $entity->getRegionId(),
-            ];
-
-            //if($entity_tmp == $array) return;
-
             $entity->fromImport($array);
 
             try {
