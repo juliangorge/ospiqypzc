@@ -570,6 +570,7 @@ class AffiliatesBucket
                 'type_of_family_member_id' => $entity->getTypeOfFamilyMemberId(),
                 'phone_number' => $entity->getPhoneNumber(),
                 'birthday' => $entity->getBirthday()->format('d/m/Y'),
+                'affiliate_type' => $entity->getAffiliateType(),
                 'region_id' => $entity->getRegionId(),
             ];
 

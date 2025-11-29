@@ -60,6 +60,12 @@ class Relatives
     /** @ORM\Column(name="region_id", type="integer", nullable=false) */
     protected $region_id;
 
+    /** @ORM\Column(name="affiliate_type", type="integer", nullable=true) */
+    protected $affiliate_type;
+
+    /** @ORM\Column(name="affiliate_number", type="string", nullable=true) */
+    protected $affiliate_number;
+
     public function getArrayCopy()
     {
         return [
@@ -78,6 +84,8 @@ class Relatives
 
             // Sólo en OSPIQYPZC
             'region_id' => $this->region_id,
+            'affiliate_type' => $this->affiliate_type,
+            'affiliate_number' => $this->affiliate_number,
         ];
     }
 
@@ -92,11 +100,12 @@ class Relatives
         $this->type_of_family_member_id = $array['type_of_family_member_id'];
         $this->phone_number = $array['phone_number'];
         $this->birthday = new \DateTime($array['birthday']);
-        $this->region_id = $array['region_id'];
         $this->is_active = true;
 
         // Sólo en OSPIQYPZC
         $this->region_id = $array['region_id'];
+        $this->affiliate_type = $array['affiliate_type'];
+        $this->affiliate_number = strval($array['affiliate_type']) . '00';
     }
 
     public function exchangeArray(array $array)
@@ -110,11 +119,13 @@ class Relatives
         $this->type_of_family_member_id = $array['type_of_family_member_id'];
         $this->phone_number = $array['phone_number'];
         $this->birthday = new \DateTime($array['birthday']);
-        $this->region_id = $array['region_id'];
         $this->is_active = true;
 
         // Sólo en OSPIQYPZC
         $this->region_id = $array['region_id'];
+        $this->affiliate_type = $array['affiliate_type'];
+        $this->credential_number = $array['credential_number'];
+        $this->affiliate_number = strval($array['affiliate_type']) . '00';
     }
 
     public function fromImport(array $array)
@@ -130,11 +141,13 @@ class Relatives
         $this->credential_number = $array['credential_number'];
         $this->type_of_family_member_id = $array['type_of_family_member_id'];
         $this->phone_number = $array['phone_number'];
-        $this->region_id = $array['region_id'];
         $this->is_active = true;
 
         // Sólo en OSPIQYPZC
         $this->region_id = $array['region_id'];
+        $this->affiliate_type = $array['affiliate_type'];
+        $this->credential_number = $array['credential_number'];
+        $this->affiliate_number = strval($array['affiliate_type']) . '00';
     }
 
     public function toFirebase($new_relative = false)
@@ -151,6 +164,8 @@ class Relatives
 
             // Sólo en OSPIQYPZC
             'region_id' => $this->getRegionName(),
+            'affiliate_type' => $this->affiliate_type,
+            'affiliate_number' => $this->affiliate_number,
         ];
 
         if ($new_relative) {
@@ -231,6 +246,14 @@ class Relatives
     {
         return ($this->region_id == 1 ? 'Buenos Aires' : 'Entre Ríos');
     }
+    public function getAffiliateType()
+    {
+        return $this->affiliate_type;
+    }
+    public function getAffiliateNumber()
+    {
+        return $this->affiliate_number;
+    }
 
     public function setFirstName($v)
     {
@@ -285,5 +308,13 @@ class Relatives
     public function setRegionId($v)
     {
         $this->region_id = $v;
+    }
+    public function setAffiliateType($v)
+    {
+        $this->affiliate_type = $v;
+    }
+    public function setAffiliateNumber($v)
+    {
+        $this->affiliate_number = $v;
     }
 }
