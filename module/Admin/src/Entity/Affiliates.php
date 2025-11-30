@@ -78,7 +78,7 @@ class Affiliates
             'birthday' => $this->birthday->format('Y-m-d'),
             'location' => $this->location,
             'phone_number' => $this->phone_number,
-            'is_active' => $this->is_active,
+            'is_active' => (int) $this->is_active,
             'photo_url' => $this->photo_url,
             'affiliate_number' => $this->affiliate_number,
             'token' => $this->token,
