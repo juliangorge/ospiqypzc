@@ -71,8 +71,12 @@ class RelativesController extends AbstractActionController
         $recordsFiltered = $this->em->createQuery('
             SELECT COUNT(i.id) 
             FROM Admin\Entity\Relatives i
+            JOIN Admin\Entity\Affiliates a WITH a.dni = i.affiliate_dni
             WHERE i.is_active = 1
-        ')->getSingleScalarResult();
+            ' . ($filterData['filter_by'] != '' ? ' AND (' . $filterData['filter_by'] . ')' : '') . '
+        ')
+            ->setParameters($filterData['parameters'])
+            ->getSingleScalarResult();
 
         return new JsonModel([
             'recordsTotal' => $filterData['length'],

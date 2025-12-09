@@ -1,4 +1,4 @@
-<?php 
+<?php
 $this->headTitle($this->title);
 $this->headLink()
 	->prependStylesheet('/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css')
@@ -15,11 +15,12 @@ $this->headLink()
 			<div class="card-body table-responsive">
 				<table id="datatable" class="table dt-responsive nowrap w-100">
 					<thead>
-	                  	<th><small>Nombre completo</small></th>
-	                  	<th><small>DNI</small></th>
-	                	<th><small>Afiliado</small></th>
-	                  	<th><small>Email</small></th>
-	                  	<th><small>Teléfono</small></th>
+						<th><small>Nombre completo</small></th>
+						<th><small>DNI</small></th>
+						<th><small>Afiliado</small></th>
+						<th><small>DNI Afiliado</small></th>
+						<th><small>Email</small></th>
+						<th><small>Teléfono</small></th>
 					</thead>
 				</table>
 			</div>
@@ -49,6 +50,7 @@ $(document).ready(function () {
 			{ data: 'full_name' },
 			{ data: 'dni' },
 			{ data: 'affiliate_full_name' },
+			{ data: 'affiliate_dni' },
 			{ data: 'email' },
 			{ data: 'phone_number' },
         ],
