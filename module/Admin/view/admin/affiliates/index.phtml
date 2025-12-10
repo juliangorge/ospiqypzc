@@ -1,4 +1,4 @@
-<?php 
+<?php
 $this->headTitle($this->title);
 $this->headLink()
 	->prependStylesheet('/vendor/datatables.net-bs5/css/dataTables.bootstrap5.min.css')
@@ -20,6 +20,7 @@ $this->headLink()
 						<th><small>Email</small></th>
 						<th><small>Teléfono</small></th>
 						<th><small>Ciudad</small></th>
+						<th><small>Nro. credencial</small></th>
 					</thead>
 				</table>
 			</div>
@@ -27,15 +28,15 @@ $this->headLink()
 	</div>
 </div
 
-<?php
-$this->inlineScript()
-	->prependFile('/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js')
-	->prependFile('/vendor/datatables.net-responsive/js/dataTables.responsive.min.js')
-	->prependFile('/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js')
-	->prependFile('/vendor/datatables.net/js/jquery.dataTables.min.js')
-	->captureStart();
+	<?php
+	$this->inlineScript()
+		->prependFile('/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js')
+		->prependFile('/vendor/datatables.net-responsive/js/dataTables.responsive.min.js')
+		->prependFile('/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js')
+		->prependFile('/vendor/datatables.net/js/jquery.dataTables.min.js')
+		->captureStart();
 
-echo <<<JS
+	echo <<<JS
 
 $(document).ready(function () {
     "use strict";
@@ -50,6 +51,7 @@ $(document).ready(function () {
 			{ data: 'email' },
 			{ data: 'phone_number' },
 			{ data: 'location' },
+			{ data: 'credential_number' },
         ],
         info: false,
         serverSide: true,
@@ -69,5 +71,5 @@ $(document).ready(function () {
 
 
 JS;
-$this->inlineScript()->captureEnd();
-?>
+	$this->inlineScript()->captureEnd();
+	?>
