@@ -369,7 +369,7 @@ class AffiliatesBucket
         return $id;
     }
 
-    private function actualizarAfiliadosEnFirebase(array $affiliates, &$stats)
+    public function actualizarAfiliadosEnFirebase(array $affiliates, &$stats)
     {
         foreach ($affiliates as $affiliate) {
             if ($affiliate->getIsActive()) {
@@ -395,7 +395,7 @@ class AffiliatesBucket
         }
     }
 
-    private function bajarAfiliadosEnFirebase(array $affiliates, &$stats)
+    public function bajarAfiliadosEnFirebase(array $affiliates, &$stats)
     {
         if (sizeof($affiliates)) {
             $factory = (new Factory)->withServiceAccount($this->config['firestore_keyFilePath']);
@@ -431,7 +431,7 @@ class AffiliatesBucket
         }
     }
 
-    private function actualizarFamiliaresEnFirebase(array $families, &$stats)
+    public function actualizarFamiliaresEnFirebase(array $families, &$stats)
     {
         foreach ($families as $family) {
             try {
@@ -482,7 +482,7 @@ class AffiliatesBucket
         */
     }
 
-    private function bajarFamiliaresEnFirebase(array $families, &$stats)
+    public function bajarFamiliaresEnFirebase(array $families, &$stats)
     {
         foreach ($families as $family) {
             if ($family->getDocumentId()) {
