@@ -110,6 +110,7 @@ class Professional
         return [
             'name' => $this->last_name . ', ' .  $this->first_name,
             'dni' => $this->dni,
+            'specialty' => $this->specialties->first()->getName(),
             'type_of_attention' => 'Consultorio'
         ];
     }

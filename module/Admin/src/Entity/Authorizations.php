@@ -113,6 +113,7 @@ class Authorizations
     public function toFirebase()
     {
         return [
+            'administrative_name' => $this->user_id->getDisplayName(),
             'authorization_date' => $this->authorization_date == NULL ? '' : $this->authorization_date->format('d/m/Y'),
             'status' => $this->getStatusText(),
         ];

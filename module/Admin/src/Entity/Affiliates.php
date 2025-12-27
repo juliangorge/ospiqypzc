@@ -152,7 +152,6 @@ class Affiliates
     public function toAffiliateDni()
     {
         return [
-            'name' => $this->getFullName(),
             'dni' => $this->dni
         ];
     }
@@ -176,7 +175,6 @@ class Affiliates
         ];
 
         if ($new_affiliate) {
-            // $array['is_data_validated'] = false;
             $array['token'] = '';
             $array['photo_url'] = '';
         } else {
