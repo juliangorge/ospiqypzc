@@ -42,11 +42,11 @@ class AffiliatesBucket
     }
 
     /*
-    Todos los affiliates y affiliates_family serán desactivados y activados en la recursión del archivo csv
+    Todos los affiliates y family_members serán desactivados y activados en la recursión del archivo csv
     Luego se actualizarán los afiliados activos en firebase y se eliminaran los documentos de los afiliados desactivos.
     
     Feature para el futuro:
-    Agregar is_active para affiliates_family.
+    Agregar is_active para family_members.
 
     Ejemplo de error a cubrir:
         Si un afiliado/familiar fue inactivado y nuevamente activado, se debe pisar el anterior registro para respetar la clave única de DNI.
@@ -67,7 +67,7 @@ class AffiliatesBucket
         }
 
         #$this->em->getConnection()->query('UPDATE affiliates SET is_active = false');
-        #$this->em->getConnection()->query('UPDATE affiliates_family SET is_active = false');
+        #$this->em->getConnection()->query('UPDATE family_members SET is_active = false');
 
         $ruta = 0;
         $affiliates = [];
@@ -155,19 +155,19 @@ class AffiliatesBucket
             'removed' => 0
         ];
 
-        try {
-            $this->actualizarAfiliadosEnFirebase($affiliates, $stats);
-            $this->bajarAfiliadosEnFirebase($remove_affiliates, $stats);
-        } catch (\Throwable $e) {
-            $errors[] = $e->getMessage();
-        }
+        // try {
+        //     $this->actualizarAfiliadosEnFirebase($affiliates, $stats);
+        //     $this->bajarAfiliadosEnFirebase($remove_affiliates, $stats);
+        // } catch (\Throwable $e) {
+        //     $errors[] = $e->getMessage();
+        // }
 
-        try {
-            $this->actualizarFamiliaresEnFirebase($families, $stats);
-            $this->bajarFamiliaresEnFirebase($remove_families, $stats);
-        } catch (\Throwable $e) {
-            $errors[] = $e->getMessage();
-        }
+        // try {
+        //     $this->actualizarFamiliaresEnFirebase($families, $stats);
+        //     $this->bajarFamiliaresEnFirebase($remove_families, $stats);
+        // } catch (\Throwable $e) {
+        //     $errors[] = $e->getMessage();
+        // }
 
         $this->em->flush();
 
@@ -375,14 +375,14 @@ class AffiliatesBucket
             if ($affiliate->getIsActive()) {
                 try {
                     if ($affiliate->getDocumentId()) {
-                        $docRef = $this->firestore->collection('affiliates_data')->document($affiliate->getDocumentId());
+                        $docRef = $this->firestore->collection('affiliates')->document($affiliate->getDocumentId());
                         $docRef->set($affiliate->toFirebase(), ['merge' => true]);
 
                         $stats['updates']++;
                     } else {
                         $to_firebase = $affiliate->toFirebase(true);
                         $this->firestore->collection('affiliates_dni')->add($affiliate->toAffiliateDni());
-                        $documentReference = $this->firestore->collection('affiliates_data')->add($to_firebase);
+                        $documentReference = $this->firestore->collection('affiliates')->add($to_firebase);
                         $affiliate->setDocumentId($documentReference->id());
                         $this->em->flush();
 
@@ -405,7 +405,7 @@ class AffiliatesBucket
         foreach ($affiliates as $affiliate) {
             if ($affiliate->getDocumentId()) {
                 try {
-                    $docRef = $this->firestore->collection('affiliates_data')->document($affiliate->getDocumentId());
+                    $docRef = $this->firestore->collection('affiliates')->document($affiliate->getDocumentId());
                     $snapshot = $docRef->snapshot();
                     if ($snapshot->exists()) {
                         $docRef->delete();
@@ -436,7 +436,7 @@ class AffiliatesBucket
         foreach ($families as $family) {
             try {
                 if ($family->getDocumentId()) {
-                    $docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
+                    $docRef = $this->firestore->collection('family_members')->document($family->getDocumentId());
 
                     $to_firebase = $family->toFirebase();
                     $to_firebase['affiliate_number'] = $this->obtenerCredencialFamiliar($to_firebase);
@@ -453,7 +453,7 @@ class AffiliatesBucket
                     $to_firebase['type_of_family_member'] = $this->obtenerMiembroFamiliar($to_firebase);
                     unset($to_firebase['type_of_family_member_id']);
 
-                    $documentReference = $this->firestore->collection('affiliates_family')->add($to_firebase);
+                    $documentReference = $this->firestore->collection('family_members')->add($to_firebase);
                     $family->setDocumentId($documentReference->id());
 
                     try {
@@ -487,7 +487,7 @@ class AffiliatesBucket
         foreach ($families as $family) {
             if ($family->getDocumentId()) {
                 try {
-                    $docRef = $this->firestore->collection('affiliates_family')->document($family->getDocumentId());
+                    $docRef = $this->firestore->collection('family_members')->document($family->getDocumentId());
                     $snapshot = $docRef->snapshot();
                     if ($snapshot->exists()) {
                         $docRef->delete();

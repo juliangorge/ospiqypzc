@@ -22,6 +22,7 @@ $this->headLink()
 						<th><small>Email</small></th>
 						<th><small>Teléfono</small></th>
 						<th><small>Nro. credencial</small></th>
+						<th><small>Acciones</small></th>
 					</thead>
 				</table>
 			</div>
@@ -55,6 +56,15 @@ $(document).ready(function () {
 			{ data: 'email' },
 			{ data: 'phone_number' },
 			{ data: 'credential_number' },
+			{ data: 'id',
+				sortable: false,
+				className: 'dt-body-right',
+				render: function(data, type, row, meta){
+					return `
+						<a class="btn btn-warning btn-sm" href="/$this->route/export/` + data + `">Exportar a Firebase</a>
+					`;
+				}
+			},
         ],
         info: false,
         serverSide: true,

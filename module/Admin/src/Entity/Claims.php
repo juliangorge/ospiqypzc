@@ -41,7 +41,10 @@ class Claims
     /** @ORM\Column(name="status", type="integer", nullable=false, options={"default": 0}) */
     protected $status;
 
-    /** @ORM\Column(name="user_id", type="integer", nullable=true) */
+    /**
+     * @ORM\ManyToOne(targetEntity="Admin\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     */
     protected $user_id;
 
     /** @ORM\Column(name="dni", type="string", length=10, unique=false, nullable=false) */
@@ -105,7 +108,7 @@ class Claims
     public function toFirebase()
     {
         return [
-            'administrative_name' => $this->user_id->getDisplayName(),
+            'administrative_name' => $this->user_id == NULL ? '' : $this->user_id->getDisplayName(),
             'response' => $this->details_answer,
             'response_date' => $this->date_answer->format('d/m/Y'),
         ];

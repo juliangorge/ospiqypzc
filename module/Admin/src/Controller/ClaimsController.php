@@ -75,6 +75,7 @@ class ClaimsController extends AbstractActionController
         $success = true;
         if ($request->isPost()) {
             $post = array_merge_recursive($request->getPost()->toArray(), $request->getFiles()->toArray());
+            $post['user_id'] = $this->em->find($this->config['authModule']['userEntity'], $this->identity()['id']);
 
             if ($form->isValid()) {
                 try {
@@ -126,14 +127,14 @@ class ClaimsController extends AbstractActionController
             i.date_answer,
             i.date_created,
             i.status,
-            i.user_id,
+            u.id as user_id,
             i.dni,
             i.document_id,
             CONCAT(a.first_name, \' \', a.last_name) as full_name,
             CONCAT(u.first_name, \' \', u.last_name) as administrative_name
             FROM Admin\Entity\Claims i 
             INNER JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
-            LEFT JOIN ' . $this->config['authModule']['userEntity'] . ' u WITH u.id = i.user_id
+            LEFT JOIN i.user_id u
             WHERE i.id = :id
         ')->setParameters(['id' => $id])
             ->getOneOrNullResult();
@@ -159,12 +160,13 @@ class ClaimsController extends AbstractActionController
             i.date_answer,
             i.date_created,
             i.status,
-            i.user_id,
+            u.id as user_id,
             i.dni,
             i.document_id,
             CONCAT(a.first_name, \' \', a.last_name) as full_name
             FROM Admin\Entity\Claims i 
             INNER JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
+            LEFT JOIN i.user_id u
             ORDER BY i.id DESC
         ')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
     }

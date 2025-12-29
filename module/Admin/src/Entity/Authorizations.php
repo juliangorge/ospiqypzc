@@ -26,7 +26,10 @@ class Authorizations
     /** @ORM\Column(name="dni", type="string", length=10, unique=false, nullable=false) */
     protected $dni;
 
-    /** @ORM\Column(name="user_id", type="integer", nullable=true) */
+    /**
+     * @ORM\ManyToOne(targetEntity="Admin\Entity\User")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id", nullable=true)
+     */
     protected $user_id;
 
     /** @ORM\Column(name="authorization_date", type="datetime", nullable=true) */
@@ -113,7 +116,7 @@ class Authorizations
     public function toFirebase()
     {
         return [
-            'administrative_name' => $this->user_id->getDisplayName(),
+            'administrative_name' => $this->user_id == NULL ? '' : $this->user_id->getDisplayName(),
             'authorization_date' => $this->authorization_date == NULL ? '' : $this->authorization_date->format('d/m/Y'),
             'status' => $this->getStatusText(),
         ];

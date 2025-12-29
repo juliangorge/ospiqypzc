@@ -134,7 +134,7 @@ class AuthorizationsController extends AbstractActionController
             FROM Admin\Entity\Authorizations i 
             LEFT JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
             LEFT JOIN Admin\Entity\Relatives f WITH f.dni = i.dni
-            LEFT JOIN ' . $this->config['authModule']['userEntity'] . ' u WITH u.id = i.user_id
+            LEFT JOIN i.user_id u
             WHERE i.id = :id
             ORDER BY i.id DESC
         ')->setParameters(['id' => $id])
@@ -159,7 +159,7 @@ class AuthorizationsController extends AbstractActionController
             i.id,
             i.authorization_id,
             i.dni,
-            i.user_id,
+            u.id as user_id,
             i.authorization_date,
             i.date_created,
             i.status,
@@ -171,7 +171,7 @@ class AuthorizationsController extends AbstractActionController
             FROM Admin\Entity\Authorizations i 
             LEFT JOIN Admin\Entity\Affiliates a WITH a.dni = i.dni
             LEFT JOIN Admin\Entity\Relatives f WITH f.dni = i.dni
-            LEFT JOIN ' . $this->config['authModule']['userEntity'] . ' u WITH u.id = i.user_id
+            LEFT JOIN i.user_id u
             ORDER BY i.id DESC
         ')->getResult($as_array ? \Doctrine\ORM\Query::HYDRATE_ARRAY : NULL);
     }

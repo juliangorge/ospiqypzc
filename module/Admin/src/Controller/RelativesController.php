@@ -2,6 +2,7 @@
 
 namespace Admin\Controller;
 
+use Google\Cloud\Firestore\FirestoreClient;
 use Laminas\Mvc\Controller\AbstractActionController;
 use Laminas\View\Model\ViewModel;
 use Laminas\View\Model\JsonModel;
@@ -18,6 +19,7 @@ class RelativesController extends AbstractActionController
     {
         $this->em = $em;
         $this->sm = $sm;
+        $this->config = $this->sm->get('config');
         $this->route = 'admin/relatives';
     }
 
@@ -27,6 +29,30 @@ class RelativesController extends AbstractActionController
             'title' => 'Familiares de Afiliados',
             'route' => $this->route
         ]);
+    }
+
+    public function exportAction()
+    {
+        $id = $this->params()->fromRoute('id', 0);
+        if (!$id) return $this->redirect()->toRoute($this->route);
+
+        $entity = $this->em->find('Admin\Entity\Relatives', $id);
+        if ($entity == NULL) return $this->redirect()->toRoute($this->route);
+
+        $to_firebase = $entity->toFirebase();
+
+        $firestore = new FirestoreClient([
+            'projectId' => $this->config['firestore_projectId'],
+            'keyFilePath' => $this->config['firestore_keyFilePath']
+        ]);
+
+        $docRef = $firestore->collection('family_members')->add($to_firebase);
+        $docRef->set($to_firebase, ['merge' => true]);
+        $entity->setDocumentId($docRef->id());
+        $this->em->flush();
+
+        $this->flashMessenger()->addSuccessMessage('Familiar exportado a Firebase');
+        return $this->redirect()->toRoute($this->route);
     }
 
     public function getAction()
