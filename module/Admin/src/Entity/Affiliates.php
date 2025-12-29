@@ -161,17 +161,17 @@ class Affiliates
         $array = [
             'name' => $this->getFullName(),
             'dni' => strval($this->dni),
-            'email' => $this->email,
+            'email' => ($this->email == null ? '' : $this->email),
             'birthday' => $this->birthday->format('Y-m-d'),
             'location' =>  $this->location,
-            'phone_number' => $this->phone_number,
+            'phone_number' => ($this->phone_number == null ? '' : $this->phone_number),
             'active_user' => boolval($this->is_active),
             'affiliate_number' => $this->affiliate_number,
             'credential_number' => $this->credential_number,
         ];
 
         if ($new_affiliate) {
-            $array['token'] = null;
+            $array['token'] = '';
             $array['photo_url'] = null;
         } else {
             $array['photo_url'] = $this->photo_url;
