@@ -155,16 +155,14 @@ class Relatives
         $array = [
             'name' => $this->getFullName(),
             'dni' => strval($this->dni),
-            'email' => ($this->email == NULL ? '' : $this->email),
+            'email' => $this->email,
             'birthday' => $this->birthday->format('d/m/Y'),
-            'phone_number' => ($this->phone_number == NULL ? '' : $this->phone_number),
+            'phone_number' => $this->phone_number,
             'type_of_family_member' => $this->type_of_family_member_id->getName(),
             'affiliate_dni' => $this->affiliate_dni,
             'credential_number' => $this->credential_number,
 
             // Sólo en OSPIQYPZC
-            'region_id' => $this->getRegionName(),
-            'affiliate_type' => $this->affiliate_type,
             'affiliate_number' => $this->affiliate_number,
         ];
 
