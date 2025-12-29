@@ -12,6 +12,13 @@ class RelativesTableGateway extends TableGateway
         $select = $this->getSql()->select();
         if (sizeof($data)) $select->where($data->toArray());
 
-        return new DbSelect($select, $this->getAdapter(), $this->getResultSetPrototype());
+        $resultSet = new DbSelect($select, $this->getAdapter(), $this->getResultSetPrototype());
+
+        if ($resultSet->count() == 0) {
+            header('HTTP/1.0 404 Not Found');
+            exit;
+        }
+
+        return $resultSet;
     }
 }

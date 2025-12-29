@@ -162,7 +162,7 @@ class Affiliates
             'name' => $this->getFullName(),
             'dni' => strval($this->dni),
             'email' => ($this->email == NULL ? '' : $this->email),
-            'birthday' => $this->birthday->format('d/m/Y'),
+            'birthday' => $this->birthday->format('Y-m-d'),
             'location' => ($this->location == NULL ? '' : $this->location),
             'phone_number' => ($this->phone_number == NULL ? '' : $this->phone_number),
             'active_user' => boolval($this->is_active),
