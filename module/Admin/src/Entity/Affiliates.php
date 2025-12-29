@@ -161,24 +161,20 @@ class Affiliates
         $array = [
             'name' => $this->getFullName(),
             'dni' => strval($this->dni),
-            'email' => ($this->email == NULL ? '' : $this->email),
+            'email' => $this->email,
             'birthday' => $this->birthday->format('Y-m-d'),
-            'location' => ($this->location == NULL ? '' : $this->location),
-            'phone_number' => ($this->phone_number == NULL ? '' : $this->phone_number),
+            'location' =>  $this->location,
+            'phone_number' => $this->phone_number,
             'active_user' => boolval($this->is_active),
             'affiliate_number' => $this->affiliate_number,
             'credential_number' => $this->credential_number,
         ];
 
         if ($new_affiliate) {
-            $array['token'] = '';
-            $array['photo_url'] = '';
+            $array['token'] = null;
+            $array['photo_url'] = null;
         } else {
-            if ($this->photo_url != NULL && $this->photo_url != '') {
-                $array['photo_url'] = $this->photo_url;
-            } else {
-                $array['photo_url'] = '';
-            }
+            $array['photo_url'] = $this->photo_url;
         }
 
         return $array;
