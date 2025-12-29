@@ -167,10 +167,6 @@ class Affiliates
             'phone_number' => ($this->phone_number == NULL ? '' : $this->phone_number),
             'active_user' => boolval($this->is_active),
             'affiliate_number' => $this->affiliate_number,
-
-            // Sólo en OSPIQYPZC
-            'region_id' => $this->getRegionName(),
-            'affiliate_type' => $this->affiliate_type,
             'credential_number' => $this->credential_number,
         ];
 

@@ -156,13 +156,11 @@ class Relatives
             'name' => $this->getFullName(),
             'dni' => strval($this->dni),
             'email' => $this->email,
-            'birthday' => $this->birthday->format('d/m/Y'),
+            'birthday' => $this->birthday->format('Y-m-d'),
             'phone_number' => $this->phone_number,
             'type_of_family_member' => $this->type_of_family_member_id->getName(),
             'affiliate_dni' => $this->affiliate_dni,
             'credential_number' => $this->credential_number,
-
-            // Sólo en OSPIQYPZC
             'affiliate_number' => $this->affiliate_number,
         ];
 
