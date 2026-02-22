@@ -521,6 +521,13 @@ class AffiliatesBucket
                 throw new \Exception('Error al crear registro titular DNI: ' . $array['dni']);
             }*/
         } else {
+            if ($array['email'] === null) {
+                $array['email'] = $entity->getEmail();
+            }
+            if ($array['phone_number'] === null) {
+                $array['phone_number'] = $entity->getPhoneNumber();
+            }
+
             $entity->fromImport($array);
 
             try {
@@ -556,6 +563,13 @@ class AffiliatesBucket
             }
             */
         } else {
+            if ($array['email'] === null) {
+                $array['email'] = $entity->getEmail();
+            }
+            if ($array['phone_number'] === null) {
+                $array['phone_number'] = $entity->getPhoneNumber();
+            }
+
             $entity->fromImport($array);
 
             try {
