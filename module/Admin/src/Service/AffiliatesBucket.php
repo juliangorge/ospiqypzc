@@ -277,7 +277,7 @@ class AffiliatesBucket
             'email' => $this->setNullIfIsEmpty($array['email']),
             'credential_number' => $array['numero_afiliado'],
             'affiliate_dni' => strval((int)(substr($array['cuil_titular'], -9, 8))),
-            'type_of_family_member_id' => $this->procesarTipoFamiliar($array['parentesco_codigo']),
+            'type_of_family_member_id' => $this->procesarTipoFamiliar($array['parentesco_nombre']),
             'phone_number' => $array['telefono_celular'],
             'birthday' => $array['fecha_nacimiento'],
             'affiliate_type' => $this->procesarTipoAfiliado($array['gerenciador_plan'], $dni),
@@ -350,19 +350,30 @@ class AffiliatesBucket
         return $id;
     }
 
-    // PRE: Recibe codigo
+    // PRE: Recibe nombre
     // POST: Devuelve id tipo familiar
-    private function procesarTipoFamiliar($codigo): int
+    /* ParentescoCodigo, ParentescoNombre (usado por proveedor)
+    0	Titular
+    1	Cónyuge
+    2	Concubino
+    4	Hijo e/ 21-25 estudiando
+    3	Hijo < 21 años
+    8	Familiar a cargo
+    9	Hijo > 25 discapacitado
+    5	Hijo cónyuge solt. < 21
+    */
+    private function procesarTipoFamiliar($nombre): int
     {
         $id = -1;
 
-        if ($codigo == 1) $id = 1;
-        if ($codigo == 2) $id = 3;
-        if ($codigo == 3) $id = 2;
-        if ($codigo == 4) $id = 4;
-        if ($codigo == 5) $id = 9;
-        if ($codigo == 8) $id = 5;
-        if ($codigo == 9) $id = 6;
+        if ($nombre == 'Titular') $id = 0; // No debería entrar acá
+        if ($nombre == 'Cónyuge') $id = 1;
+        if ($nombre == 'Hijo < 21 años') $id = 2;
+        if ($nombre == 'Concubino') $id = 3;
+        if ($nombre == 'Hijo e/ 21-25 estudiando') $id = 4;
+        if ($nombre == 'Familiar a cargo') $id = 5;
+        if ($nombre == 'Hijo > 25 discapacitado') $id = 6;
+        if ($nombre == 'Hijo cónyuge solt. < 21') $id = 9;
 
         if ($id == -1) throw new \Exception('Tipo de Afiliado Familiar invalido. Revisar CSV.');
 
