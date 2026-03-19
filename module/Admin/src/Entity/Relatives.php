@@ -38,7 +38,10 @@ class Relatives
     /** @ORM\Column(name="credential_number", type="string", nullable=false) */
     protected $credential_number;
 
-    /** @ORM\Column(name="type_of_family_member_id", type="integer", nullable=false) */
+    /**
+     * @ORM\ManyToOne(targetEntity="Admin\Entity\TypeOfFamilyMember")
+     * @ORM\JoinColumn(name="type_of_family_member_id", referencedColumnName="id")
+     */
     protected $type_of_family_member_id;
 
     /** @ORM\Column(name="phone_number", type="string", nullable=true) */

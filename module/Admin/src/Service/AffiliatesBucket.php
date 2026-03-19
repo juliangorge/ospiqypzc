@@ -20,20 +20,20 @@ class AffiliatesBucket
         $this->config = $config;
         $this->filename = $this->config['exportAfiliadosFile'];
 
-        $s3Client = new S3Client([
-            'version' => 'latest',
-            'region' => 'us-east-1',
-            'credentials' => [
-                'key' => $this->config['awsBucketKey'],
-                'secret' => $this->config['awsBucketSecret'],
-            ],
-        ]);
+        // $s3Client = new S3Client([
+        //     'version' => 'latest',
+        //     'region' => 'us-east-1',
+        //     'credentials' => [
+        //         'key' => $this->config['awsBucketKey'],
+        //         'secret' => $this->config['awsBucketSecret'],
+        //     ],
+        // ]);
 
-        $s3Client->getObject([
-            'Bucket' => 'saas-padron-backup',
-            'Key'    => '10/export-afiliados-latest.csv',
-            'SaveAs' => $this->filename
-        ]);
+        // $s3Client->getObject([
+        //     'Bucket' => 'saas-padron-backup',
+        //     'Key'    => '10/export-afiliados-latest.csv',
+        //     'SaveAs' => $this->filename
+        // ]);
 
         $this->firestore = new FirestoreClient([
             'projectId' => $this->config['firestore_projectId'],
@@ -110,6 +110,7 @@ class AffiliatesBucket
                             if ($affiliate != NULL) $affiliates[] = $affiliate;
                         } else {
                             $data = $this->procesarLineaFamiliar($data_linea);
+
                             $family = $this->cargarFamiliar($data);
                             if ($family != NULL) $families[] = $family;
                         }
@@ -377,7 +378,7 @@ class AffiliatesBucket
 
         if ($id == -1) throw new \Exception('Tipo de Afiliado Familiar invalido. Revisar CSV.');
 
-        return $id;
+        return $this->em->find(\Admin\Entity\TypeOfFamilyMember::class, $id);
     }
 
     public function actualizarAfiliadosEnFirebase(array $affiliates, &$stats)
@@ -595,7 +596,7 @@ class AffiliatesBucket
 
     private function obtenerMiembroFamiliar(array $array)
     {
-        $family_member = $this->em->find('Admin\Entity\TypeOfFamilyMember', $array['type_of_family_member_id']);
+        $family_member = $this->em->find(\Admin\Entity\TypeOfFamilyMember::class, $array['type_of_family_member_id']);
         if ($family_member == NULL) throw new \Exception('Error al cargar Tipo de Miembro Familiar registro DNI: ' . $array['dni']);
 
         return $family_member->getName();
